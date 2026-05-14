@@ -38,7 +38,7 @@ export default function DemoPage() {
         </h1>
         <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
           가입·로그인·DB 없이 미션 카드 흐름만 그대로 보여줍니다. 메모에
-          "죽고싶어" 같은 위험 키워드를 적으면 crisis modal이 즉시 뜹니다.
+          “죽고싶어” 같은 위험 키워드를 적으면 crisis modal이 즉시 뜹니다.
         </p>
       </div>
 

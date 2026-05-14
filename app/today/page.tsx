@@ -1,14 +1,15 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
 import { getTodayMission } from "@/lib/missions/today";
 import { ensureUser, isOnboarded } from "@/lib/users/ensure";
 import { MissionCard } from "@/components/mission-card";
+import { isLocal } from "@/lib/runtime/mode";
 
 export const dynamic = "force-dynamic";
 
 export default async function TodayPage() {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     redirect("/sign-in");
   }
@@ -19,6 +20,7 @@ export default async function TodayPage() {
   }
 
   const mission = await getTodayMission(userId);
+  const allowPhoto = !isLocal();
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-zinc-50 px-6 py-16 dark:bg-zinc-950">
@@ -27,6 +29,7 @@ export default async function TodayPage() {
       </p>
       {mission ? (
         <MissionCard
+          allowPhoto={allowPhoto}
           mission={{
             assignmentId: mission.assignmentId,
             level: mission.level,

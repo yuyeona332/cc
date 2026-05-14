@@ -1,6 +1,6 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
 import { ensureUser, isOnboarded } from "@/lib/users/ensure";
 import { getRecentHistory } from "@/lib/missions/history";
 import { levelLabel } from "@/lib/missions/types";
@@ -15,7 +15,7 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("ko-KR", {
 });
 
 export default async function HistoryPage() {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     redirect("/sign-in");
   }

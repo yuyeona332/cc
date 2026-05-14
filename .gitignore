@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local-mode SQLite database (file: lib/db/client.ts)
+/data/local.db
+/data/local.db-journal
+/data/local.db-shm
+/data/local.db-wal

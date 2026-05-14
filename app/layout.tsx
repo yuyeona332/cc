@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
+import { Fragment, type ComponentType, type ReactNode } from "react";
 import { Geist } from "next/font/google";
 import { ServiceWorkerRegistration } from "@/components/service-worker-registration";
+import { isLocal } from "@/lib/runtime/mode";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,13 +25,22 @@ export const viewport: Viewport = {
   themeColor: "#fafafa",
 };
 
-export default function RootLayout({
+async function getAuthWrapper(): Promise<ComponentType<{ children: ReactNode }>> {
+  if (isLocal()) {
+    return Fragment;
+  }
+  const { ClerkProvider } = await import("@clerk/nextjs");
+  return ClerkProvider as ComponentType<{ children: ReactNode }>;
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const Wrapper = await getAuthWrapper();
   return (
-    <ClerkProvider>
+    <Wrapper>
       <html
         lang="ko"
         className={`${geistSans.variable} h-full antialiased`}
@@ -40,6 +50,6 @@ export default function RootLayout({
           <ServiceWorkerRegistration />
         </body>
       </html>
-    </ClerkProvider>
+    </Wrapper>
   );
 }

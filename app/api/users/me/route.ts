@@ -1,7 +1,7 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
+import { getDb } from "@/lib/db/client";
 import { users, auditLog } from "@/lib/db/schema";
 
 export const runtime = "nodejs";
@@ -15,17 +15,14 @@ export const runtime = "nodejs";
  * is intentional, so a user who clicked by mistake can be restored by
  * support during the grace window. After the 30-day cron runs, the row
  * is permanently gone.
- *
- * If the user wants immediate hard deletion the support flow handles it;
- * we don't expose it as a one-tap self-serve action because it is
- * irreversible.
  */
 export async function DELETE() {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
 
+  const db = await getDb();
   await db
     .update(users)
     .set({ deletedAt: new Date() })

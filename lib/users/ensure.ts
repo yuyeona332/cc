@@ -1,21 +1,23 @@
 import { eq } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { getDb } from "@/lib/db/client";
 import { users, type User } from "@/lib/db/schema";
 
 /**
- * Ensure a row exists in our users table for the authenticated Clerk user.
+ * Ensure a row exists in our users table for the authenticated user
+ * (Clerk user id in cloud mode, local-cookie uuid in local mode).
  *
  * Returns the existing row, or inserts a new row with defaults and returns
  * it. Onboarding sets the meaningful fields (ageVerified, preferredMissionLevel,
  * dailyPushHour); a freshly-created row is "exists but not onboarded".
  *
- * Idempotent — uses onConflictDoNothing keyed on the Clerk user id.
+ * Idempotent — uses onConflictDoNothing keyed on the user id.
  */
-export async function ensureUser(clerkUserId: string): Promise<User> {
+export async function ensureUser(userId: string): Promise<User> {
+  const db = await getDb();
   const [existing] = await db
     .select()
     .from(users)
-    .where(eq(users.id, clerkUserId))
+    .where(eq(users.id, userId))
     .limit(1);
 
   if (existing) {
@@ -24,13 +26,13 @@ export async function ensureUser(clerkUserId: string): Promise<User> {
 
   await db
     .insert(users)
-    .values({ id: clerkUserId })
+    .values({ id: userId })
     .onConflictDoNothing({ target: users.id });
 
   const [created] = await db
     .select()
     .from(users)
-    .where(eq(users.id, clerkUserId))
+    .where(eq(users.id, userId))
     .limit(1);
 
   if (!created) {

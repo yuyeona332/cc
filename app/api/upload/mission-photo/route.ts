@@ -1,35 +1,39 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
+import { isLocal } from "@/lib/runtime/mode";
 
 export const runtime = "nodejs";
 
 /**
  * Issue a signed client-side upload URL for a mission completion photo.
  *
- * Flow:
- *   1. Client POSTs to this endpoint with a HandleUploadBody.
- *   2. We require an authenticated user; if absent we reject.
- *   3. We constrain the content type and put the URL under a per-user
- *      prefix so a leaked URL only exposes that user's own files.
- *
- * The actual blob upload happens directly from client to Vercel Blob —
- * we don't proxy the bytes through this function.
+ * Photo upload is a cloud-only feature (Vercel Blob). In local mode we
+ * return 501 — the mission card hides the upload button via the
+ * `allowPhoto` prop, so this endpoint should not be hit.
  */
 export async function POST(request: Request) {
-  const body = (await request.json()) as HandleUploadBody;
+  if (isLocal()) {
+    return NextResponse.json(
+      { error: "photo_upload_disabled_in_local_mode" },
+      { status: 501 },
+    );
+  }
+
+  const blobClient = await import("@vercel/blob/client");
+  const body = (await request.json()) as Parameters<
+    typeof blobClient.handleUpload
+  >[0]["body"];
 
   try {
-    const result = await handleUpload({
+    const result = await blobClient.handleUpload({
       body,
       request,
       onBeforeGenerateToken: async (pathname) => {
-        const { userId } = await auth();
+        const userId = await getCurrentUserIdOrNull();
         if (!userId) {
           throw new Error("unauthenticated");
         }
 
-        // Enforce per-user prefix.
         const expectedPrefix = `mission-photos/${userId}/`;
         if (!pathname.startsWith(expectedPrefix)) {
           throw new Error("invalid_pathname");
@@ -42,8 +46,7 @@ export async function POST(request: Request) {
         };
       },
       onUploadCompleted: async () => {
-        // No-op for now. Phase 2: write an audit-log row referencing
-        // the blob URL so we can detect orphaned uploads.
+        // No-op; Phase 2 wires audit log for orphan detection.
       },
     });
 

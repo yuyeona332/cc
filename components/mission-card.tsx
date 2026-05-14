@@ -18,6 +18,8 @@ export interface MissionCardData {
 
 interface MissionCardProps {
   mission: MissionCardData;
+  /** When false, hide the photo upload UI (e.g., local mode without Vercel Blob). */
+  allowPhoto?: boolean;
 }
 
 type Phase = "intro" | "accepted" | "logging" | "done";
@@ -34,7 +36,7 @@ type Phase = "intro" | "accepted" | "logging" | "done";
  * the user does not unintentionally route a crisis note through the
  * standard mission log endpoint.
  */
-export function MissionCard({ mission }: MissionCardProps) {
+export function MissionCard({ mission, allowPhoto = true }: MissionCardProps) {
   const router = useRouter();
   const initialPhase: Phase =
     mission.response === "accepted" ? "accepted" : "intro";
@@ -160,7 +162,7 @@ export function MissionCard({ mission }: MissionCardProps) {
             placeholder="어땠는지 한 줄로. 비워둬도 괜찮아요."
             className="w-full rounded-xl border border-zinc-200 bg-white p-3 text-sm text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
           />
-          <PhotoUpload onUploaded={setPhotoUrl} />
+          {allowPhoto && <PhotoUpload onUploaded={setPhotoUrl} />}
           <div className="flex gap-3">
             <button
               type="submit"

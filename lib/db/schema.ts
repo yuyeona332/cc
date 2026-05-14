@@ -1,177 +1,37 @@
-import {
-  pgTable,
-  text,
-  timestamp,
-  integer,
-  jsonb,
-  pgEnum,
-  uuid,
-  date,
-  boolean,
-  index,
-} from "drizzle-orm/pg-core";
+/**
+ * Active-mode schema shim.
+ *
+ * Re-exports either pg-core or sqlite-core tables based on runtime mode.
+ * Type information is anchored on the pg-core schema (production source
+ * of truth); the sqlite-core schema is cast to the same shape so business
+ * logic does not need dialect-aware imports.
+ *
+ * This relies on the two schemas keeping structurally identical column
+ * names, enums, and table names — see [[../README.md]] schema drift note.
+ */
 
-// Mission difficulty levels (PLAN.md §Mission System)
-export const missionLevelEnum = pgEnum("mission_level", [
-  "L1_cognitive",
-  "L2_home_action",
-  "L3_outside_action",
-  "L4_social_action",
-]);
+import * as pg from "./schema-pg";
+import * as sqlite from "./schema-sqlite";
+import { isLocal } from "@/lib/runtime/mode";
 
-export const missionResponseEnum = pgEnum("mission_response", [
-  "accepted",
-  "declined",
-  "no_response",
-]);
+const active = (isLocal() ? sqlite : pg) as unknown as typeof pg;
 
-export const missionStatusEnum = pgEnum("mission_status", [
-  "completed",
-  "skipped",
-]);
+export const users = active.users;
+export const missions = active.missions;
+export const missionAssignments = active.missionAssignments;
+export const missionLogs = active.missionLogs;
+export const riskEvents = active.riskEvents;
+export const auditLog = active.auditLog;
 
-export const riskActionEnum = pgEnum("risk_action", [
-  "modal_shown",
-  "soft_check_in",
-  "escalated",
-  "none",
-]);
+export const missionLevelEnum = pg.missionLevelEnum;
+export const missionResponseEnum = pg.missionResponseEnum;
+export const missionStatusEnum = pg.missionStatusEnum;
+export const riskActionEnum = pg.riskActionEnum;
 
-// Application-level user profile.
-// Clerk owns identity (id matches Clerk user id). Adult-only product —
-// age verification is enforced server-side before any onboarding write.
-export const users = pgTable("users", {
-  id: text("id").primaryKey(), // Clerk user id
-  ageVerified: boolean("age_verified").notNull().default(false),
-  ageVerifiedAt: timestamp("age_verified_at", { withTimezone: true }),
-  locale: text("locale").notNull().default("ko-KR"),
-  preferredMissionLevel: missionLevelEnum("preferred_mission_level")
-    .notNull()
-    .default("L1_cognitive"),
-  pushSubscription: jsonb("push_subscription"), // Web Push endpoint + keys
-  dailyPushHour: integer("daily_push_hour").notNull().default(9), // 0-23 in user TZ
-  timezone: text("timezone").notNull().default("Asia/Seoul"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  // Soft delete — hard delete runs on 30-day cron after this is set
-  deletedAt: timestamp("deleted_at", { withTimezone: true }),
-});
-
-// Mission library (templates).
-// Seed list lives in lib/missions/seed.ts. seed_id is the natural key
-// the seed script uses for upserts; it stays stable across copy edits.
-export const missions = pgTable("missions", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  seedId: text("seed_id").notNull().unique(),
-  level: missionLevelEnum("level").notNull(),
-  category: text("category").notNull(),
-  prompt: text("prompt").notNull(),
-  expectedMinutes: integer("expected_minutes").notNull().default(5),
-  enabled: boolean("enabled").notNull().default(true),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
-
-// One row per (user, day) — what was sent and how the user responded.
-export const missionAssignments = pgTable(
-  "mission_assignments",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    missionId: uuid("mission_id")
-      .notNull()
-      .references(() => missions.id),
-    assignedForDate: date("assigned_for_date").notNull(),
-    sentAt: timestamp("sent_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    response: missionResponseEnum("response").notNull().default("no_response"),
-    respondedAt: timestamp("responded_at", { withTimezone: true }),
-  },
-  (table) => ({
-    userDateIdx: index("mission_assignments_user_date_idx").on(
-      table.userId,
-      table.assignedForDate,
-    ),
-  }),
-);
-
-// Completion record. Self-report only (photo/note/check) — no GPS.
-// Photo URL points to Vercel Blob with private access.
-export const missionLogs = pgTable(
-  "mission_logs",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    assignmentId: uuid("assignment_id").references(() => missionAssignments.id),
-    missionId: uuid("mission_id")
-      .notNull()
-      .references(() => missions.id),
-    completedAt: timestamp("completed_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-    note: text("note"), // optional one-line memo
-    photoUrl: text("photo_url"), // optional Vercel Blob URL
-    status: missionStatusEnum("status").notNull().default("completed"),
-  },
-  (table) => ({
-    userCompletedIdx: index("mission_logs_user_completed_idx").on(
-      table.userId,
-      table.completedAt,
-    ),
-  }),
-);
-
-// Safety events. PLAN.md mandates separate encrypted storage for any
-// utterance containing suicide/self-harm/violence content — the row
-// references that storage by blobRef rather than embedding text here.
-// This table is for audit and analytics only.
-export const riskEvents = pgTable(
-  "risk_events",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
-    source: text("source").notNull(), // "chat" | "mission_note" | "manual"
-    severity: integer("severity").notNull(), // 0-10
-    matchedKeywords: jsonb("matched_keywords"), // string[] of categories, not raw text
-    llmJudgment: jsonb("llm_judgment"), // {model, confidence, rationale_summary}
-    action: riskActionEnum("action").notNull(),
-    isolatedBlobRef: text("isolated_blob_ref"), // pointer to encrypted utterance store
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .notNull()
-      .defaultNow(),
-  },
-  (table) => ({
-    userCreatedIdx: index("risk_events_user_created_idx").on(
-      table.userId,
-      table.createdAt,
-    ),
-  }),
-);
-
-// Auditable system events (signups, age-verification outcomes, data deletions).
-export const auditLog = pgTable("audit_log", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id"), // nullable — system-level events have no user
-  eventType: text("event_type").notNull(),
-  metadata: jsonb("metadata"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
-
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
-export type Mission = typeof missions.$inferSelect;
-export type MissionAssignment = typeof missionAssignments.$inferSelect;
-export type MissionLog = typeof missionLogs.$inferSelect;
-export type RiskEvent = typeof riskEvents.$inferSelect;
-export type AuditLogEntry = typeof auditLog.$inferSelect;
+export type User = pg.User;
+export type NewUser = pg.NewUser;
+export type Mission = pg.Mission;
+export type MissionAssignment = pg.MissionAssignment;
+export type MissionLog = pg.MissionLog;
+export type RiskEvent = pg.RiskEvent;
+export type AuditLogEntry = pg.AuditLogEntry;

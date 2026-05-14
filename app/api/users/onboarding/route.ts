@@ -1,8 +1,8 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
+import { getDb } from "@/lib/db/client";
 import { users, auditLog } from "@/lib/db/schema";
 import { ensureUser } from "@/lib/users/ensure";
 
@@ -21,7 +21,7 @@ const onboardingSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
@@ -37,6 +37,7 @@ export async function POST(request: Request) {
 
   await ensureUser(userId);
 
+  const db = await getDb();
   await db
     .update(users)
     .set({
@@ -48,9 +49,6 @@ export async function POST(request: Request) {
     })
     .where(eq(users.id, userId));
 
-  // Self-attestation today; PASS / KakaoTalk identity check replaces this
-  // before any non-internal launch. Audit log keeps the attestation event
-  // for review.
   await db.insert(auditLog).values({
     userId,
     eventType: "onboarding_completed",

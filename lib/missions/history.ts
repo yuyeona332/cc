@@ -1,5 +1,5 @@
 import { eq, desc } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { getDb } from "@/lib/db/client";
 import { missionLogs, missions } from "@/lib/db/schema";
 import type { MissionLevel } from "./types";
 
@@ -22,6 +22,7 @@ export async function getRecentHistory(
   userId: string,
   limit = 30,
 ): Promise<ReadonlyArray<HistoryEntry>> {
+  const db = await getDb();
   const rows = await db
     .select({
       logId: missionLogs.id,

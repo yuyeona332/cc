@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 px-6 py-16 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50">
@@ -12,6 +14,12 @@ export default function Home() {
           하루에 하나, 5분짜리 일. 안 해도 괜찮은 일.
           이 product는 변화를 약속하지 않습니다. 다만 옆에 있을게요.
         </p>
+        <Link
+          href="/today"
+          className="inline-block rounded-xl bg-zinc-900 px-6 py-3 text-sm font-medium text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+        >
+          시작하기
+        </Link>
         <p className="text-xs text-zinc-400">
           현재 베타 준비 중입니다 (Phase 0 인터뷰 진행 중).
         </p>

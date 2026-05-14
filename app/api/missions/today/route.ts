@@ -1,11 +1,11 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
 import { getTodayMission } from "@/lib/missions/today";
 
 export const runtime = "nodejs";
 
 export async function GET() {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }

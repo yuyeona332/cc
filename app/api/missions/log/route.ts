@@ -1,8 +1,8 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
+import { getDb } from "@/lib/db/client";
 import { missionAssignments, missionLogs } from "@/lib/db/schema";
 import { scanForRisk } from "@/lib/safety/keywords";
 import { classifyUtterance } from "@/lib/safety/detect";
@@ -23,7 +23,7 @@ const logSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     );
   }
 
-  // Verify the assignment belongs to this user before logging anything.
+  const db = await getDb();
   const [assignment] = await db
     .select({
       id: missionAssignments.id,
@@ -71,8 +71,6 @@ export async function POST(request: Request) {
         utterance: safeNote,
         source: "mission_note",
       });
-      // TODO(Phase 1): write the original note to isolated encrypted store
-      // and persist a risk_event row referencing it.
       void judgment;
       safeNote = null;
       riskRouted = true;

@@ -1,13 +1,13 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
 import { ensureUser, isOnboarded } from "@/lib/users/ensure";
 import { SettingsForm } from "@/components/settings-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     redirect("/sign-in");
   }

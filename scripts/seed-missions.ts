@@ -11,11 +11,12 @@
  */
 
 import { sql } from "drizzle-orm";
-import { db } from "../lib/db/client";
+import { getDb } from "../lib/db/client";
 import { missions } from "../lib/db/schema";
 import { missionSeed } from "../lib/missions/seed";
 
 async function main() {
+  const db = await getDb();
   let touched = 0;
 
   for (const template of missionSeed) {

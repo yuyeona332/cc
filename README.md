@@ -70,19 +70,24 @@ PLAN-B.md                 # 대안 (AI 옆사람) 설계
 
 ## 로컬 개발
 
-### 옵션 A: 빠른 데모 (auth/DB 없이 UX만)
+### 옵션 A: LOCAL 모드 — Clerk·Neon 없이 그대로 실행 (인터뷰 데모)
 
-`.env.local`이 이미 placeholder로 채워져 있고 dev 서버는 그대로 부팅됩니다.
+`.env` 없이 부팅하면 자동으로 로컬 모드입니다. 쿠키 게스트 세션 + 파일
+SQLite (`./data/local.db`) + 미션 자동 시드.
 
 ```bash
+npm install
 npm run dev
-# → http://localhost:3001/demo
+# → http://localhost:3000/today
 ```
 
-`/demo`는 가입·로그인·DB 없이 4단계 미션 카드를 보여줍니다. 메모에
-"죽고싶어" 같은 위험 키워드를 적으면 crisis modal이 즉시 뜹니다.
+흐름: `/` → `/today` 접근 시 쿠키가 자동 발급되고 onboarding으로 안내,
+완료하면 오늘의 미션 1개. 사진 업로드는 LOCAL 모드에서 자동으로 숨겨집니다.
 
-### 옵션 B: 전체 MVP (Clerk + Neon + Blob)
+> 모드 자동 판정: `CLERK_SECRET_KEY` 와 `DATABASE_URL` 둘 다 있으면 cloud,
+> 아니면 local. 강제 override flag는 없습니다.
+
+### 옵션 B: CLOUD 모드 — 전체 MVP (Clerk + Neon + Blob)
 
 각 서비스 무료 tier로 10분 안에 셋업 가능합니다.
 
@@ -94,16 +99,22 @@ npm run dev
 3. **Vercel Blob** (선택, 사진 업로드 시) → Vercel 프로젝트 → Storage → Blob → Token을
    - `BLOB_READ_WRITE_TOKEN`
 
-`.env.local`을 위 값으로 교체 후:
+`.env.local`을 위 값으로 채운 뒤:
 
 ```bash
 npm run db:migrate   # 6 tables 생성
 npm run db:seed      # 100개 미션 시드
-npm run dev          # 자동 재시작 또는 새로 실행
+npm run dev
 ```
 
-브라우저: `http://localhost:3001/sign-up` → 가입 → onboarding 3-step →
+브라우저: `http://localhost:3000/sign-up` → 가입 → onboarding 3-step →
 첫 미션.
+
+### Schema drift 주의
+
+`lib/db/schema.ts`는 pg-core(`schema-pg.ts`)와 sqlite-core(`schema-sqlite.ts`)를
+모드에 따라 re-export합니다. **PG 스키마를 변경하면 SQLite 스키마와
+`lib/db/local-init.ts`의 CREATE TABLE DDL도 동기화해야 합니다.**
 
 ### 검증
 

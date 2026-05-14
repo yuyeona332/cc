@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useClerk } from "@clerk/nextjs";
 import type { MissionLevel } from "@/lib/missions/types";
 import { levelLabel } from "@/lib/missions/types";
 
@@ -26,7 +25,6 @@ export function SettingsForm({
   initialPushHour,
 }: SettingsFormProps) {
   const router = useRouter();
-  const { signOut } = useClerk();
   const [level, setLevel] = useState<MissionLevel>(initialLevel);
   const [pushHour, setPushHour] = useState<number>(initialPushHour);
   const [saving, setSaving] = useState(false);
@@ -62,7 +60,8 @@ export function SettingsForm({
       if (!res.ok) {
         throw new Error(`delete failed: ${res.status}`);
       }
-      await signOut({ redirectUrl: "/" });
+      await fetch("/api/auth/sign-out", { method: "POST" });
+      window.location.href = "/";
     } finally {
       setDeleting(false);
     }

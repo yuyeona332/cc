@@ -1,8 +1,8 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq, and } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
+import { getDb } from "@/lib/db/client";
 import { missionAssignments } from "@/lib/db/schema";
 
 export const runtime = "nodejs";
@@ -13,7 +13,7 @@ const respondSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
@@ -27,6 +27,7 @@ export async function POST(request: Request) {
     );
   }
 
+  const db = await getDb();
   const [updated] = await db
     .update(missionAssignments)
     .set({

@@ -1,8 +1,8 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
-import { db } from "@/lib/db/client";
+import { getCurrentUserIdOrNull } from "@/lib/auth/current-user";
+import { getDb } from "@/lib/db/client";
 import { users } from "@/lib/db/schema";
 
 export const runtime = "nodejs";
@@ -20,7 +20,7 @@ const updateSchema = z.object({
 });
 
 export async function PATCH(request: Request) {
-  const { userId } = await auth();
+  const userId = await getCurrentUserIdOrNull();
   if (!userId) {
     return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
   }
@@ -46,6 +46,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
+  const db = await getDb();
   await db.update(users).set(updates).where(eq(users.id, userId));
   return NextResponse.json({ ok: true });
 }
