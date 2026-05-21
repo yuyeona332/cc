@@ -1,10 +1,13 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 import { LOCAL_USER_COOKIE } from "@/lib/auth/local-cookie";
 import { isLocal } from "@/lib/runtime/mode";
 
 const LOCAL_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 
-export default async function middleware(request: NextRequest) {
+export default async function middleware(
+  request: NextRequest,
+  event: NextFetchEvent
+) {
   if (isLocal()) {
     return localMiddleware(request);
   }
@@ -23,11 +26,7 @@ export default async function middleware(request: NextRequest) {
     if (isPublicRoute(req)) return;
     await auth.protect();
   });
-  // clerkMiddleware returns a handler with the same (req, event) signature
-  // Next.js expects.
-  return handler(request, {
-    waitUntil: () => undefined,
-  } as unknown as Parameters<typeof handler>[1]);
+  return handler(request, event);
 }
 
 function localMiddleware(request: NextRequest) {
