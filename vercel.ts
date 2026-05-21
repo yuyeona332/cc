@@ -2,7 +2,7 @@ import { routes, type VercelConfig } from "@vercel/config/v1";
 
 export const config: VercelConfig = {
   framework: "nextjs",
-  buildCommand: "next build",
+  buildCommand: "npm run db:migrate && npm run build",
 
   headers: [
     routes.cacheControl("/_next/static/(.*)", {

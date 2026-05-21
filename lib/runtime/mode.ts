@@ -14,9 +14,8 @@ let cached: RuntimeMode | null = null;
 
 export function getRuntimeMode(): RuntimeMode {
   if (cached) return cached;
-  const hasClerk = !!process.env.CLERK_SECRET_KEY;
   const hasDb = !!process.env.DATABASE_URL;
-  cached = hasClerk && hasDb ? "cloud" : "local";
+  cached = hasDb ? "cloud" : "local";
   return cached;
 }
 
