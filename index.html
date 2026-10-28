@@ -3,18 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#5a5bc9" />
     <meta
       name="description"
-      content="애니 덕질 성향 테스트. 애니를 좋아하는 방식에 따라 16가지 덕질 유형을 알아보세요."
+      content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 유형 중 나는 어떤 타입일까요?"
     />
     <title>애니 덕질 성향 테스트</title>
+    <link rel="canonical" href="https://yuyeon-a.github.io/connection-care/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="애니 덕질 성향 테스트" />
+    <meta property="og:description" content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 유형 중 나는 어떤 타입일까요?" />
+    <meta property="og:url" content="https://yuyeon-a.github.io/connection-care/" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:image" content="https://yuyeon-a.github.io/connection-care/assets/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="애니 덕질 성향 테스트" />
+    <meta name="twitter:description" content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 유형 중 나는 어떤 타입일까요?" />
+    <meta name="twitter:image" content="https://yuyeon-a.github.io/connection-care/assets/og.png" />
+    <link rel="icon" type="image/png" href="./assets/favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <div class="page-shell">
@@ -35,7 +48,7 @@
                 <div class="meta-row" aria-label="테스트 정보">
                   <span>총 24문항</span>
                   <span>약 3~5분</span>
-                  <span>정답 없음</span>
+                  <span>답을 선택해 주세요</span>
                 </div>
               </div>
 
@@ -56,7 +69,6 @@
                     <span class="axis-tag">감상 습관</span>
                     <span class="axis-code">R / S</span>
                   </div>
-                  <div class="axis-emoji">📺</div>
                   <h3>정주행형 R</h3>
                   <p>한 번에 몰아보는지, 일상 속에서 꾸준히 감상하는지 알아봐요.</p>
                 </article>
@@ -66,7 +78,6 @@
                     <span class="axis-tag">작품 선택 기준</span>
                     <span class="axis-code">C / W</span>
                   </div>
-                  <div class="axis-emoji">💖</div>
                   <h3>캐릭터 우선형 C</h3>
                   <p>최애와 관계성에 끌리는지, 스토리와 연출의 완성도를 중요하게 보는지 알아봐요.</p>
                 </article>
@@ -76,7 +87,6 @@
                     <span class="axis-tag">취향 탐색 방식</span>
                     <span class="axis-code">F / E</span>
                   </div>
-                  <div class="axis-emoji">✨</div>
                   <h3>취향 확신형 F</h3>
                   <p>좋아하는 장르를 깊게 파는지, 새로운 장르와 작품을 탐험하는지 알아봐요.</p>
                 </article>
@@ -86,7 +96,6 @@
                     <span class="axis-tag">덕질 표현 방식</span>
                     <span class="axis-code">P / D</span>
                   </div>
-                  <div class="axis-emoji">🎀</div>
                   <h3>개인 향유형 P</h3>
                   <p>혼자 조용히 즐기는지, 다른 사람과 취향을 나누는지 알아봐요.</p>
                 </article>
@@ -132,20 +141,19 @@
           <div class="panel question-panel">
             <div class="question-meta">
               <span id="question-counter" class="question-badge">QUESTION 01 / 24</span>
-              <span class="meta-tag">정답은 없어요</span>
+              <span class="meta-tag">답을 선택해 주세요</span>
             </div>
 
             <div class="progress-track" aria-hidden="true">
               <div id="progress-fill" class="progress-fill"></div>
             </div>
 
-            <div id="question-mascot" class="question-mascot" aria-hidden="true"></div>
-
             <h2 id="question-text" class="question-text"></h2>
             <div id="answer-options" class="answer-options" aria-label="질문 응답 선택"></div>
 
             <div class="nav-row">
-              <button id="prev-btn" class="btn secondary" type="button">이전 질문</button>
+              <button id="prev-btn" class="btn secondary" type="button">이전</button>
+              <button id="next-btn" class="btn primary" type="button" disabled>다음 →</button>
             </div>
           </div>
         </section>
@@ -159,26 +167,26 @@
           <div class="result-layout">
             <div id="result-card-wrap" class="panel result-card-wrap"></div>
 
-            <div class="result-side">
-              <div class="panel">
-                <h2>나의 성향 분석</h2>
-                <div id="axis-breakdown" class="axis-breakdown"></div>
-                <p class="axis-note">
-                  ※ 수치는 응답을 바탕으로 한 상대적 성향 점수예요. 두 성향이 같으면 X로 표시해요.
-                </p>
-              </div>
+            <div class="panel result-summary-panel">
+              <h2>나의 성향 분석</h2>
+              <div id="axis-breakdown" class="axis-breakdown"></div>
+              <p class="axis-note">
+                ※ 수치는 응답을 바탕으로 한 상대적 성향 점수예요. 두 성향이 같으면 X로 표시해요.
+              </p>
+            </div>
+          </div>
 
-              <div class="panel share-panel">
-                <h2>결과 공유하기</h2>
-                <div class="share-grid">
-                  <button type="button" class="btn share-btn" data-share="instagram">인스타그램</button>
-                  <button type="button" class="btn share-btn" data-share="x">X(트위터)</button>
-                  <button type="button" class="btn share-btn" data-share="kakao">카카오톡</button>
-                  <button type="button" class="btn share-btn secondary" data-share="save">이미지 저장</button>
-                  <button type="button" class="btn share-btn secondary" data-share="copy">링크 복사</button>
-                  <button type="button" class="btn share-btn secondary" data-share="retry">다시 하기</button>
-                </div>
-              </div>
+          <div id="result-report" class="result-report" aria-live="polite"></div>
+
+          <div class="panel share-panel">
+            <h2>결과 공유하기</h2>
+            <div class="share-grid">
+              <button type="button" class="btn share-btn" data-share="instagram">인스타그램</button>
+              <button type="button" class="btn share-btn" data-share="x">X(트위터)</button>
+              <button type="button" class="btn share-btn" data-share="kakao">카카오톡</button>
+              <button type="button" class="btn share-btn secondary" data-share="save">이미지 저장</button>
+              <button type="button" class="btn share-btn secondary" data-share="copy">링크 복사</button>
+              <button type="button" class="btn share-btn secondary" data-share="retry">다시 하기</button>
             </div>
           </div>
         </section>
@@ -187,7 +195,7 @@
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="js/data.js"></script>
-    <script src="js/app.js"></script>
+    <script src="./js/data.js"></script>
+    <script src="./js/app.js"></script>
   </body>
 </html>
