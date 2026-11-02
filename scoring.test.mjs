@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 import test from "node:test";
 import { scoreAnswers } from "./scoring.mjs";
@@ -35,6 +35,35 @@ test("all 16 answer patterns resolve to their matching four-letter type", () => 
   }
 });
 
+test("all 16 types have complete names, reports, and character assets", () => {
+  const requiredProfileFields = [
+    "koreanName",
+    "line",
+    "intro",
+    "summary",
+    "traits",
+    "strengths",
+    "weaknesses",
+    "lifestyle",
+    "compatibility",
+    "keywords",
+  ];
+
+  assert.equal(Object.keys(data.typeMeta).length, 16);
+  for (const code of Object.keys(data.typeMeta)) {
+    assert.ok(data.typeDisplayNames[code], `${code} display name`);
+    assert.ok(existsSync(new URL(`./assets/types/${code}.svg`, import.meta.url)), `${code} artwork`);
+    const profile = data.typeProfiles[code];
+    assert.ok(profile, `${code} profile`);
+    for (const field of requiredProfileFields) {
+      assert.ok(profile[field], `${code}.${field}`);
+    }
+    for (const field of ["traits", "strengths", "weaknesses", "keywords"]) {
+      assert.ok(Array.isArray(profile[field]) && profile[field].length > 0, `${code}.${field} items`);
+    }
+  }
+});
+
 test("neutral answers use configured deterministic defaults without 50:50 axes", () => {
   const result = scoreAnswers(
     data.questions,
@@ -44,6 +73,26 @@ test("neutral answers use configured deterministic defaults without 50:50 axes",
   assert.equal(result.code, "RWFD");
   assert.ok(result.axes.every(({ percentA, percentB }) => percentA !== 50 && percentB !== 50));
   assert.ok(result.axes.every(({ tieBreak }) => tieBreak === "neutral-default"));
+});
+
+test("axis percentages reflect moderate and extreme answer preferences", () => {
+  const scoreAxisAt = (axis, preferredSide, strength) => {
+    const answers = Object.fromEntries(data.questions.map((question) => {
+      const direction = question.side === "A" ? "A" : "B";
+      const agrees = direction === preferredSide;
+      return [question.id, agrees ? 4 + strength : 4 - strength];
+    }));
+    return scoreAnswers(data.questions, data.axes, answers).axes.find((item) => item.axis.id === axis.id);
+  };
+
+  for (const axis of data.axes) {
+    const strongA = scoreAxisAt(axis, "A", 3);
+    const strongB = scoreAxisAt(axis, "B", 3);
+    const moderateA = scoreAxisAt(axis, "A", 1);
+    assert.equal(strongA.percentA, 100, `${axis.id} strong A preference`);
+    assert.equal(strongB.percentA, 0, `${axis.id} strong B preference`);
+    assert.ok(moderateA.percentA > 50 && moderateA.percentA < 100, `${axis.id} moderate A preference`);
+  }
 });
 
 function scoreDeltas(deltas, tieBreakSide = "B") {

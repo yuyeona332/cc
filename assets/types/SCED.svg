@@ -10,15 +10,11 @@
   <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc5" stroke="#42303d" stroke-width="4"/>
   <path d="M78 90q0-53 44-59 43 4 40 58l-17-14-13 10-13-24-17 22-12-9-12 16z" fill="#704e68" stroke="#42303d" stroke-width="4" stroke-linejoin="round"/>
   <path d="M87 88q-12 16-5 37m71-37q12 16 5 37" fill="none" stroke="#704e68" stroke-width="8" stroke-linecap="round"/>
-  <path d="M93 95q11-10 21 0l-2 15q-11 7-19-15m33 0q11-10 21 0l-2 15q-11 7-19-15" fill="#6879a5"/>
-  <path d="M92 86q10-6 20 0m28 0q10-6 20 0" fill="none" stroke="#42303d" stroke-width="2.5" stroke-linecap="round"/>
-  <ellipse cx="104" cy="102" rx="7.5" ry="9" fill="#fff" stroke="#42303d" stroke-width="1.5"/><ellipse cx="136" cy="102" rx="7.5" ry="9" fill="#fff" stroke="#42303d" stroke-width="1.5"/>
-  <ellipse cx="104" cy="103" rx="4.5" ry="6" fill="#718ec3"/><ellipse cx="136" cy="103" rx="4.5" ry="6" fill="#718ec3"/>
-  <ellipse cx="104" cy="104" rx="2.2" ry="3.5" fill="#3b3346"/><ellipse cx="136" cy="104" rx="2.2" ry="3.5" fill="#3b3346"/>
-  <circle cx="102" cy="99" r="2" fill="#fff"/><circle cx="134" cy="99" r="2" fill="#fff"/>
+  <path d="M92 84q10-9 20-1m28 1q10-8 20 1" fill="none" stroke="#42303d" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
+
   <circle cx="84" cy="117" r="5" fill="#ec91a4" opacity=".4"/><circle cx="156" cy="117" r="5" fill="#ec91a4" opacity=".4"/>
-  <circle cx="105" cy="99" r="3" fill="#fff"/><circle cx="137" cy="99" r="3" fill="#fff"/>
-  <path d="M109 127q11 10 22-1" fill="none" stroke="#ad6368" stroke-width="3"/>
+  <path d="M116 128q4-4 8 0t0 4q-4 3-8 0t0-4" fill="none" stroke="#ad6368" stroke-width="3"/><path d="M84 116l5 2m67-2-5 2" fill="none" stroke="#d88791" stroke-width="2" stroke-linecap="round"/>
   <path d="M102 142v12m36-12v12" stroke="#42303d" stroke-width="4"/>
   <path d="M77 206l-7 16h38l-3-16m61 0 8 16h-38l2-16" fill="#5b4155" stroke="#42303d" stroke-width="4"/>
   <path d="M162 48l6-12 5 12 12 5-12 4-5 12-6-12-11-4z" fill="#f0bd55"/>

@@ -10,15 +10,11 @@
   <path d="M81 92q-16-42-38-7l15 64 28-18m73-39q24-41 41 0l-20 62-26-19" fill="#714c39" stroke="#262b3c" stroke-width="5"/>
   <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffdec8" stroke="#262b3c" stroke-width="4"/>
   <path d="M78 91q-4-54 42-60 45 4 43 59l-18-17-11 8-15-24-14 23-14-11-13 20z" fill="#80593d" stroke="#262b3c" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M92 97q12-10 23 0l-4 14q-11 8-19-14m35 0q12-10 23 0l-4 14q-11 8-19-14" fill="#5083a5"/>
-  <path d="M91 87q11-6 21 0m32 0q11-6 21 0" fill="none" stroke="#262b3c" stroke-width="2.5" stroke-linecap="round"/>
-  <ellipse cx="104" cy="103" rx="7.5" ry="9" fill="#fff" stroke="#262b3c" stroke-width="1.5"/><ellipse cx="136" cy="103" rx="7.5" ry="9" fill="#fff" stroke="#262b3c" stroke-width="1.5"/>
-  <ellipse cx="104" cy="104" rx="4.5" ry="6" fill="#5b9dc0"/><ellipse cx="136" cy="104" rx="4.5" ry="6" fill="#5b9dc0"/>
-  <ellipse cx="104" cy="105" rx="2.2" ry="3.5" fill="#293449"/><ellipse cx="136" cy="105" rx="2.2" ry="3.5" fill="#293449"/>
-  <circle cx="102" cy="100" r="2" fill="#fff"/><circle cx="134" cy="100" r="2" fill="#fff"/>
+  <path d="M91 83q11-11 21-1m32 1q11-10 21 0" fill="none" stroke="#262b3c" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
+
   <circle cx="84" cy="118" r="5" fill="#e99194" opacity=".4"/><circle cx="156" cy="118" r="5" fill="#e99194" opacity=".4"/>
-  <circle cx="105" cy="101" r="3.5" fill="#fff"/><circle cx="138" cy="101" r="3.5" fill="#fff"/>
-  <path d="M109 128q11 10 22-1" fill="none" stroke="#ad625e" stroke-width="3"/>
+  <path d="M116 124q4-5 8 0t0 9q-4 4-8 0t0-9" fill="none" stroke="#ad625e" stroke-width="3"/><path d="M84 105l-4 6m76-6 4 6" fill="none" stroke="#bd786e" stroke-width="2" stroke-linecap="round"/>
   <path d="M96 50q24-26 51-3l-13 12-24-4z" fill="#e6a738" stroke="#262b3c" stroke-width="3"/><circle cx="119" cy="36" r="13" fill="#f6c958" stroke="#262b3c" stroke-width="3"/>
   <path d="M76 206l-6 16h38l-3-16m61 0 8 16h-38l2-16" fill="#27384f" stroke="#262b3c" stroke-width="4"/>
 </svg>

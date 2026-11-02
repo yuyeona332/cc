@@ -9,15 +9,11 @@
   <path d="M79 91q-31-34-18 28l16 30 17-20m65-37q35-40 27 25l-14 40-22-19" fill="#d94b88" stroke="#39233a" stroke-width="5"/>
   <ellipse cx="120" cy="91" rx="43" ry="50" fill="#ffddc6" stroke="#39233a" stroke-width="4"/>
   <path d="M77 93q-4-54 42-61 47 1 46 60l-17-16-14 10-17-23-15 20-20-8z" fill="#a92f67" stroke="#39233a" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M91 91q12-13 24 0-3 19-12 19t-12-19m34 0q12-13 24 0-3 19-12 19t-12-19" fill="#743a9a"/>
-  <path d="M90 84q11-7 22 0m34 0q11-7 22 0" fill="none" stroke="#39233a" stroke-width="2.5" stroke-linecap="round"/>
-  <ellipse cx="104" cy="101" rx="7.5" ry="9" fill="#fff" stroke="#39233a" stroke-width="1.5"/><ellipse cx="136" cy="101" rx="7.5" ry="9" fill="#fff" stroke="#39233a" stroke-width="1.5"/>
-  <ellipse cx="104" cy="102" rx="4.5" ry="6" fill="#6a62cf"/><ellipse cx="136" cy="102" rx="4.5" ry="6" fill="#6a62cf"/>
-  <ellipse cx="104" cy="103" rx="2.2" ry="3.5" fill="#29243a"/><ellipse cx="136" cy="103" rx="2.2" ry="3.5" fill="#29243a"/>
-  <circle cx="102" cy="98" r="2" fill="#fff"/><circle cx="134" cy="98" r="2" fill="#fff"/>
+  <path d="M90 84q12-10 23 0m34 0q12-10 23 0" fill="none" stroke="#39233a" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
+
   <circle cx="84" cy="117" r="5" fill="#ed8194" opacity=".42"/><circle cx="156" cy="117" r="5" fill="#ed8194" opacity=".42"/>
-  <circle cx="105" cy="98" r="4" fill="#fff"/><circle cx="137" cy="98" r="4" fill="#fff"/>
-  <path d="M109 124q11 13 23-1" fill="none" stroke="#b34062" stroke-width="3" stroke-linecap="round"/>
+  <path d="M107 122q13 15 26 0q-2 11-13 11t-13-11" fill="none" stroke="#b34062" stroke-width="3" stroke-linecap="round"/><path d="M112 129q8 6 16 0" fill="none" stroke="#f0a1a7" stroke-width="2" stroke-linecap="round"/>
   <path d="M103 140l17 12 17-12" fill="none" stroke="#39233a" stroke-width="4"/>
   <path d="M82 61l-11-18 23 2 9 17m52 0 17-18-1 25-16 10" fill="#ffca55" stroke="#39233a" stroke-width="3"/>
   <path d="M97 202l-7 19h33l-4-19m29 0 7 19h-33l4-19" fill="#71384e" stroke="#39233a" stroke-width="4"/>

@@ -9,15 +9,11 @@
   <path d="M79 91q-19-42-40 0l17 61 27-18m80-43q21-39 39 2l-18 59-27-18" fill="#856b78" stroke="#39313a" stroke-width="5"/>
   <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc5" stroke="#39313a" stroke-width="4"/>
   <path d="M78 92q-2-55 43-60 42 4 41 58l-16-19-11 12-14-23-16 22-13-11-12 20z" fill="#9a7c8a" stroke="#39313a" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M94 97q10-7 20 0l-2 12q-10 7-18-12m32 0q10-7 20 0l-2 12q-10 7-18-12" fill="#7373a4"/>
-  <path d="M93 87q9-5 18 0m30 0q9-5 18 0" fill="none" stroke="#39313a" stroke-width="2.5" stroke-linecap="round"/>
-  <ellipse cx="104" cy="102" rx="7.5" ry="9" fill="#fff" stroke="#39313a" stroke-width="1.5"/><ellipse cx="136" cy="102" rx="7.5" ry="9" fill="#fff" stroke="#39313a" stroke-width="1.5"/>
-  <ellipse cx="104" cy="103" rx="4.5" ry="6" fill="#8589c9"/><ellipse cx="136" cy="103" rx="4.5" ry="6" fill="#8589c9"/>
-  <ellipse cx="104" cy="104" rx="2.2" ry="3.5" fill="#39334a"/><ellipse cx="136" cy="104" rx="2.2" ry="3.5" fill="#39334a"/>
-  <circle cx="102" cy="99" r="2" fill="#fff"/><circle cx="134" cy="99" r="2" fill="#fff"/>
+  <path d="M93 84q9 4 18 1m30 0q9 3 18-1" fill="none" stroke="#39313a" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
+
   <circle cx="84" cy="117" r="5" fill="#e9949f" opacity=".38"/><circle cx="156" cy="117" r="5" fill="#e9949f" opacity=".38"/>
-  <circle cx="105" cy="100" r="2.8" fill="#fff"/><circle cx="137" cy="100" r="2.8" fill="#fff"/>
-  <path d="M110 127q10 7 20-1" fill="none" stroke="#ad676b" stroke-width="3"/>
+  <path d="M112 130q8-5 16 0" fill="none" stroke="#ad676b" stroke-width="3"/><path d="M96 93l5 2m38-2-5 2" fill="none" stroke="#39313a" stroke-width="1.5" stroke-linecap="round"/>
   <path d="M99 141v13m42-13v13" stroke="#39313a" stroke-width="4"/>
   <path d="M75 206l-7 16h40l-3-16m61 0 8 16h-40l2-16" fill="#5b4e59" stroke="#39313a" stroke-width="4"/>
   <path d="M47 57q11-14 22 0-11 15-22 0m135 13q10-13 20 0-10 14-20 0" fill="#d5a77c"/>

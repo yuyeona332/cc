@@ -2626,6 +2626,143 @@ body.modal-open {
           min-height: 50px;
         }
       }
+
+      .answer-options {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        align-items: center;
+        gap: 0;
+        width: 100%;
+      }
+
+      .answer-option {
+        display: flex;
+        min-width: 0;
+        min-height: 48px;
+        height: auto;
+        padding: 6px 0;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        border: 0 !important;
+        border-radius: 0;
+        background: transparent !important;
+        box-shadow: none !important;
+        transform: none;
+        transition: color 140ms ease;
+      }
+
+      .answer-option:hover {
+        transform: none;
+      }
+
+      .answer-option:hover .answer-dot {
+        transform: scale(1.12);
+      }
+
+      .answer-option:active .answer-dot {
+        transform: scale(0.88);
+      }
+
+      .answer-option .answer-dot {
+        width: 10px !important;
+        height: 10px !important;
+        flex: 0 0 10px;
+        border: 1.5px solid #514954 !important;
+        background: #ffffff !important;
+        box-shadow: none !important;
+        transition: transform 140ms ease, background-color 140ms ease, box-shadow 140ms ease;
+      }
+
+      .answer-option.selected .answer-dot {
+        width: 10px !important;
+        height: 10px !important;
+        background: #d82c79 !important;
+        border-color: #222222 !important;
+        box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px #222222 !important;
+        transform: scale(1.18);
+        animation: answerDotPop 220ms ease-out;
+      }
+
+      @keyframes answerDotPop {
+        0% { transform: scale(0.85); }
+        65% { transform: scale(1.32); }
+        100% { transform: scale(1.18); }
+      }
+
+      .answer-option .answer-dot::before,
+      .answer-option .answer-dot::after {
+        display: none !important;
+      }
+
+      .answer-option .answer-value {
+        color: #3e3943 !important;
+        font-size: 0.72rem !important;
+        font-weight: 700;
+        line-height: 1;
+      }
+
+      .answer-option .answer-label {
+        display: none !important;
+      }
+
+      .answer-option.selected .answer-value {
+        color: #222222 !important;
+      }
+
+      .answer-scale-captions {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        align-items: start;
+        gap: 0;
+        margin-top: 2px;
+        color: #514954;
+        font-size: 0.72rem;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      .answer-scale-captions span:first-child {
+        grid-column: 1 / span 2;
+        text-align: left;
+      }
+
+      .answer-scale-captions span:nth-child(2) {
+        grid-column: 4;
+        text-align: center;
+      }
+
+      .answer-scale-captions span:last-child {
+        grid-column: 6 / span 2;
+        text-align: right;
+      }
+
+      @media (max-width: 560px) {
+        .answer-options,
+        .answer-scale-captions {
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+          gap: 0;
+        }
+
+        .answer-option {
+          min-width: 0;
+          min-height: 46px;
+          padding: 5px 0;
+        }
+
+        .answer-scale-captions {
+          font-size: 0.62rem;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .answer-option .answer-dot,
+        .answer-option.selected .answer-dot {
+          transition: none;
+          animation: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -2757,6 +2894,11 @@ body.modal-open {
 
             <h2 id="question-text" class="question-text" aria-live="polite"></h2>
             <div id="answer-options" class="answer-options" aria-label="질문 응답 선택" role="radiogroup"></div>
+            <div class="answer-scale-captions" aria-hidden="true">
+              <span>전혀 그렇지 않다</span>
+              <span>보통이다</span>
+              <span>매우 그렇다</span>
+            </div>
 
             <div class="nav-row">
               <button id="prev-btn" class="btn secondary" type="button">이전</button>
@@ -2941,8 +3083,8 @@ body.modal-open {
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="./survey-config.js?v=0.6.0"></script>
-        <script src="./data.js?v=0.6.0"></script>
-        <script type="module" src="./app.js?v=0.6.0"></script>
+    <script src="./survey-config.js?v=0.6.8"></script>
+        <script src="./data.js?v=0.6.8"></script>
+        <script type="module" src="./app.js?v=0.6.8"></script>
   </body>
 </html>

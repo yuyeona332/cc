@@ -10,15 +10,11 @@
   <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc5" stroke="#253145" stroke-width="4"/>
   <path d="M78 89q0-53 43-58 44 5 41 59l-19-16-10 13-15-25-16 23-12-11-12 15z" fill="#d9547b" stroke="#253145" stroke-width="4" stroke-linejoin="round"/>
   <path d="M77 73q43 16 85-1" fill="none" stroke="#f8cf52" stroke-width="8"/><path d="M120 69l-10 18 14 2" fill="#f8cf52"/>
-  <path d="M91 93q13-14 25 0l-3 19q-13 8-22-19m34 0q13-14 25 0l-3 19q-13 8-22-19" fill="#4d73c7"/>
-  <path d="M89 85q12-7 23 0m34 0q12-7 23 0" fill="none" stroke="#253145" stroke-width="2.5" stroke-linecap="round"/>
-  <ellipse cx="104" cy="102" rx="7.5" ry="9" fill="#fff" stroke="#253145" stroke-width="1.5"/><ellipse cx="136" cy="102" rx="7.5" ry="9" fill="#fff" stroke="#253145" stroke-width="1.5"/>
-  <ellipse cx="104" cy="103" rx="4.5" ry="6" fill="#5c8ae0"/><ellipse cx="136" cy="103" rx="4.5" ry="6" fill="#5c8ae0"/>
-  <ellipse cx="104" cy="104" rx="2.2" ry="3.5" fill="#26394b"/><ellipse cx="136" cy="104" rx="2.2" ry="3.5" fill="#26394b"/>
-  <circle cx="102" cy="99" r="2" fill="#fff"/><circle cx="134" cy="99" r="2" fill="#fff"/>
+  <path d="M89 84q12-10 23 0m34 0q12-10 23 0" fill="none" stroke="#253145" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
+
   <circle cx="84" cy="118" r="5" fill="#ee8599" opacity=".4"/><circle cx="156" cy="118" r="5" fill="#ee8599" opacity=".4"/>
-  <circle cx="105" cy="100" r="4" fill="#fff"/><circle cx="137" cy="100" r="4" fill="#fff"/>
-  <path d="M107 128q13 14 26-1" fill="none" stroke="#ae4d65" stroke-width="3" stroke-linecap="round"/>
+  <path d="M106 123q14 15 28 0" fill="none" stroke="#ae4d65" stroke-width="3" stroke-linecap="round"/><path d="M111 129q9 6 18 0" fill="none" stroke="#f3a5a9" stroke-width="2" stroke-linecap="round"/>
   <path d="M99 206l-7 16h39l-4-16m29 0 7 16h-39l4-16" fill="#303955" stroke="#253145" stroke-width="4"/>
   <path d="M185 54l4-11 5 11 11 4-11 4-5 11-4-11-11-4z" fill="#f8cf52"/>
 </svg>

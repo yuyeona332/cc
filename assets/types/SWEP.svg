@@ -10,15 +10,11 @@
   <path d="M81 91q-20-38-41 2l17 60 27-19m77-43q20-38 39 2l-18 61-28-20" fill="#3f514f" stroke="#293940" stroke-width="5"/>
   <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc6" stroke="#293940" stroke-width="4"/>
   <path d="M78 92q-1-54 43-60 43 3 40 59l-16-17-14 10-12-22-17 20-12-11-12 18z" fill="#56655c" stroke="#293940" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M92 95q12-10 23 0l-3 16q-12 8-20-16m34 0q12-10 23 0l-3 16q-12 8-20-16" fill="#547d89"/>
-  <path d="M91 86q10-5 21 0m32 0q10-5 21 0" fill="none" stroke="#293940" stroke-width="2.5" stroke-linecap="round"/>
-  <ellipse cx="104" cy="102" rx="7.5" ry="9" fill="#fff" stroke="#293940" stroke-width="1.5"/><ellipse cx="136" cy="102" rx="7.5" ry="9" fill="#fff" stroke="#293940" stroke-width="1.5"/>
-  <ellipse cx="104" cy="103" rx="4.5" ry="6" fill="#5b93a5"/><ellipse cx="136" cy="103" rx="4.5" ry="6" fill="#5b93a5"/>
-  <ellipse cx="104" cy="104" rx="2.2" ry="3.5" fill="#293940"/><ellipse cx="136" cy="104" rx="2.2" ry="3.5" fill="#293940"/>
-  <circle cx="102" cy="99" r="2" fill="#fff"/><circle cx="134" cy="99" r="2" fill="#fff"/>
+  <path d="M91 89q10-3 21 1m32 0q10-3 21-1" fill="none" stroke="#293940" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
+
   <circle cx="84" cy="117" r="5" fill="#e99094" opacity=".38"/><circle cx="156" cy="117" r="5" fill="#e99094" opacity=".38"/>
-  <circle cx="105" cy="100" r="3.4" fill="#fff"/><circle cx="137" cy="100" r="3.4" fill="#fff"/>
-  <path d="M109 128q11 8 22-1" fill="none" stroke="#aa6262" stroke-width="3"/>
+  <path d="M114 129h12" fill="none" stroke="#aa6262" stroke-width="3"/><path d="M95 109q6 4 12 0m26 0q6 4 12 0" fill="none" stroke="#638591" stroke-width="2" stroke-linecap="round"/>
   <path d="M93 51l27-17 29 17-12 14-31-4z" fill="#c8945d" stroke="#293940" stroke-width="3"/>
   <path d="M76 206l-8 16h40l-2-16m61 0 8 16h-40l2-16" fill="#39484a" stroke="#293940" stroke-width="4"/>
 </svg>

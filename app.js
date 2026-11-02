@@ -98,7 +98,7 @@ function buildResultFromToken(token) {
   const resolvedName = getTypeName(code);
   const meta = DATA.typeMeta[code] || DATA.fallbackType;
   const profile = DATA.typeProfiles?.[code] || {
-    koreanName: `${resolvedName[0]} ${resolvedName[1]}`,
+    koreanName: resolvedName,
     line: meta.tagline || DATA.fallbackType.tagline,
     intro: meta.description || DATA.fallbackType.description,
     summary: meta.description || DATA.fallbackType.description,
@@ -118,8 +118,6 @@ function buildResultFromToken(token) {
   return {
     code,
     name: resolvedName,
-    adjective: resolvedName[0],
-    noun: resolvedName[1],
     tagline: meta.tagline || DATA.fallbackType.tagline,
     description: meta.description || DATA.fallbackType.description,
     profile,
@@ -336,12 +334,11 @@ function renderTypePreview() {
 
   const buttons = TYPE_CODES.map((code) => {
     const name = getTypeName(code);
-    const label = Array.isArray(name) ? name.join(" ") : name;
     const sub = DATA.typeProfiles?.[code]?.line || DATA.typeMeta[code]?.tagline || "나만의 애니 덕질 유형";
     return `
-      <button type="button" class="type-card" data-character-code="${code}" aria-label="${label} 상세 정보 보기">
+      <button type="button" class="type-card" data-character-code="${code}" aria-label="${name} 상세 정보 보기">
         <div class="type-card-art" aria-hidden="true">${buildCharacterSvg(code, 84)}</div>
-        <span class="label">${label}</span>
+        <span class="label">${name}</span>
         <span class="sub">${sub}</span>
       </button>
     `;
@@ -366,20 +363,23 @@ function typeCodeFromAxisLetters(axisLetters) {
 
 function getTypeArtworkUrl(code) {
   const url = new URL(`./assets/types/${getIllustrationCode(code)}.svg`, document.baseURI);
-  url.searchParams.set("v", "0.5.2");
+  url.searchParams.set("v", "0.6.8");
   return url.href;
 }
 
 function getTypeName(code) {
   const normalized = String(code || "").toUpperCase();
 
-  if (DATA.typeDisplayNames && DATA.typeDisplayNames[normalized]) {
-    return [DATA.typeDisplayNames[normalized]];
+  if (Object.prototype.hasOwnProperty.call(DATA.typeDisplayNames || {}, normalized)) {
+    return DATA.typeDisplayNames[normalized];
   }
 
-  const adjectivePair = `${normalized[2] || "X"}${normalized[3] || "X"}`;
-  const nounPair = `${normalized[0] || "X"}${normalized[1] || "X"}`;
+  if (!/^[RSX][CWX][FEX][PDX]$/.test(normalized)) {
+    return `${DATA.fallbackType.adjective} ${DATA.fallbackType.noun}`;
+  }
 
+  const adjectivePair = `${normalized[2]}${normalized[3]}`;
+  const nounPair = `${normalized[0]}${normalized[1]}`;
   const adjective = adjectivePair.includes("X")
     ? DATA.fallbackType.adjective
     : DATA.adjectiveByPair[adjectivePair] || DATA.fallbackType.adjective;
@@ -387,7 +387,7 @@ function getTypeName(code) {
     ? DATA.fallbackType.noun
     : DATA.nounByPair[nounPair] || DATA.fallbackType.noun;
 
-  return [adjective, noun];
+  return `${adjective} ${noun}`;
 }
 
 function calculateAxisScore(axisId) {
@@ -447,7 +447,7 @@ function buildResult() {
   const meta = (typeKey && DATA.typeMeta[typeKey]) || fallbackMeta;
   const resolvedName = getTypeName(code);
   const profile = DATA.typeProfiles?.[code] || {
-    koreanName: resolvedName.length > 1 ? `${resolvedName[0]} ${resolvedName[1]}` : resolvedName[0],
+    koreanName: resolvedName,
     line: meta.tagline || fallbackMeta.tagline,
     intro: meta.description || fallbackMeta.description,
     summary: meta.description || fallbackMeta.description,
@@ -467,8 +467,6 @@ function buildResult() {
   state.currentResult = {
     code,
     name: resolvedName,
-    adjective: resolvedName[0],
-    noun: resolvedName[1],
     tagline: meta.tagline || fallbackMeta.tagline,
     description: meta.description || fallbackMeta.description,
     profile,
@@ -639,6 +637,14 @@ function renderQuestion() {
 
   answerOptions.innerHTML = options;
   const optionButtons = [...answerOptions.querySelectorAll(".answer-option")];
+  const selectOption = (selectedButton) => {
+    optionButtons.forEach((optionButton) => {
+      const selected = optionButton === selectedButton;
+      optionButton.classList.toggle("selected", selected);
+      optionButton.setAttribute("aria-checked", String(selected));
+      optionButton.tabIndex = selected ? 0 : -1;
+    });
+  };
 
   optionButtons.forEach((button) => {
     const selectedValue = normalizeAnswerValue(button.dataset.value);
@@ -658,6 +664,7 @@ function renderQuestion() {
       }
 
       state.answers[question.id] = nextValue;
+      selectOption(button);
       state.transitionLocked = true;
       setTimeout(() => {
         if (state.index < DATA.questions.length - 1) {
@@ -697,6 +704,7 @@ function renderQuestion() {
           return;
         }
         state.answers[question.id] = chosen;
+        selectOption(button);
         state.transitionLocked = true;
         setTimeout(() => {
           state.transitionLocked = false;
@@ -720,6 +728,7 @@ function renderQuestion() {
         return;
       }
       state.answers[question.id] = targetValue;
+      selectOption(targetButton);
       state.transitionLocked = true;
       setTimeout(() => {
         state.transitionLocked = false;
@@ -882,10 +891,9 @@ function svgTextLines(lines, x, lineHeight) {
 function buildResultCardSvg(result, artworkHref = null) {
   const fallbackCode = "RCFP";
   const code = String((result && result.code) || fallbackCode).toUpperCase();
-  const baseName = Array.isArray(result && result.name) && result.name.length >= 2
+  const displayName = typeof result?.name === "string" && result.name.trim()
     ? result.name
     : getTypeName(code);
-  const displayName = String(baseName.join(" ") || `${DATA.fallbackType.adjective} ${DATA.fallbackType.noun}`);
 
   const nameSize = fitTextToWidth(displayName, { minSize: 16, maxSize: 30, targetWidth: 304, fontWeight: 900 });
   const profile = result.profile || {};
@@ -1433,15 +1441,7 @@ function renderResult() {
     updateFriendBanner();
     const friendButton = document.querySelector(".friend-cta");
     if (friendButton) {
-      friendButton.addEventListener("click", () => {
-        clearResultHash();
-        state.isFriendView = false;
-        state.sharedToken = "";
-        state.answers = {};
-        state.index = 0;
-        state.currentResult = null;
-        showScreen("intro");
-      });
+      friendButton.addEventListener("click", resetToIntro);
     }
   } catch (error) {
     console.error("공유 배너 렌더링 실패:", error);
@@ -1511,7 +1511,7 @@ function renderDetailedReport() {
       <section class="report-hero">
         <div class="report-hero-art">${buildCharacterSvg(state.currentResult.code, 260)}</div>
         <div class="report-copy">
-          <h3>${profile.koreanName || state.currentResult.name.join(" ")}</h3>
+          <h3>${profile.koreanName || state.currentResult.name}</h3>
           <span class="result-badge">${state.currentResult.code}</span>
           <p class="result-line">${profile.line}</p>
           <p class="result-intro">${profile.intro}</p>
@@ -1625,7 +1625,7 @@ function generateResultImageBlob() {
 
 function getShareText() {
   const code = state.currentResult.code;
-  const name = state.currentResult.name.join(" ");
+  const name = state.currentResult.name;
   return `나의 덕질 유형은 "${name}" (${code})! 너의 덕질 유형도 확인해봐`;
 }
 
@@ -1829,6 +1829,17 @@ function resetToIntro() {
   state.submissionId = "";
   showSurveySubmissionStatus("", false);
   showScreen("intro");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  const ensureTop = () => {
+    if (window.scrollY > 0) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  };
+  if (document.visibilityState === "hidden") {
+    ensureTop();
+  } else {
+    window.setTimeout(ensureTop, 1200);
+  }
 }
 
 function bindEvents() {
@@ -1915,7 +1926,7 @@ function openCharacterModal(code) {
   modal.setAttribute("aria-modal", "true");
   modal.setAttribute("aria-labelledby", "character-modal-title");
 
-  const typeName = isIntro ? ["애니 덕질", "테스트 안내"] : getTypeName(initialCode);
+  const typeName = isIntro ? "애니 덕질 테스트 안내" : getTypeName(initialCode);
   const meta = isIntro ? {
     tagline: "25문항으로 나를 알아보는 덕질 테스트",
     description: "평소의 애니 감상 습관과 덕질 방식을 살펴보고, 나만의 유형을 한 번에 확인할 수 있어요.",
@@ -1951,7 +1962,7 @@ function openCharacterModal(code) {
       </div>
       <div class="character-modal-copy">
         <span class="character-modal-badge">${initialCode}</span>
-        <h3 id="character-modal-title">${typeName[0]} ${typeName[1]}</h3>
+        <h3 id="character-modal-title">${typeName}</h3>
         <p class="character-modal-tagline">${meta.tagline || DATA.fallbackType.tagline}</p>
         <p class="character-modal-description">${meta.description || DATA.fallbackType.description}</p>
         <div class="character-modal-chips">
@@ -2045,7 +2056,7 @@ function openCharacterModal(code) {
         </div>
         <div class="character-modal-copy">
           <span class="character-modal-badge">${nextCode}</span>
-          <h3 id="character-modal-title">${nextName[0]} ${nextName[1]}</h3>
+          <h3 id="character-modal-title">${nextName}</h3>
           <p class="character-modal-tagline">${nextMeta.tagline || DATA.fallbackType.tagline}</p>
           <p class="character-modal-description">${nextMeta.description || DATA.fallbackType.description}</p>
           <div class="character-modal-chips">
