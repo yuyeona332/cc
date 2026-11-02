@@ -1,5 +1,8 @@
-const SITE_URL = "https://yuyeon-a.github.io/connection-care/";
+const SITE_URL = "https://yuyeona332.github.io/cc/";
 const KAKAO_KEY = "";
+const FEEDBACK_ENDPOINT = window.ANIME_ID_FEEDBACK_ENDPOINT || "";
+const TEST_RESPONSE_ENDPOINT = window.ANIME_ID_SURVEY_ENDPOINT || "";
+const FEEDBACK_SUBMITTED_KEY = "anime-fandom-feedback-submitted";
 
 const DATA = window.ANIME_TEST_DATA;
 
@@ -9,7 +12,11 @@ const state = {
   index: 0,
   currentResult: null,
   isFriendView: false,
-  sharedToken: ""
+  sharedToken: "",
+  transitionLocked: false,
+  submissionLocked: false,
+  submissionId: "",
+  feedbackSubmitted: false
 };
 
 const RESULT_HASH_RE = /^#r=([RSX][CWX][FEX][PDX])-(\d{1,3})-(\d{1,3})-(\d{1,3})-(\d{1,3})$/;
@@ -20,7 +27,11 @@ function isInAppBrowser() {
 
 function clearResultHash() {
   const path = `${window.location.pathname}${window.location.search}`;
-  window.history.replaceState(null, "", path);
+  try {
+    window.history.replaceState(null, "", path);
+  } catch (error) {
+    console.warn("history.replaceState failed", error);
+  }
 }
 
 function buildResultShareToken(result) {
@@ -116,9 +127,8 @@ function buildResultFromToken(token) {
 }
 
 function getShareUrl() {
-  const baseUrl = SITE_URL.replace(/\/$/, "");
   const token = state.currentResult ? buildResultShareToken(state.currentResult) : state.sharedToken;
-  return `${baseUrl}${token || ""}`;
+  return `${SITE_URL}${token || ""}`;
 }
 
 const TYPE_CODES = [
@@ -159,20 +169,70 @@ function ensureCurrentAnswerSelected() {
   return true;
 }
 
-function shuffleArray(items) {
-  const list = [...items];
-  for (let i = list.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [list[i], list[j]] = [list[j], list[i]];
-  }
-  return list;
-}
-
 function showScreen(name) {
   document.querySelectorAll(".screen").forEach((screen) => {
     const shouldShow = screen.id === name;
     screen.classList.toggle("hidden", !shouldShow);
   });
+}
+
+function safeLocalStorageGet(key) {
+  try {
+    return window.localStorage.getItem(key);
+  } catch (error) {
+    return null;
+  }
+}
+
+function safeLocalStorageSet(key, value) {
+  try {
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function setFeedbackSubmitted(flag) {
+  state.feedbackSubmitted = Boolean(flag);
+  if (flag) {
+    safeLocalStorageSet(FEEDBACK_SUBMITTED_KEY, "1");
+  } else {
+    try {
+      window.localStorage.removeItem(FEEDBACK_SUBMITTED_KEY);
+    } catch (error) {
+      // ignore
+    }
+  }
+}
+
+function getFeedbackSubmitted() {
+  const saved = safeLocalStorageGet(FEEDBACK_SUBMITTED_KEY);
+  return saved === "1" || state.feedbackSubmitted;
+}
+
+function updateSurveyButtonState() {
+  const button = document.getElementById("survey-trigger-btn");
+  if (!button) {
+    return;
+  }
+
+  if (state.isFriendView) {
+    button.style.display = "none";
+    return;
+  }
+
+  button.style.display = "block";
+  if (getFeedbackSubmitted()) {
+    button.textContent = "설문에 참여해 주셔서 감사합니다.";
+    button.disabled = true;
+    button.setAttribute("aria-disabled", "true");
+    return;
+  }
+
+  button.textContent = "결과 평가 설문 남기기";
+  button.disabled = false;
+  button.removeAttribute("aria-disabled");
 }
 
 function showToast(message) {
@@ -227,6 +287,45 @@ function setHeroArt() {
   });
 }
 
+function renderAxisGuide() {
+  const guide = document.getElementById("axis-guide");
+  if (!guide) {
+    return;
+  }
+
+  const guideCodeMap = {
+    "R/S": ["RCFP", "SWED"],
+    "C/W": ["RCFP", "SWED"],
+    "F/E": ["RCFP", "SWED"],
+    "P/D": ["RCFP", "SWED"]
+  };
+
+  const axisRows = DATA.axes.map((axis) => {
+    const [leftCode, rightCode] = guideCodeMap[axis.label] || ["RCFP", "SWED"];
+
+    return `
+      <div class="axis-guide-row">
+        <div class="axis-guide-label">${axis.label}</div>
+        <div class="axis-guide-pairs">
+          <button type="button" class="axis-guide-pill" data-character-code="${leftCode}">
+            <span class="axis-guide-sprite">${buildCharacterSvg(leftCode, 42)}</span>
+            <span>${axis.sideA} ${axis.sideAName}</span>
+          </button>
+          <button type="button" class="axis-guide-pill" data-character-code="${rightCode}">
+            <span class="axis-guide-sprite">${buildCharacterSvg(rightCode, 42)}</span>
+            <span>${axis.sideB} ${axis.sideBName}</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  guide.innerHTML = axisRows;
+  guide.querySelectorAll(".axis-guide-pill").forEach((button) => {
+    button.addEventListener("click", () => openCharacterModal(button.dataset.characterCode));
+  });
+}
+
 function renderTypePreview() {
   const preview = document.getElementById("type-preview");
   if (!preview) {
@@ -235,11 +334,12 @@ function renderTypePreview() {
 
   const buttons = TYPE_CODES.map((code) => {
     const name = getTypeName(code);
+    const label = Array.isArray(name) ? name.join(" ") : name;
     return `
-      <button type="button" class="type-card" data-character-code="${code}" aria-label="${name[0]} ${name[1]} 상세 정보 보기">
-        <div class="type-card-art" aria-hidden="true">${buildCharacterSvg(code, 110)}</div>
-        <span class="label">${name[1]}</span>
-        <span class="sub">${name[0]}</span>
+      <button type="button" class="type-card" data-character-code="${code}" aria-label="${label} 상세 정보 보기">
+        <div class="type-card-art" aria-hidden="true">${buildCharacterSvg(code, 84)}</div>
+        <span class="label">${label}</span>
+        <span class="sub">${code}</span>
       </button>
     `;
   }).join("");
@@ -263,6 +363,11 @@ function typeCodeFromAxisLetters(axisLetters) {
 
 function getTypeName(code) {
   const normalized = String(code || "").toUpperCase();
+
+  if (DATA.typeDisplayNames && DATA.typeDisplayNames[normalized]) {
+    return [DATA.typeDisplayNames[normalized]];
+  }
+
   const adjectivePair = `${normalized[2] || "X"}${normalized[3] || "X"}`;
   const nounPair = `${normalized[0] || "X"}${normalized[1] || "X"}`;
 
@@ -340,10 +445,10 @@ function buildResult() {
 
   const fallbackMeta = DATA.fallbackType;
   const typeKey = validTypeCode;
-  const meta = typeKey ? DATA.typeMeta[typeKey] : fallbackMeta;
+  const meta = (typeKey && DATA.typeMeta[typeKey]) || fallbackMeta;
   const resolvedName = getTypeName(code);
   const profile = DATA.typeProfiles?.[code] || {
-    koreanName: `${resolvedName[0]} ${resolvedName[1]}`,
+    koreanName: resolvedName.length > 1 ? `${resolvedName[0]} ${resolvedName[1]}` : resolvedName[0],
     line: meta.tagline || fallbackMeta.tagline,
     intro: meta.description || fallbackMeta.description,
     summary: meta.description || fallbackMeta.description,
@@ -383,8 +488,94 @@ function buildResult() {
     }
   }
 
-  showResult();
+  showConsentPrompt();
   return true;
+}
+
+function showConsentPrompt() {
+  state.submissionLocked = false;
+  state.submissionId = window.crypto?.randomUUID?.()
+    || "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (char) => {
+      const value = Math.floor(Math.random() * 16);
+      return (char === "x" ? value : (value & 0x3) | 0x8).toString(16);
+    });
+  showScreen("consent");
+}
+
+function showSurveySubmissionStatus(message, isSuccess) {
+  const status = document.getElementById("survey-submit-status");
+  if (!status) {
+    return;
+  }
+  status.hidden = !message;
+  status.textContent = message;
+  status.classList.toggle("success", Boolean(isSuccess));
+  status.classList.toggle("error", Boolean(message) && !isSuccess);
+}
+
+function showCalculatedResult() {
+  showScreen("result");
+  showResult();
+}
+
+function declineSurveySubmission() {
+  showSurveySubmissionStatus("", false);
+  showCalculatedResult();
+}
+
+async function submitTestResponse() {
+  if (state.submissionLocked || !state.currentResult) {
+    return;
+  }
+
+  state.submissionLocked = true;
+  const sendButton = document.getElementById("survey-send-btn");
+  if (sendButton) {
+    sendButton.disabled = true;
+    sendButton.textContent = "전송 중...";
+  }
+
+  let success = false;
+  if (TEST_RESPONSE_ENDPOINT) {
+    const payload = {
+      submissionId: state.submissionId,
+      submittedAt: new Date().toISOString(),
+      typeCode: state.currentResult.code,
+      answers: DATA.questions.map((question) => ({
+        questionId: question.id,
+        question: question.text,
+        axis: question.axis,
+        answer: state.answers[question.id]
+      })),
+      axisPercentages: Object.fromEntries(
+        state.currentResult.axisStats.map((axis) => [axis.id, axis.percentA])
+      )
+    };
+
+    try {
+      const response = await fetch(TEST_RESPONSE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": state.submissionId
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        throw new Error(`Survey submission failed with status ${response.status}`);
+      }
+      success = true;
+    } catch (error) {
+      console.error("Survey submission failed.", error);
+    }
+  }
+
+  const message = success
+    ? "응답이 정상적으로 전송되었습니다."
+    : "응답 전송에 실패했습니다. 결과는 정상적으로 확인할 수 있습니다.";
+  showSurveySubmissionStatus(message, success);
+  showToast(message);
+  showCalculatedResult();
 }
 
 function renderQuestion() {
@@ -399,6 +590,7 @@ function renderQuestion() {
   const questionCounter = document.getElementById("question-counter");
   if (questionCounter) {
     questionCounter.textContent = `${state.index + 1} / ${total}`;
+    questionCounter.setAttribute("aria-live", "polite");
   }
 
   const progressFill = document.getElementById("progress-fill");
@@ -413,15 +605,7 @@ function renderQuestion() {
 
   const prevBtn = document.getElementById("prev-btn");
   if (prevBtn) {
-    prevBtn.disabled = state.index === 0;
-  }
-
-  const nextBtn = document.getElementById("next-btn");
-  if (nextBtn) {
-    const isAnswered = isQuestionAnswered(question.id);
-    nextBtn.disabled = !isAnswered;
-    nextBtn.textContent = state.index === total - 1 ? "결과 보기" : "다음 →";
-    nextBtn.setAttribute("aria-label", state.index === total - 1 ? "결과 보기" : "다음 질문");
+    prevBtn.disabled = state.index === 0 || state.transitionLocked;
   }
 
   const answerOptions = document.getElementById("answer-options");
@@ -443,7 +627,7 @@ function renderQuestion() {
           role="radio"
           aria-checked="${isSelected ? "true" : "false"}"
           aria-label="${scaleItem.value}. ${scaleItem.label}"
-          tabindex="${isSelected ? 0 : -1}"
+          tabindex="${isSelected || (!isQuestionAnswered(question.id) && scaleItem.value === DATA.scale[0].value) ? 0 : -1}"
         >
           <span class="answer-dot" aria-hidden="true"></span>
           <span class="answer-value">${scaleItem.value}</span>
@@ -457,15 +641,35 @@ function renderQuestion() {
   const optionButtons = [...answerOptions.querySelectorAll(".answer-option")];
 
   optionButtons.forEach((button) => {
+    const selectedValue = normalizeAnswerValue(button.dataset.value);
+    if (selectedValue === null) {
+      return;
+    }
+
     button.addEventListener("click", () => {
-      const selectedValue = normalizeAnswerValue(button.dataset.value);
-      if (selectedValue === null) {
+      if (state.transitionLocked) {
+        return;
+      }
+
+      const nextValue = normalizeAnswerValue(button.dataset.value);
+      if (nextValue === null) {
         showToast("답을 선택해 주세요.");
         return;
       }
 
-      state.answers[question.id] = selectedValue;
-      renderQuestion();
+      state.answers[question.id] = nextValue;
+      state.transitionLocked = true;
+      setTimeout(() => {
+        if (state.index < DATA.questions.length - 1) {
+          state.index += 1;
+          state.transitionLocked = false;
+          renderQuestion();
+          return;
+        }
+
+        state.transitionLocked = false;
+        buildResult();
+      }, 200);
     });
 
     button.addEventListener("keydown", (event) => {
@@ -475,19 +679,34 @@ function renderQuestion() {
       }
 
       event.preventDefault();
+      if (state.transitionLocked) {
+        return;
+      }
+
       const currentIndex = optionButtons.indexOf(button);
       let targetIndex = currentIndex;
-
       if (key === "ArrowRight" || key === "ArrowDown") {
         targetIndex = Math.min(optionButtons.length - 1, currentIndex + 1);
       } else if (key === "ArrowLeft" || key === "ArrowUp") {
         targetIndex = Math.max(0, currentIndex - 1);
-      } else if (key === " " || key === "Enter") {
-        const selectedValue = normalizeAnswerValue(button.dataset.value);
-        if (selectedValue !== null) {
-          state.answers[question.id] = selectedValue;
-          renderQuestion();
+      }
+
+      if (key === " " || key === "Enter") {
+        const chosen = normalizeAnswerValue(button.dataset.value);
+        if (chosen === null) {
+          return;
         }
+        state.answers[question.id] = chosen;
+        state.transitionLocked = true;
+        setTimeout(() => {
+          state.transitionLocked = false;
+          if (state.index === DATA.questions.length - 1) {
+            buildResult();
+            return;
+          }
+          state.index += 1;
+          renderQuestion();
+        }, 200);
         return;
       }
 
@@ -496,51 +715,44 @@ function renderQuestion() {
         return;
       }
 
-      const selectedValue = normalizeAnswerValue(targetButton.dataset.value);
-      if (selectedValue === null) {
+      const targetValue = normalizeAnswerValue(targetButton.dataset.value);
+      if (targetValue === null) {
         return;
       }
-
-      state.answers[question.id] = selectedValue;
-      renderQuestion();
+      state.answers[question.id] = targetValue;
+      state.transitionLocked = true;
       setTimeout(() => {
-        const focusTarget = answerOptions.querySelector(`.answer-option[data-value="${selectedValue}"]`);
-        if (focusTarget) {
-          focusTarget.focus();
+        state.transitionLocked = false;
+        if (state.index < DATA.questions.length - 1) {
+          state.index += 1;
+          renderQuestion();
+          return;
         }
-      }, 0);
+        buildResult();
+      }, 180);
     });
   });
 }
 
-function nextQuestion() {
-  const question = getCurrentQuestion();
-  if (!question) {
+function prevQuestion() {
+  if (state.transitionLocked) {
     return;
   }
 
-  if (!isQuestionAnswered(question.id)) {
-    showToast("답을 선택해 주세요.");
-    const firstOption = document.querySelector(".answer-option");
-    if (firstOption) {
-      firstOption.focus();
-    }
-    return;
-  }
-
-  if (state.index < DATA.questions.length - 1) {
-    state.index += 1;
+  if (state.index > 0) {
+    state.index -= 1;
     renderQuestion();
-    return;
   }
-
-  buildResult();
 }
 
 function startTest() {
-  state.order = shuffleArray(DATA.questions.map((question) => question.id));
+  state.order = DATA.questions.map((question) => question.id);
   state.answers = {};
   state.index = 0;
+  state.currentResult = null;
+  state.submissionLocked = false;
+  state.submissionId = "";
+  showSurveySubmissionStatus("", false);
   showScreen("test");
   renderQuestion();
 }
@@ -579,155 +791,21 @@ function renderAxisBreakdown() {
 }
 
 function buildCharacterSvg(code, size = 220) {
-  const normalized = Array.isArray(code) ? code.join("").toUpperCase() : String(code || "RCFP").toUpperCase();
-
-  const mascotMap = {
-    RCFP: { animal: "cat", palette: ["#fbe7f0", "#ffc9dc", "#fff1d9", "#f9a9c6", "#7b6bd6"], accessory: "bow", expression: "spark", outline: "#604f7d" },
-    RCFD: { animal: "rabbit", palette: ["#f7eaff", "#dcd5ff", "#ffe9c8", "#b6a8ff", "#7d76ea"], accessory: "heart", expression: "happy", outline: "#5b4ea0" },
-    RCEP: { animal: "bear", palette: ["#fde2c0", "#f7b578", "#fff8ec", "#f4d6a4", "#d57d5e"], accessory: "star", expression: "sleepy", outline: "#68523d" },
-    RCED: { animal: "hamster", palette: ["#dfeeff", "#b8d7ff", "#fff3d9", "#8ab7ff", "#4d8af4"], accessory: "glasses", expression: "curious", outline: "#4d5c96" },
-    RWFP: { animal: "puppy", palette: ["#f9e7d0", "#f4cc9d", "#fbead8", "#f0b788", "#8e7ce4"], accessory: "scarf", expression: "spark", outline: "#655c54" },
-    RWFD: { animal: "mouse", palette: ["#e9f3ff", "#d2defd", "#fceae8", "#a5c5ff", "#7a91e3"], accessory: "flower", expression: "happy", outline: "#4e5c88" },
-    RWEP: { animal: "fox", palette: ["#ffe7d8", "#ffb58c", "#fff0df", "#ff9b73", "#f87262"], accessory: "badge", expression: "sleepy", outline: "#7c4037" },
-    RWED: { animal: "panda", palette: ["#f4f5fb", "#d9def2", "#f4e7d2", "#a8b4d6", "#4c5b87"], accessory: "ribbon", expression: "curious", outline: "#4a4d62" },
-    SCFP: { animal: "cat", palette: ["#f7dff0", "#ffbfd7", "#fefaf2", "#f5aecc", "#7f7de0"], accessory: "bow", expression: "happy", outline: "#5e5b8d" },
-    SCFD: { animal: "rabbit", palette: ["#e9e7ff", "#c8d0ff", "#fff3d7", "#a8b0ff", "#7f77d4"], accessory: "heart", expression: "spark", outline: "#4d4c7f" },
-    SCEP: { animal: "hamster", palette: ["#fdf2d9", "#f4d4a5", "#fffaf3", "#e8b46b", "#d88255"], accessory: "star", expression: "sleepy", outline: "#6a5848" },
-    SCED: { animal: "mouse", palette: ["#e8f7ff", "#c5efff", "#fff7da", "#9adcf8", "#4ca9d9"], accessory: "badge", expression: "curious", outline: "#4b6f93" },
-    SWFP: { animal: "puppy", palette: ["#f5efe2", "#efddbe", "#fffaf0", "#d9c9a7", "#b88c5e"], accessory: "bell", expression: "spark", outline: "#6d5e52" },
-    SWFD: { animal: "fox", palette: ["#ffe7df", "#ffbf9d", "#fff8e8", "#ff9e86", "#d5644e"], accessory: "ribbon", expression: "happy", outline: "#7b4b45" },
-    SWEP: { animal: "bear", palette: ["#e7f4db", "#bbcfa6", "#fef9ef", "#9ec98c", "#76a965"], accessory: "flower", expression: "sleepy", outline: "#4d6b45" },
-    SWED: { animal: "rabbit", palette: ["#ffe9ec", "#ffc4d7", "#fff7ee", "#ffa8cf", "#d777a6"], accessory: "bow", expression: "curious", outline: "#724d62" }
-  };
-
-  const profile = mascotMap[normalized] || mascotMap.RCFP;
-  const [fur, accent, cheek, ear, line] = profile.palette;
-
-  const accessoryMap = {
-    bow: `<g transform="translate(110 25)"><path d="M-15 8 C-15 -8 -2 -10 0 0 C2 -10 15 -8 15 8 C15 18 6 18 0 12 C-6 18 -15 18 -15 8Z" fill="#f7d9ef" stroke="${line}" stroke-width="3" stroke-linejoin="round"/></g>`,
-    heart: `<g transform="translate(110 28)"><path d="M0 8 C0 -6 16 -12 26 0 C36 -12 52 -6 52 8 C52 24 28 38 26 40 C24 38 0 24 0 8Z" fill="#ffbfd5" stroke="${line}" stroke-width="3" stroke-linejoin="round" transform="scale(0.55) translate(-26 -18)"/></g>`,
-    star: `<g transform="translate(110 24)"><path d="M0 -18 L6 -4 L20 -4 L9 4 L13 18 L0 9 L-13 18 L-9 4 L-20 -4 L-6 -4 Z" fill="#fbe7a1" stroke="${line}" stroke-width="3" stroke-linejoin="round"/></g>`,
-    scarf: `<g transform="translate(104 136)"><path d="M-26 0 L26 0 Q34 10 26 20 L-26 20 Q-34 10 -26 0Z" fill="#ec8bbf" stroke="${line}" stroke-width="3"/><path d="M-8 18 L-2 36 M8 18 L2 36" stroke="${line}" stroke-width="3" stroke-linecap="round"/></g>`,
-    flower: `<g transform="translate(110 24)"><circle cx="0" cy="0" r="7" fill="#f7d9a4" stroke="${line}" stroke-width="3"/><circle cx="0" cy="-18" r="5" fill="#f7d9a4" stroke="${line}" stroke-width="3"/><circle cx="18" cy="0" r="5" fill="#f7d9a4" stroke="${line}" stroke-width="3"/><circle cx="0" cy="18" r="5" fill="#f7d9a4" stroke="${line}" stroke-width="3"/><circle cx="-18" cy="0" r="5" fill="#f7d9a4" stroke="${line}" stroke-width="3"/></g>`,
-    glasses: `<g transform="translate(110 94)"><rect x="-20" y="-8" width="18" height="18" rx="6" fill="rgba(255,255,255,0.8)" stroke="${line}" stroke-width="3"/><rect x="2" y="-8" width="18" height="18" rx="6" fill="rgba(255,255,255,0.8)" stroke="${line}" stroke-width="3"/><path d="M-2 -1 H2" stroke="${line}" stroke-width="3" stroke-linecap="round"/></g>`,
-    badge: `<g transform="translate(110 26)"><circle r="12" fill="#f3f0ff" stroke="${line}" stroke-width="3"/><circle cx="0" cy="0" r="4" fill="#ffc9d8" stroke="${line}" stroke-width="2"/></g>`,
-    bell: `<g transform="translate(110 26)"><path d="M-8 0 Q0 -14 8 0 L8 10 Q8 18 0 18 Q-8 18 -8 10 Z" fill="#f8d77d" stroke="${line}" stroke-width="3"/><circle cx="0" cy="18" r="5" fill="#fef3ba" stroke="${line}" stroke-width="2"/></g>`,
-    ribbon: `<g transform="translate(110 28)"><path d="M0 -10 V18" stroke="${line}" stroke-width="3" stroke-linecap="round"/><path d="M-10 0 Q0 -16 10 0 Q0 12 -10 0Z" fill="#c7ceff" stroke="${line}" stroke-width="3" stroke-linejoin="round"/></g>`
-  };
-
-  const speciesBody = {
-    cat: {
-      body: `<path d="M72 152 C68 128 82 112 109 112 C137 112 150 128 148 152 L146 175 Q110 188 74 175 Z" fill="${fur}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      earLeft: `<path d="M78 60 L66 26 L95 54 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      earRight: `<path d="M142 60 L154 26 L125 54 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      tail: `<path d="M152 140 C182 138 184 170 165 186 C159 170 158 156 152 140Z" fill="${fur}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      paws: `<path d="M90 170 L80 190 M130 170 L140 190" stroke="${line}" stroke-width="4" stroke-linecap="round"/>`,
-      outfit: `<path d="M74 146 Q110 128 146 146 L141 176 Q110 186 79 176 Z" fill="${accent}" opacity="0.42"/>`
-    },
-    rabbit: {
-      body: `<ellipse cx="110" cy="148" rx="52" ry="43" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      earLeft: `<path d="M84 60 L76 20 L108 48 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/><path d="M90 58 L84 34 L100 48 Z" fill="#ffe9f3" opacity="0.8"/>`,
-      earRight: `<path d="M136 60 L144 20 L112 48 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/><path d="M130 58 L136 34 L120 48 Z" fill="#ffe9f3" opacity="0.8"/>`,
-      tail: `<circle cx="164" cy="174" r="10" fill="${fur}" stroke="${line}" stroke-width="3"/>`,
-      paws: `<path d="M92 176 L86 192 M128 176 L134 192" stroke="${line}" stroke-width="4" stroke-linecap="round"/>`,
-      outfit: `<path d="M82 154 Q110 142 138 154 L136 182 Q110 188 84 182 Z" fill="${accent}" opacity="0.38"/>`
-    },
-    bear: {
-      body: `<ellipse cx="110" cy="150" rx="58" ry="46" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      earLeft: `<circle cx="82" cy="64" r="12" fill="${ear}" stroke="${line}" stroke-width="4"/>`,
-      earRight: `<circle cx="138" cy="64" r="12" fill="${ear}" stroke="${line}" stroke-width="4"/>`,
-      tail: `<path d="M154 164 C174 170 182 182 176 196 C164 192 154 178 154 164 Z" fill="${fur}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      paws: `<path d="M88 174 L80 192 M132 174 L140 192" stroke="${line}" stroke-width="4" stroke-linecap="round"/>`,
-      outfit: `<path d="M76 150 Q110 134 144 150 L140 182 Q110 190 80 182 Z" fill="${accent}" opacity="0.42"/>`
-    },
-    hamster: {
-      body: `<ellipse cx="110" cy="150" rx="58" ry="42" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      earLeft: `<path d="M82 64 L76 36 L98 54 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      earRight: `<path d="M138 64 L144 36 L122 54 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      tail: `<path d="M160 160 C182 166 186 184 168 194 C156 188 154 176 160 160 Z" fill="${fur}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      paws: `<path d="M90 176 L82 188 M130 176 L138 188" stroke="${line}" stroke-width="4" stroke-linecap="round"/>`,
-      outfit: `<path d="M80 156 Q110 136 140 156 L136 182 Q110 190 84 182 Z" fill="${accent}" opacity="0.38"/>`
-    },
-    puppy: {
-      body: `<ellipse cx="110" cy="153" rx="55" ry="44" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      earLeft: `<path d="M82 66 L72 42 L98 54 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      earRight: `<path d="M138 66 L148 42 L122 54 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      tail: `<path d="M156 146 C176 144 184 162 176 180 C166 176 158 162 156 146 Z" fill="${fur}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      paws: `<path d="M90 176 L82 192 M130 176 L138 192" stroke="${line}" stroke-width="4" stroke-linecap="round"/>`,
-      outfit: `<path d="M80 154 Q110 138 140 154 L137 182 Q110 191 83 182 Z" fill="${accent}" opacity="0.38"/>`
-    },
-    mouse: {
-      body: `<ellipse cx="110" cy="152" rx="56" ry="42" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      earLeft: `<circle cx="88" cy="64" r="10" fill="${ear}" stroke="${line}" stroke-width="4"/>`,
-      earRight: `<circle cx="132" cy="64" r="10" fill="${ear}" stroke="${line}" stroke-width="4"/>`,
-      tail: `<path d="M152 150 C184 152 196 180 176 194" fill="none" stroke="${fur}" stroke-width="8" stroke-linecap="round"/>`,
-      paws: `<path d="M92 176 L82 192 M128 176 L138 192" stroke="${line}" stroke-width="4" stroke-linecap="round"/>`,
-      outfit: `<path d="M76 154 Q110 138 144 154 L138 180 Q110 190 82 180 Z" fill="${accent}" opacity="0.38"/>`
-    },
-    fox: {
-      body: `<ellipse cx="110" cy="148" rx="57" ry="44" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      earLeft: `<path d="M82 64 L68 22 L98 58 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      earRight: `<path d="M138 64 L152 22 L122 58 Z" fill="${ear}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      tail: `<path d="M152 138 C182 130 188 160 170 184 C160 172 154 158 152 138 Z" fill="${fur}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      paws: `<path d="M90 176 L82 190 M130 176 L138 190" stroke="${line}" stroke-width="4" stroke-linecap="round"/>`,
-      outfit: `<path d="M80 150 Q110 136 140 150 L138 182 Q110 190 82 182 Z" fill="${accent}" opacity="0.42"/>`
-    },
-    panda: {
-      body: `<ellipse cx="110" cy="152" rx="56" ry="44" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      earLeft: `<circle cx="84" cy="62" r="11" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      earRight: `<circle cx="136" cy="62" r="11" fill="${fur}" stroke="${line}" stroke-width="4"/>`,
-      tail: `<path d="M154 144 C178 144 188 168 172 184 C164 178 160 164 154 144 Z" fill="${fur}" stroke="${line}" stroke-width="4" stroke-linejoin="round"/>`,
-      paws: `<path d="M90 176 L80 192 M130 176 L140 192" stroke="${line}" stroke-width="4" stroke-linecap="round"/>`,
-      outfit: `<path d="M76 154 Q110 138 144 154 L138 182 Q110 188 82 182 Z" fill="${accent}" opacity="0.38"/>`
-    }
-  };
-
-  const speciesStyle = speciesBody[profile.animal] || speciesBody.cat;
-  const eyeMap = {
-    spark: `<g><ellipse cx="92" cy="103" rx="8" ry="10" fill="${line}"/><ellipse cx="128" cy="103" rx="8" ry="10" fill="${line}"/><circle cx="89" cy="100" r="2.4" fill="#ffffff"/><circle cx="131" cy="100" r="2.4" fill="#ffffff"/></g>`,
-    happy: `<g><circle cx="92" cy="104" r="8" fill="${line}"/><circle cx="128" cy="104" r="8" fill="${line}"/><circle cx="89" cy="101" r="2.4" fill="#ffffff"/><circle cx="131" cy="101" r="2.4" fill="#ffffff"/></g>`,
-    sleepy: `<g><path d="M84 108 Q92 99 100 108" stroke="${line}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M120 108 Q128 99 136 108" stroke="${line}" stroke-width="4" fill="none" stroke-linecap="round"/></g>`,
-    curious: `<g><path d="M84 108 Q92 98 100 108" stroke="${line}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M120 108 Q128 98 136 108" stroke="${line}" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="88" cy="100" r="2.2" fill="#ffffff"/><circle cx="132" cy="100" r="2.2" fill="#ffffff"/></g>`
-  };
-
-  const mouthMap = {
-    spark: `<path d="M100 124 Q110 132 120 124" stroke="#d87a91" stroke-width="4" fill="none" stroke-linecap="round"/>`,
-    happy: `<path d="M98 122 Q110 136 122 122" stroke="#d87a91" stroke-width="4" fill="none" stroke-linecap="round"/>`,
-    sleepy: `<path d="M102 126 H118" stroke="#d87a91" stroke-width="4" stroke-linecap="round"/>`,
-    curious: `<path d="M100 124 Q110 129 120 124" stroke="#d87a91" stroke-width="4" fill="none" stroke-linecap="round"/>`
-  };
-
-  const accessory = accessoryMap[profile.accessory] || accessoryMap.bow;
-  const blush = `<g><circle cx="78" cy="116" r="8" fill="${cheek}" opacity="0.85"/><circle cx="142" cy="116" r="8" fill="${cheek}" opacity="0.85"/></g>`;
-  const sparkles = `<g opacity="0.8"><path d="M42 44 L46 54 L56 58 L46 62 L42 72 L38 62 L28 58 L38 54 Z" fill="#fff7b0"/><path d="M166 32 L169 41 L178 44 L169 47 L166 56 L163 47 L154 44 L163 41 Z" fill="#fff7b0"/><path d="M174 82 L177 90 L185 93 L177 96 L174 104 L171 96 L163 93 L171 90 Z" fill="#ffe3ee"/></g>`;
-
+  const fallbackCode = String(code || "RCFP").toUpperCase();
+  const resolvedCode = getIllustrationCode(fallbackCode);
+  const assetUrl = new URL(`./assets/types/${resolvedCode}.svg`, document.baseURI).href;
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="${size}" height="${size}" role="img" aria-label="${normalized} 캐릭터">
-      <defs>
-        <linearGradient id="mascot-bg-${normalized}" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="${fur}"/>
-          <stop offset="1" stop-color="${accent}"/>
-        </linearGradient>
-      </defs>
-      <ellipse cx="110" cy="194" rx="62" ry="16" fill="rgba(112,120,175,0.16)"/>
-      ${sparkles}
-      ${speciesStyle.tail}
-      <g>
-        ${speciesStyle.earLeft}
-        ${speciesStyle.earRight}
-        <circle cx="110" cy="106" r="62" fill="url(#mascot-bg-${normalized})" stroke="${line}" stroke-width="4"/>
-        <path d="M78 110 Q90 88 110 88 Q130 88 142 110" fill="${accent}" opacity="0.58"/>
-        ${speciesStyle.outfit || ""}
-        ${speciesStyle.body}
-        ${blush}
-        ${eyeMap[profile.expression] || eyeMap.spark}
-        <path d="M88 118 Q110 124 132 118" stroke="${line}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
-        ${mouthMap[profile.expression] || mouthMap.happy}
-        ${speciesStyle.paws}
-        ${accessory}
-      </g>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="${size}" height="${size}" role="img" aria-label="${fallbackCode} 캐릭터 일러스트">
+      <image href="${assetUrl}" x="0" y="0" width="220" height="220" preserveAspectRatio="xMidYMid meet"/>
     </svg>
   `;
+}
+
+function getIllustrationCode(code) {
+  const assetCode = [...String(code || "RCFP").toUpperCase()].map((letter, index) => (
+    letter === "X" ? (DATA.axes[index]?.sideA || "R") : letter
+  )).join("");
+  return TYPE_CODES.includes(assetCode) ? assetCode : "RCFP";
 }
 
 function fitTextToWidth(text, options = {}) {
@@ -755,30 +833,21 @@ function fitTextToWidth(text, options = {}) {
   return minSize;
 }
 
-function buildResultCardSvg(result) {
+function buildResultCardSvg(result, artworkHref = null) {
   const fallbackCode = "RCFP";
   const code = String((result && result.code) || fallbackCode).toUpperCase();
   const baseName = Array.isArray(result && result.name) && result.name.length >= 2
     ? result.name
     : getTypeName(code);
-  const adjective = String(baseName[0] || DATA.fallbackType.adjective || "균형 잡힌");
-  const noun = String(baseName[1] || DATA.fallbackType.noun || "애니 감상가");
+  const displayName = String(baseName.join(" ") || `${DATA.fallbackType.adjective} ${DATA.fallbackType.noun}`);
 
-  const paletteOptions = [
-    ["#f7dfe8", "#f6f0ff", "#5a5bc9", "#1f2350"],
-    ["#dfebff", "#f7ecff", "#5a5bc9", "#1f2350"],
-    ["#ffe9d4", "#fff3f9", "#5a5bc9", "#1f2350"],
-    ["#dff6ec", "#f8f1ff", "#5a5bc9", "#1f2350"],
-    ["#e7e9ff", "#fff1f7", "#5a5bc9", "#1f2350"],
-    ["#f8e6d6", "#f4ebff", "#5a5bc9", "#1f2350"],
-    ["#fff2de", "#f5ecff", "#5a5bc9", "#1f2350"],
-    ["#fbe3ed", "#eef3ff", "#5a5bc9", "#1f2350"]
-  ];
-  const paletteIndex = TYPE_CODES.indexOf(code);
-  const [bgStart, bgEnd, indigo, navy] = paletteOptions[(paletteIndex >= 0 ? paletteIndex : 0) % paletteOptions.length] || paletteOptions[0];
-
-  const adjectiveSize = fitTextToWidth(adjective, { minSize: 13, maxSize: 24, targetWidth: 250, fontWeight: 800 });
-  const nounSize = fitTextToWidth(noun, { minSize: 22, maxSize: 38, targetWidth: 250, fontWeight: 900 });
+  const nameSize = fitTextToWidth(displayName, { minSize: 12, maxSize: 24, targetWidth: 280, fontWeight: 900 });
+  const profile = result.profile || {};
+  const keywords = (profile.keywords || []).slice(0, 4).join("  ·  ");
+  const portraitHref = artworkHref || new URL(
+    `./assets/types/${getIllustrationCode(code)}.svg`,
+    document.baseURI
+  ).href;
 
   const axisRows = (result && result.axisStats ? result.axisStats : []).map((axis) => {
     const left = Number(axis.percentA || 0);
@@ -793,11 +862,11 @@ function buildResultCardSvg(result) {
 
     return `
       <g transform="translate(28 ${338 + result.axisStats.indexOf(axis) * 30})">
-        <text x="0" y="0" font-size="9" font-weight="700" fill="#4f5a9f">${shortLabel}</text>
-        <text x="304" y="0" text-anchor="end" font-size="9" font-weight="700" fill="#4b507c">${valueText}</text>
-        <rect x="0" y="8" width="304" height="7" rx="4" fill="#efe9ff"/>
-        <rect x="0" y="8" width="${304 * (left / 100)}" height="7" rx="4" fill="#6b75e9"/>
-        <rect x="${304 * (left / 100)}" y="8" width="${304 * (right / 100)}" height="7" rx="4" fill="#f5b9ce"/>
+        <text x="0" y="0" font-size="9" font-weight="700" fill="#f5bdd5">${shortLabel}</text>
+        <text x="304" y="0" text-anchor="end" font-size="9" font-weight="700" fill="#f7eef5">${valueText}</text>
+        <rect x="0" y="8" width="304" height="7" rx="4" fill="#423043"/>
+        <rect x="0" y="8" width="${304 * (left / 100)}" height="7" rx="4" fill="#f05a9d"/>
+        <rect x="${304 * (left / 100)}" y="8" width="${304 * (right / 100)}" height="7" rx="4" fill="#a880e8"/>
       </g>
     `;
   }).join("");
@@ -807,43 +876,58 @@ function buildResultCardSvg(result) {
   const axisSummaryText = (result && result.axisStats ? result.axisStats : []).map((axis) => `${axis.label}: ${axis.percentA}% / ${axis.percentB}%`).join(", ");
 
   const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520" role="img" aria-label="${code} 유형 결과 카드: ${adjective} ${noun}. ${axisSummaryText}">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520" role="img" aria-label="${code} 유형 결과 카드: ${displayName}. ${axisSummaryText}">
       <defs>
         <linearGradient id="cardGradient-${code}" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="${bgStart}"/>
-          <stop offset="1" stop-color="${bgEnd}"/>
+          <stop offset="0" stop-color="#180e20"/>
+          <stop offset="0.55" stop-color="#2a1027"/>
+          <stop offset="1" stop-color="#120c1c"/>
         </linearGradient>
+        <linearGradient id="portraitGlow-${code}" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ff78b7"/>
+          <stop offset="1" stop-color="#9d71e7"/>
+        </linearGradient>
+        <clipPath id="portraitClip-${code}">
+          <circle cx="180" cy="130" r="80"/>
+        </clipPath>
+        <filter id="cardGlow-${code}" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="7" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
       </defs>
       <rect width="360" height="520" rx="30" fill="url(#cardGradient-${code})"/>
-      <g opacity="0.7">
-        <path d="M30 44 Q52 28 72 44" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-        <circle cx="36" cy="90" r="5" fill="#ffffff" opacity="0.7"/>
-        <circle cx="326" cy="66" r="5" fill="#ffffff" opacity="0.7"/>
-        <circle cx="298" cy="118" r="3.5" fill="#ffffff" opacity="0.7"/>
+      <rect x="9" y="9" width="342" height="502" rx="24" fill="none" stroke="#ed77b4" stroke-opacity="0.7" stroke-width="1.5"/>
+      <rect x="16" y="16" width="328" height="488" rx="20" fill="none" stroke="#fff1fa" stroke-opacity="0.12"/>
+      <g opacity="0.9" fill="#ffc9e4">
+        <path d="M34 76l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/>
+        <path d="M322 113l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z"/>
+        <circle cx="40" cy="153" r="2.2"/>
+        <circle cx="318" cy="56" r="2.2"/>
+        <circle cx="298" cy="169" r="1.8"/>
       </g>
-      <text x="180" y="38" text-anchor="middle" font-size="9.5" font-weight="800" fill="#5a5bc9" letter-spacing="2">ANIME FANDOM TEST</text>
+      <text x="180" y="38" text-anchor="middle" font-size="9.5" font-weight="800" fill="#ffc3e0" letter-spacing="2">ANIME ID · PERSONALITY</text>
 
-      <g transform="translate(0 42)">
-        <circle cx="180" cy="112" r="86" fill="rgba(255,255,255,0.55)"/>
-        <circle cx="180" cy="112" r="64" fill="rgba(255,255,255,0.72)"/>
-        <g transform="translate(40 8)">${buildCharacterSvg(code, 170)}</g>
+      <g filter="url(#cardGlow-${code})">
+        <circle cx="180" cy="130" r="88" fill="none" stroke="url(#portraitGlow-${code})" stroke-width="2"/>
+        <circle cx="180" cy="130" r="82" fill="#271526" stroke="#fff0f8" stroke-opacity="0.6"/>
       </g>
+      <image href="${portraitHref}" x="100" y="50" width="160" height="160" preserveAspectRatio="xMidYMid meet" clip-path="url(#portraitClip-${code})"/>
 
-      <rect x="24" y="208" width="312" height="84" rx="22" fill="rgba(255,255,255,0.7)" stroke="rgba(90,91,201,0.18)"/>
-      <text x="180" y="236" text-anchor="middle" font-size="${adjectiveSize}" font-weight="800" fill="${indigo}">${adjective}</text>
-      <text x="180" y="272" text-anchor="middle" font-size="${nounSize}" font-weight="900" fill="${navy}">${noun}</text>
+      <text x="180" y="244" text-anchor="middle" font-size="${nameSize}" font-weight="900" fill="#fff3fb">${displayName}</text>
+      <text x="180" y="265" text-anchor="middle" font-size="10" font-weight="700" fill="#f0bfd8" textLength="304" lengthAdjust="spacingAndGlyphs">${profile.line || result.tagline || ""}</text>
+      <text x="180" y="284" text-anchor="middle" font-size="8.5" font-weight="700" fill="#e1cce1" textLength="304" lengthAdjust="spacingAndGlyphs">${keywords}</text>
 
-      <g transform="translate(0 12)">
-        <rect x="92" y="290" width="176" height="28" rx="14" fill="${indigo}"/>
-        <text x="180" y="310" text-anchor="middle" font-size="12" font-weight="900" fill="#ffffff" letter-spacing="4">${code}</text>
+      <g>
+        <rect x="105" y="300" width="150" height="26" rx="13" fill="#d9488c"/>
+        <text x="180" y="318" text-anchor="middle" font-size="12" font-weight="900" fill="#ffffff" letter-spacing="4">${code}</text>
       </g>
 
       <g>
         ${axisRows}
       </g>
 
-      <text x="180" y="492" text-anchor="middle" font-size="8.5" font-weight="700" fill="#6973b0">${footerUrl}</text>
-      <text x="180" y="504" text-anchor="middle" font-size="8" font-weight="800" fill="#8d8fb8">ANIME FANDOM TEST</text>
+      <text x="180" y="492" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ddb9d0">${footerUrl}</text>
+      <text x="180" y="504" text-anchor="middle" font-size="8" font-weight="800" fill="#f5bdd5">ANIME ID · FANDOM TEST</text>
     </svg>
   `;
 
@@ -857,17 +941,28 @@ function updateFriendBanner() {
   }
 
   const existing = panel.querySelector(".friend-banner");
+  const sharePanel = document.querySelector(".share-panel");
+  const feedbackRow = document.querySelector(".result-feedback-row");
+
+  if (sharePanel) {
+    sharePanel.hidden = state.isFriendView;
+  }
+  if (feedbackRow) {
+    feedbackRow.hidden = state.isFriendView;
+  }
 
   if (state.isFriendView) {
     if (!existing) {
-      const html = `
-        <div class="friend-banner" role="status" aria-live="polite">
-          <strong>친구가 공유한 덕질 유형이에요 💜</strong>
+      const banner = document.createElement("div");
+      banner.className = "friend-banner";
+      banner.setAttribute("role", "status");
+      banner.setAttribute("aria-live", "polite");
+      banner.innerHTML = `
+          <strong>친구가 공유한 덕질 유형이에요</strong>
           <span>앱 설치·로그인 없이 바로 해볼 수 있어요.</span>
           <button type="button" class="btn primary friend-cta" data-share="retry">나도 테스트하기 →</button>
-        </div>
       `;
-      panel.insertAdjacentHTML("afterend", html);
+      panel.prepend(banner);
     }
     return;
   }
@@ -919,6 +1014,352 @@ function showResult() {
   }
 }
 
+function getFeedbackPayloadFromForm() {
+  const form = document.getElementById("feedback-form");
+  if (!form) {
+    return null;
+  }
+
+  const honeypot = form.querySelector('input[name="website"]');
+  if (honeypot && honeypot.value.trim()) {
+    return null;
+  }
+
+  const q1 = Number(document.querySelector('[data-rating-group="q1_resultMatch"].selected')?.dataset?.value || "");
+  const q2 = Number(document.querySelector('[data-rating-group="q2_explanationClarity"].selected')?.dataset?.value || "");
+  const q3 = form.querySelector('input[name="q3_bestMatchingAxis"]:checked');
+  const q4 = document.getElementById("q4_mismatchReason");
+  const q5 = document.getElementById("q5_comments");
+
+  if (!state.currentResult && !window.__lastFeedbackResult) {
+    return null;
+  }
+
+  const result = state.currentResult || window.__lastFeedbackResult;
+  const percentages = Array.isArray(result?.axisStats)
+    ? result.axisStats.map((item) => Number(item.percentA || 0))
+    : [50, 50, 50, 50];
+
+  return {
+    submittedAt: new Date().toISOString(),
+    typeCode: result?.code || "",
+    percentages,
+    q1_resultMatch: q1 || "",
+    q2_explanationClarity: q2 || "",
+    q3_bestMatchingAxis: q3 ? q3.value : "",
+    q4_mismatchReason: q4 ? q4.value.trim() : "",
+    q5_comments: q5 ? q5.value.trim() : "",
+    userAgentType: window.innerWidth <= 768 ? "mobile" : "desktop",
+    appVersion: "anime-id-v0.4.3"
+  };
+}
+
+function renderFeedbackText() {
+  const payload = getFeedbackPayloadFromForm();
+  if (!payload) {
+    return "";
+  }
+
+  return [
+    "테스트 결과 평가 설문",
+    `submittedAt: ${payload.submittedAt}`,
+    `typeCode: ${payload.typeCode}`,
+    `percentages: ${payload.percentages.join(" - ")}`,
+    `q1_resultMatch: ${payload.q1_resultMatch}`,
+    `q2_explanationClarity: ${payload.q2_explanationClarity}`,
+    `q3_bestMatchingAxis: ${payload.q3_bestMatchingAxis}`,
+    `q4_mismatchReason: ${payload.q4_mismatchReason}`,
+    `q5_comments: ${payload.q5_comments}`,
+    `userAgentType: ${payload.userAgentType}`,
+    `appVersion: ${payload.appVersion}`
+  ].join("\n");
+}
+
+async function copyFeedbackText() {
+  const text = renderFeedbackText();
+  if (!text) {
+    showToast("복사할 응답이 없어요.");
+    return;
+  }
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      showToast("응답 내용을 복사했어요.");
+      return;
+    }
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+    showToast("응답 내용을 복사했어요.");
+  } catch (error) {
+    const manual = window.prompt("응답 내용을 복사해 주세요.", text);
+    if (manual !== null) {
+      showToast("응답 내용을 준비했어요.");
+    }
+  }
+}
+
+function showFeedbackError(fieldName) {
+  const field = document.querySelector(`[data-field="${fieldName}"]`);
+  if (!field) {
+    return;
+  }
+
+  field.classList.add("has-error");
+  const error = field.querySelector(".form-error");
+  if (error) {
+    error.style.display = "block";
+  }
+
+  const focusTarget = field.querySelector(".rating-btn, input[name='q3_bestMatchingAxis'], .survey-textarea") || field.querySelector("input");
+  if (focusTarget && typeof focusTarget.focus === "function") {
+    focusTarget.focus();
+  }
+}
+
+function clearFeedbackErrors() {
+  document.querySelectorAll(".survey-field").forEach((field) => field.classList.remove("has-error"));
+}
+
+function validateFeedbackForm() {
+  clearFeedbackErrors();
+
+  const q1 = document.querySelector('[data-rating-group="q1_resultMatch"].selected');
+  const q2 = document.querySelector('[data-rating-group="q2_explanationClarity"].selected');
+  const q3 = document.querySelector('input[name="q3_bestMatchingAxis"]:checked');
+  const consent = document.getElementById("feedback-consent");
+
+  let firstInvalid = null;
+  if (!q1) {
+    showFeedbackError("q1_resultMatch");
+    firstInvalid = firstInvalid || "q1_resultMatch";
+  }
+  if (!q2) {
+    showFeedbackError("q2_explanationClarity");
+    firstInvalid = firstInvalid || "q2_explanationClarity";
+  }
+  if (!q3) {
+    showFeedbackError("q3_bestMatchingAxis");
+    firstInvalid = firstInvalid || "q3_bestMatchingAxis";
+  }
+  if (!consent || !consent.checked) {
+    showFeedbackError("feedback-consent");
+    firstInvalid = firstInvalid || "feedback-consent";
+  }
+
+  if (firstInvalid) {
+    const firstField = document.querySelector(`[data-field="${firstInvalid}"]`);
+    if (firstField) {
+      firstField.scrollIntoView({ behavior: "smooth", block: "center" });
+      const focusTarget = firstField.querySelector(".rating-btn, input[name='q3_bestMatchingAxis']");
+      if (focusTarget && typeof focusTarget.focus === "function") {
+        focusTarget.focus();
+      }
+    }
+    return false;
+  }
+
+  return true;
+}
+
+function attachRatingSelectionHandlers() {
+  document.querySelectorAll(".rating-btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      const group = button.dataset.ratingGroup;
+      const value = button.dataset.value;
+      document.querySelectorAll(`.rating-btn[data-rating-group="${group}"]`).forEach((item) => {
+        const selected = item.dataset.value === value;
+        item.classList.toggle("selected", selected);
+        item.setAttribute("aria-checked", selected ? "true" : "false");
+      });
+      const readout = document.getElementById(`${group}_readout`);
+      const scoreLabels = {
+        1: "1점 전혀 그렇지 않다",
+        2: "2점 그렇지 않다",
+        3: "3점 보통이다",
+        4: "4점 그렇다",
+        5: "5점 매우 그렇다"
+      };
+      if (readout) {
+        readout.textContent = `선택: ${scoreLabels[value] || value}`;
+      }
+      const field = document.querySelector(`[data-field="${group}"]`);
+      if (field) {
+        field.classList.remove("has-error");
+      }
+    });
+
+    button.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " " && event.key !== "ArrowRight" && event.key !== "ArrowLeft" && event.key !== "ArrowDown" && event.key !== "ArrowUp") {
+        return;
+      }
+      event.preventDefault();
+      const group = button.dataset.ratingGroup;
+      const buttons = [...document.querySelectorAll(`.rating-btn[data-rating-group="${group}"]`)];
+      const currentIndex = buttons.indexOf(button);
+      let targetIndex = currentIndex;
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        targetIndex = Math.min(buttons.length - 1, currentIndex + 1);
+      } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        targetIndex = Math.max(0, currentIndex - 1);
+      }
+      const nextButton = buttons[targetIndex];
+      if (nextButton) {
+        nextButton.click();
+        nextButton.focus();
+      }
+    });
+  });
+}
+
+function attachTextareaCounters() {
+  document.querySelectorAll(".survey-textarea").forEach((textarea) => {
+    const countEl = document.getElementById(`${textarea.id}_count`);
+    const sync = () => {
+      if (countEl) {
+        countEl.textContent = String(textarea.value.length);
+      }
+    };
+    textarea.addEventListener("input", sync);
+    sync();
+  });
+}
+
+function markFeedbackSubmitted() {
+  setFeedbackSubmitted(true);
+  updateSurveyButtonState();
+}
+
+function showThankYouScreen() {
+  showScreen("thanks");
+}
+
+async function submitFeedbackForm(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const honeypot = form.querySelector('input[name="website"]');
+  if (honeypot && honeypot.value.trim()) {
+    return;
+  }
+
+  if (!validateFeedbackForm()) {
+    return;
+  }
+
+  const payload = getFeedbackPayloadFromForm();
+  if (!payload) {
+    showToast("응답을 준비하지 못했어요.");
+    return;
+  }
+
+  const button = document.getElementById("feedback-submit-btn");
+  const status = document.getElementById("feedback-status");
+  const copyButton = document.getElementById("feedback-copy-btn");
+  button.disabled = true;
+  button.textContent = "보내는 중...";
+  if (status) {
+    status.textContent = "";
+  }
+
+  if (!FEEDBACK_ENDPOINT) {
+    console.info("Optional feedback was not sent because no endpoint is configured.");
+    if (status) {
+      status.textContent = "설문 전송 설정이 아직 끝나지 않았어요.";
+    }
+    if (copyButton) {
+      copyButton.style.display = "block";
+    }
+    button.disabled = false;
+    button.textContent = "응답 제출";
+    return;
+  }
+
+  try {
+    const response = await fetch(FEEDBACK_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    markFeedbackSubmitted();
+    showThankYouScreen();
+  } catch (error) {
+    if (status) {
+      status.textContent = "전송하지 못했어요. 잠시 후 다시 시도해 주세요.";
+    }
+    if (copyButton) {
+      copyButton.style.display = "block";
+    }
+    button.disabled = false;
+    button.textContent = "응답 제출";
+    showToast("전송하지 못했어요. 잠시 후 다시 시도해 주세요.");
+    console.warn("Feedback send failed:", error);
+  }
+}
+
+function attachSurveyEvents() {
+  const surveyBack = document.getElementById("survey-back-btn");
+  if (surveyBack) {
+    surveyBack.addEventListener("click", () => {
+      showScreen("result");
+      if (state.currentResult) {
+        renderResult();
+      }
+    });
+  }
+
+  const form = document.getElementById("feedback-form");
+  if (form) {
+    form.addEventListener("submit", submitFeedbackForm);
+  }
+
+  const copyButton = document.getElementById("feedback-copy-btn");
+  if (copyButton) {
+    copyButton.addEventListener("click", copyFeedbackText);
+  }
+
+  const thanksResult = document.getElementById("thanks-result-btn");
+  if (thanksResult) {
+    thanksResult.addEventListener("click", () => {
+      showScreen("result");
+      if (state.currentResult) {
+        renderResult();
+      }
+    });
+  }
+
+  const thanksHome = document.getElementById("thanks-home-btn");
+  if (thanksHome) {
+    thanksHome.addEventListener("click", () => {
+      resetToIntro();
+    });
+  }
+
+  const surveyTrigger = document.getElementById("survey-trigger-btn");
+  if (surveyTrigger) {
+    surveyTrigger.addEventListener("click", () => {
+      if (getFeedbackSubmitted()) {
+        showThankYouScreen();
+        return;
+      }
+      showScreen("survey");
+    });
+  }
+}
+
 function renderResult() {
   if (!state.currentResult) {
     return;
@@ -950,6 +1391,7 @@ function renderResult() {
   }
 
   try {
+    updateSurveyButtonState();
     updateFriendBanner();
     const friendButton = document.querySelector(".friend-cta");
     if (friendButton) {
@@ -1071,13 +1513,6 @@ function renderDetailedReport() {
   `;
 }
 
-function prevQuestion() {
-  if (state.index > 0) {
-    state.index -= 1;
-    renderQuestion();
-  }
-}
-
 function generateResultImageBlob() {
   return new Promise(async (resolve, reject) => {
     if (!state.currentResult) {
@@ -1085,7 +1520,23 @@ function generateResultImageBlob() {
       return;
     }
 
-    const svgMarkup = buildResultCardSvg(state.currentResult);
+    let artworkDataUrl;
+    try {
+      const response = await fetch(new URL(
+        `./assets/types/${getIllustrationCode(state.currentResult.code)}.svg`,
+        document.baseURI
+      ));
+      if (!response.ok) {
+        throw new Error(`Character asset request failed with status ${response.status}`);
+      }
+      const artworkSvg = await response.text();
+      artworkDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(artworkSvg)}`;
+    } catch (error) {
+      reject(error);
+      return;
+    }
+
+    const svgMarkup = buildResultCardSvg(state.currentResult, artworkDataUrl);
     const blob = new Blob([svgMarkup], { type: "image/svg+xml;charset=utf-8" });
     const url = URL.createObjectURL(blob);
 
@@ -1133,7 +1584,7 @@ function generateResultImageBlob() {
 function getShareText() {
   const code = state.currentResult.code;
   const name = state.currentResult.name.join(" ");
-  return `나의 덕질 유형은 "${name}" (${code})! 너의 덕질 유형도 확인해봐 👉`;
+  return `나의 덕질 유형은 "${name}" (${code})! 너의 덕질 유형도 확인해봐`;
 }
 
 function showResultImageOverlay(blob) {
@@ -1145,7 +1596,7 @@ function showResultImageOverlay(blob) {
     root.innerHTML = `
       <div class="image-overlay-backdrop" aria-hidden="true"></div>
       <div class="image-overlay-dialog" role="dialog" aria-modal="true" aria-label="결과 이미지 저장">
-        <button type="button" class="image-overlay-close" aria-label="닫기">✕</button>
+        <button type="button" class="image-overlay-close" aria-label="닫기">닫기</button>
         <p class="image-overlay-copy">이미지를 길게 눌러 저장하세요</p>
         <img alt="결과 이미지" class="image-overlay-preview" />
       </div>
@@ -1189,7 +1640,7 @@ async function saveResultImage() {
     document.body.appendChild(link);
     link.click();
     link.remove();
-    URL.revokeObjectURL(url);
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     showToast("이미지를 저장했어요.");
   } catch (error) {
     showToast("이미지 저장에 실패했어요. 잠시 후 다시 시도해 주세요.");
@@ -1199,19 +1650,20 @@ async function saveResultImage() {
 async function shareToInstagram() {
   try {
     const blob = await generateResultImageBlob();
-    const file = new File([blob], `anime-fandom-${state.currentResult.code}.png`, { type: "image/png" });
-
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        text: `${getShareText()} ${getShareUrl()}`
-      });
-      return;
-    }
 
     if (isInAppBrowser()) {
       showResultImageOverlay(blob);
       showToast("이미지를 길게 눌러 저장해 주세요.");
+      return;
+    }
+
+    const file = new File([blob], `anime-fandom-${state.currentResult.code}.png`, { type: "image/png" });
+
+    if (typeof navigator.canShare === "function" && typeof navigator.share === "function" && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        text: `${getShareText()} ${getShareUrl()}`
+      });
       return;
     }
 
@@ -1226,7 +1678,12 @@ function shareToX() {
   const shareUrl = getShareUrl();
   const text = `${getShareText()} ${shareUrl}`;
   const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareUrl)}`;
-  window.open(url, "_blank", "noopener,noreferrer");
+  try {
+    const popup = window.open(url, "_blank", "noopener,noreferrer");
+    showToast(popup ? "X 공유 창을 열었어요." : "공유 창이 열리지 않았어요. 링크를 복사해 주세요.");
+  } catch (error) {
+    showToast("공유 창이 열리지 않았어요. 링크를 복사해 주세요.");
+  }
 }
 
 async function shareToKakao() {
@@ -1267,7 +1724,7 @@ async function shareToKakao() {
     }
   }
 
-  if (navigator.share) {
+  if (typeof navigator.share === "function") {
     try {
       await navigator.share({
         title: "애니 덕질 성향 테스트",
@@ -1281,7 +1738,12 @@ async function shareToKakao() {
   }
 
   try {
-    await withTimeout(async () => navigator.clipboard.writeText(text), 3000, "클립보드 쓰기 타임아웃");
+    await withTimeout(async () => {
+      if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
+        throw new Error("클립보드를 사용할 수 없습니다.");
+      }
+      await navigator.clipboard.writeText(text);
+    }, 3000, "클립보드 쓰기 타임아웃");
     showToast("공유 문구를 복사했어요. 카카오톡에 붙여넣어 주세요.");
   } catch (error) {
     const manualValue = window.prompt("링크를 복사해 주세요", text);
@@ -1296,7 +1758,12 @@ async function shareToKakao() {
 async function copyLink() {
   const value = getShareUrl();
   try {
-    await withTimeout(async () => navigator.clipboard.writeText(value), 3000, "링크 복사 타임아웃");
+    await withTimeout(async () => {
+      if (!navigator.clipboard || typeof navigator.clipboard.writeText !== "function") {
+        throw new Error("클립보드를 사용할 수 없습니다.");
+      }
+      await navigator.clipboard.writeText(value);
+    }, 3000, "링크 복사 타임아웃");
     showToast("링크를 복사했어요.");
   } catch (error) {
     const manualValue = window.prompt("링크를 복사해 주세요", value);
@@ -1316,13 +1783,32 @@ function resetToIntro() {
   state.currentResult = null;
   state.isFriendView = false;
   state.sharedToken = "";
+  state.submissionLocked = false;
+  state.submissionId = "";
+  showSurveySubmissionStatus("", false);
   showScreen("intro");
 }
 
 function bindEvents() {
-  document.getElementById("start-btn").addEventListener("click", startTest);
-  document.getElementById("prev-btn").addEventListener("click", prevQuestion);
-  document.getElementById("next-btn").addEventListener("click", nextQuestion);
+  const startButton = document.getElementById("start-btn");
+  if (startButton) {
+    startButton.addEventListener("click", startTest);
+  }
+
+  const prevButton = document.getElementById("prev-btn");
+  if (prevButton) {
+    prevButton.addEventListener("click", prevQuestion);
+  }
+
+  const consentDeclineButton = document.getElementById("survey-decline-btn");
+  if (consentDeclineButton) {
+    consentDeclineButton.addEventListener("click", declineSurveySubmission);
+  }
+
+  const consentSendButton = document.getElementById("survey-send-btn");
+  if (consentSendButton) {
+    consentSendButton.addEventListener("click", submitTestResponse);
+  }
 
   document.querySelectorAll("[data-share]").forEach((button) => {
     button.addEventListener("click", async () => {
@@ -1396,7 +1882,7 @@ function openCharacterModal(code) {
 
   const content = isIntro ? `
     <div class="character-modal-body">
-      <button type="button" class="character-modal-close" aria-label="닫기">✕</button>
+      <button type="button" class="character-modal-close" aria-label="닫기">닫기</button>
       <div class="character-modal-hero">
         ${buildCharacterSvg(initialCode, 220)}
       </div>
@@ -1417,7 +1903,7 @@ function openCharacterModal(code) {
     </div>
   ` : `
     <div class="character-modal-body">
-      <button type="button" class="character-modal-close" aria-label="닫기">✕</button>
+      <button type="button" class="character-modal-close" aria-label="닫기">닫기</button>
       <div class="character-modal-hero">
         ${buildCharacterSvg(initialCode, 220)}
       </div>
@@ -1511,7 +1997,7 @@ function openCharacterModal(code) {
       const nextMeta = DATA.typeMeta[nextCode] || DATA.fallbackType;
       const modalBody = modal.querySelector(".character-modal-body");
       modalBody.innerHTML = `
-        <button type="button" class="character-modal-close" aria-label="닫기">✕</button>
+        <button type="button" class="character-modal-close" aria-label="닫기">닫기</button>
         <div class="character-modal-hero">
           ${buildCharacterSvg(nextCode, 220)}
         </div>
@@ -1579,6 +2065,11 @@ function initialize() {
   setHeroArt();
   renderTypePreview();
   bindEvents();
+  attachRatingSelectionHandlers();
+  attachTextareaCounters();
+  attachSurveyEvents();
+
+  state.feedbackSubmitted = safeLocalStorageGet(FEEDBACK_SUBMITTED_KEY) === "1";
 
   const shouldDebug = new URLSearchParams(window.location.search).get("debug") === "1";
   if (shouldDebug) {

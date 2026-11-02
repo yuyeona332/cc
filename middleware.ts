@@ -20,6 +20,7 @@ export default async function middleware(
     "/sign-in(.*)",
     "/sign-up(.*)",
     "/api/health",
+    "/api/anime-id-survey",
     "/api/cron/(.*)",
   ]);
   const handler = clerkMiddleware(async (auth, req) => {

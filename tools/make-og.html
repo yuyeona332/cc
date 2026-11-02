@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Generate Anime Fandom Test social images</title>
+    <style>
+      body { margin: 0; padding: 32px; color: #1f2350; background: #f2efff; font: 16px sans-serif; }
+      main { max-width: 760px; margin: 0 auto; }
+      button { padding: 12px 18px; border: 0; color: #fff; background: #5a5bc9; font: inherit; font-weight: 700; cursor: pointer; }
+      canvas { display: block; width: min(100%, 600px); height: auto; margin: 24px 0; border: 1px solid #d5d0ef; }
+      #downloads a { display: inline-block; margin: 0 16px 0 0; color: #3d3d7d; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Social image generator</h1>
+      <p>Creates the root Open Graph image and favicon from the site's pixel sprites.</p>
+      <button id="generate" type="button">Generate PNG files</button>
+      <canvas id="preview" width="1200" height="630" aria-label="Open Graph image preview"></canvas>
+      <div id="downloads"></div>
+    </main>
+    <script src="../sprites.js"></script>
+    <script>
+      const spriteCodes = ["RCFP", "RCFD", "SCFP", "SWFD", "SWEP", "XXXX"];
+      const spriteUrl = (code) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(window.ANIME_PIXEL_SPRITES.buildSpriteSvg(code, 64))}`;
+
+      function loadImage(source) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.onload = () => resolve(image);
+          image.onerror = reject;
+          image.src = source;
+        });
+      }
+
+      function addDownload(name, dataUrl) {
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = name;
+        link.textContent = `Download ${name}`;
+        document.getElementById("downloads").appendChild(link);
+        link.click();
+      }
+
+      async function generateImages() {
+        const canvas = document.getElementById("preview");
+        const context = canvas.getContext("2d");
+        context.imageSmoothingEnabled = false;
+        context.fillStyle = "#f2efff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.fillStyle = "#ffffff";
+        context.fillRect(48, 42, 1104, 546);
+        context.strokeStyle = "#d8d4ff";
+        context.lineWidth = 3;
+        context.strokeRect(49.5, 43.5, 1101, 543);
+
+        context.textAlign = "center";
+        context.fillStyle = "#5a5bc9";
+        context.font = '800 18px "Apple SD Gothic Neo", sans-serif';
+        context.fillText("ANIME FANDOM TEST", 600, 91);
+        context.fillStyle = "#1f2350";
+        context.font = '900 54px "Apple SD Gothic Neo", sans-serif';
+        context.fillText("애니 덕질 성향 테스트", 600, 158);
+        context.fillStyle = "#5e658e";
+        context.font = '500 25px "Apple SD Gothic Neo", sans-serif';
+        context.fillText("24개 질문으로 알아보는 나의 덕질 유형", 600, 202);
+
+        const spriteImages = await Promise.all(spriteCodes.map((code) => loadImage(spriteUrl(code))));
+        spriteImages.forEach((image, index) => {
+          const x = 56 + index * 200;
+          context.drawImage(image, x, 256, 128, 128);
+          context.fillStyle = "#5a5bc9";
+          context.font = '800 18px "Apple SD Gothic Neo", sans-serif';
+          context.fillText(spriteCodes[index], x + 64, 414);
+        });
+
+        context.fillStyle = "#f2efff";
+        context.fillRect(80, 460, 1040, 74);
+        context.fillStyle = "#1f2350";
+        context.font = '700 24px "Apple SD Gothic Neo", sans-serif';
+        context.fillText("나에게 맞는 덕질 유형을 확인하고 친구와 공유해 보세요", 600, 506);
+
+        const favicon = document.createElement("canvas");
+        favicon.width = 64;
+        favicon.height = 64;
+        const faviconContext = favicon.getContext("2d");
+        faviconContext.imageSmoothingEnabled = false;
+        faviconContext.fillStyle = "#5a5bc9";
+        faviconContext.fillRect(0, 0, 64, 64);
+        const head = await loadImage(spriteUrl("RCFP"));
+        faviconContext.drawImage(head, 0, 0, 32, 19, 0, 13, 64, 38);
+
+        document.getElementById("downloads").replaceChildren();
+        addDownload("og.png", canvas.toDataURL("image/png"));
+        addDownload("favicon.png", favicon.toDataURL("image/png"));
+      }
+
+      document.getElementById("generate").addEventListener("click", () => {
+        generateImages().catch((error) => {
+          document.getElementById("downloads").textContent = `Image generation failed: ${error.message}`;
+        });
+      });
+    </script>
+  </body>
+</html>

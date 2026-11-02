@@ -1,0 +1,2 @@
+window.ANIME_ID_SURVEY_ENDPOINT = "";
+window.ANIME_ID_FEEDBACK_ENDPOINT = "";

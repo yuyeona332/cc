@@ -3,31 +3,2064 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#5a5bc9" />
+    <meta name="theme-color" content="#130d18" />
     <meta
       name="description"
-      content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 유형 중 나는 어떤 타입일까요?"
+      content="ANIME ID v0.4 — 24개 질문으로 알아보는 나의 애니 덕질 유형!"
     />
-    <title>애니 덕질 성향 테스트</title>
-    <link rel="canonical" href="https://yuyeon-a.github.io/connection-care/" />
+    <title>ANIME ID v0.4</title>
+    <link rel="canonical" href="https://yuyeona332.github.io/cc/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="애니 덕질 성향 테스트" />
-    <meta property="og:description" content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 유형 중 나는 어떤 타입일까요?" />
-    <meta property="og:url" content="https://yuyeon-a.github.io/connection-care/" />
+    <meta property="og:description" content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 중 나는 어떤 타입일까요?" />
+    <meta property="og:url" content="https://yuyeona332.github.io/cc/" />
     <meta property="og:locale" content="ko_KR" />
-    <meta property="og:image" content="https://yuyeon-a.github.io/connection-care/assets/og.png" />
+    <meta property="og:image" content="https://yuyeona332.github.io/cc/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="애니 덕질 성향 테스트, 24개 질문으로 알아보는 나의 덕질 유형" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="애니 덕질 성향 테스트" />
-    <meta name="twitter:description" content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 유형 중 나는 어떤 타입일까요?" />
-    <meta name="twitter:image" content="https://yuyeon-a.github.io/connection-care/assets/og.png" />
-    <link rel="icon" type="image/png" href="./assets/favicon.png" />
+    <meta name="twitter:description" content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 중 나는 어떤 타입일까요?" />
+    <meta name="twitter:image" content="https://yuyeona332.github.io/cc/og.png" />
+    <link rel="icon" type="image/png" href="./favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./css/style.css" />
+    <style>
+:root {
+  --bg-1: #fff5f8;
+  --bg-2: #f7f2ff;
+  --bg-3: #eef7ff;
+  --panel: rgba(255, 255, 255, 0.94);
+  --pink: #f7bfd7;
+  --pink-strong: #f29bbd;
+  --peach: #ffd7c0;
+  --blue: #bfe7ff;
+  --blue-strong: #7ec6f5;
+  --lavender: #dfe3ff;
+  --lavender-strong: #7a7fe6;
+  --yellow: #f8ebab;
+  --mint: #d7f5e6;
+  --navy: #1f2350;
+  --subtle: #5e658e;
+  --line: #e4d9ef;
+  --shadow: rgba(90, 91, 201, 0.12);
+  --danger: #d75c85;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.5) 0, rgba(255, 255, 255, 0) 30%),
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.35) 0, rgba(255, 255, 255, 0) 26%),
+    linear-gradient(160deg, var(--bg-1), var(--bg-2) 45%, #eef2ff 100%);
+  color: var(--navy);
+  font-family: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  line-height: 1.6;
+}
+
+body,
+.page-shell,
+.page,
+.screen,
+main,
+section,
+article,
+div,
+span,
+button,
+label,
+strong,
+small,
+p,
+h1,
+h2,
+h3,
+h4,
+svg {
+  max-width: 100%;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(245, 186, 209, 0.65) 0 10%, transparent 11%);
+  background-size: 26px 26px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(242, 155, 189, 0.9);
+  outline-offset: 3px;
+}
+
+.page-shell {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1180px);
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px 52px;
+  overflow-x: hidden;
+}
+
+.page {
+  width: 100%;
+  max-width: 100%;
+}
+
+.screen {
+  width: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(194, 179, 232, 0.9);
+  border-radius: 28px;
+  box-shadow: 0 16px 34px var(--shadow);
+}
+
+.hero-panel {
+  padding: 28px 22px 18px;
+}
+
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.eyebrow,
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 10px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1.5px solid rgba(122, 127, 230, 0.2);
+  color: var(--lavender-strong);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 4.8rem);
+  line-height: 0.96;
+  letter-spacing: -0.06em;
+}
+
+.lead {
+  margin: 18px 0 0;
+  max-width: 600px;
+  color: var(--subtle);
+  font-size: 1.05rem;
+}
+
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 22px;
+}
+
+.meta-row span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(223, 227, 255, 0.7);
+  border: 1px solid rgba(122, 127, 230, 0.2);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--lavender-strong), #8e8eed);
+  color: var(--white);
+  padding: 16px 24px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  box-shadow: 0 10px 18px rgba(122, 127, 230, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 22px rgba(122, 127, 230, 0.35);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn.secondary {
+  background: var(--white);
+  color: var(--lavender-strong);
+  border: 2px solid rgba(122, 127, 230, 0.22);
+  box-shadow: none;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.hero-art {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  min-height: 300px;
+  padding: 12px 8px;
+}
+
+.hero-character {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  width: 32%;
+  min-width: 100px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  transform-origin: bottom center;
+}
+
+.hero-character:nth-child(1) { transform: translateY(8px) rotate(-3deg); }
+.hero-character:nth-child(2) { transform: translateY(0) rotate(0deg); }
+.hero-character:nth-child(3) { transform: translateY(8px) rotate(3deg); }
+
+.hero-art svg {
+  width: 100%;
+  height: auto;
+  max-width: 180px;
+  filter: drop-shadow(0 14px 18px rgba(96, 92, 182, 0.08));
+  animation: characterFloat 3.2s ease-in-out infinite;
+}
+
+.hero-character:nth-child(2) svg {
+  animation-delay: -1.1s;
+}
+
+.hero-character:nth-child(3) svg {
+  animation-delay: -2.2s;
+}
+
+.type-card-art svg,
+.character-modal-hero svg,
+.report-hero-art svg {
+  animation: characterFloat 3.6s ease-in-out infinite;
+}
+
+.report-hero-art svg {
+  animation-duration: 4.2s;
+}
+
+@keyframes characterFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-art svg,
+  .type-card-art svg,
+  .character-modal-hero svg,
+  .report-hero-art svg {
+    animation: none;
+  }
+}
+
+.character-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(17, 20, 48, 0.48);
+  z-index: 200;
+}
+
+.character-modal-body {
+  position: relative;
+  width: min(92vw, 480px);
+  max-height: 85vh;
+  overflow: auto;
+  background: rgba(255, 255, 255, 0.98);
+  border: 2px solid rgba(122, 127, 230, 0.12);
+  border-radius: 28px;
+  box-shadow: 0 22px 60px rgba(31, 35, 80, 0.2);
+  padding: 18px 16px 16px;
+  animation: modalIn 0.2s ease-out;
+}
+
+.character-modal-hero {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 14px;
+}
+
+.character-modal-copy {
+  display: grid;
+  gap: 10px;
+}
+
+.character-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: rgba(122, 127, 230, 0.1);
+  color: var(--navy);
+  font-size: 1.2rem;
+}
+
+.character-modal-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(223, 227, 255, 0.72);
+  color: var(--lavender-strong);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.character-modal-copy h3 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4vw, 2.35rem);
+  letter-spacing: -0.04em;
+}
+
+.character-modal-tagline {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--lavender-strong);
+  font-weight: 800;
+}
+
+.character-modal-description {
+  margin: 0;
+  color: var(--subtle);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.character-modal-list {
+  margin: 4px 0 0;
+  padding-left: 1.1rem;
+  color: var(--subtle);
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+.character-modal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.trait-chip {
+  display: inline-flex;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(255, 245, 250, 0.8);
+  border: 1px solid rgba(242, 155, 189, 0.2);
+  color: var(--navy);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.character-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.character-modal-actions .btn {
+  padding-inline: 18px;
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .character-modal-body {
+    animation: none;
+  }
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+.result-error-panel {
+  display: grid;
+  gap: 12px;
+  text-align: center;
+  padding: 24px 18px;
+  min-height: 260px;
+  align-content: center;
+  justify-items: center;
+}
+
+.result-error-mark {
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 191, 215, 0.35);
+  color: var(--danger);
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.result-error-panel h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  letter-spacing: -0.04em;
+}
+
+.result-error-panel p {
+  margin: 0;
+  color: var(--subtle);
+}
+
+.result-error-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.info-section,
+.preview-block {
+  margin-top: 30px;
+}
+
+.section-head {
+  margin-bottom: 18px;
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 2.3rem);
+  letter-spacing: -0.04em;
+}
+
+.axis-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.axis-card {
+  padding: 18px 18px 16px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 245, 255, 0.95));
+}
+
+.axis-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.axis-tag {
+  display: inline-flex;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(223, 227, 255, 0.75);
+  color: var(--lavender-strong);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.axis-code {
+  color: var(--subtle);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.axis-emoji {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 8px 0 10px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(247, 191, 215, 0.4), rgba(191, 231, 255, 0.4));
+  font-size: 1.6rem;
+}
+
+.axis-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+}
+
+.axis-card p {
+  margin: 0;
+  color: var(--subtle);
+  font-size: 0.92rem;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.step-card {
+  padding: 18px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 150px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(247,242,255,0.9));
+}
+
+.step-number {
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 215, 192, 0.7);
+  color: var(--navy);
+  font-weight: 900;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+.step-card b {
+  font-size: 1.08rem;
+}
+
+.step-card span {
+  color: var(--subtle);
+  font-size: 0.9rem;
+}
+
+.type-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.type-card {
+  background: rgba(255, 255, 255, 0.84);
+  border: 2px solid rgba(194, 179, 232, 0.7);
+  border-radius: 20px;
+  padding: 12px 10px 10px;
+  text-align: center;
+  box-shadow: 0 12px 20px rgba(122, 127, 230, 0.08);
+}
+
+.type-card-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 8px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(247, 245, 255, 0.9), rgba(235, 240, 255, 0.9));
+  overflow: hidden;
+}
+
+.type-card-art svg {
+  display: block;
+  width: 112px;
+  height: 112px;
+  margin: 0;
+}
+
+.type-card .label {
+  display: block;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+
+.type-card .sub {
+  color: var(--subtle);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.question-panel {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 26px 18px 20px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(248,245,255,0.95));
+}
+
+.question-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.question-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(223, 227, 255, 0.75);
+  color: var(--navy);
+  font-size: 0.73rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.meta-tag {
+  color: var(--subtle);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.progress-track {
+  height: 12px;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(223,227,255,0.8), rgba(255,223,236,0.75));
+  border: 1px solid rgba(122, 127, 230, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--pink-strong), var(--lavender-strong), var(--blue-strong));
+  border-radius: inherit;
+  transition: width 0.26s ease;
+}
+
+.question-text {
+  margin: 26px 0 22px;
+  min-height: 78px;
+  font-size: clamp(1.3rem, 2.7vw, 2rem);
+  line-height: 1.45;
+  letter-spacing: -0.03em;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.answer-options {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+  align-items: start;
+}
+
+.answer-option {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+  min-height: 96px;
+  padding: 8px 4px 6px;
+  border: none;
+  background: transparent;
+  color: var(--navy);
+  text-align: center;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.answer-option:hover {
+  transform: translateY(-2px);
+}
+
+.answer-option:focus-visible {
+  outline: 3px solid rgba(122, 127, 230, 0.45);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+
+.answer-option .answer-dot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(188, 194, 221, 0.95), rgba(146, 150, 179, 0.88));
+  border: 2px solid rgba(86, 93, 140, 0.18);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.75), 0 0 0 rgba(255, 255, 255, 0);
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.answer-option .answer-dot::before,
+.answer-option .answer-dot::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.answer-option .answer-dot::before {
+  border: 2px solid rgba(255, 185, 214, 0.8);
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.answer-option .answer-dot::after {
+  inset: -4px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 62%);
+  opacity: 0;
+}
+
+.answer-option .answer-value {
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--subtle);
+}
+
+.answer-option .answer-label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--subtle);
+  word-break: keep-all;
+  min-height: 28px;
+}
+
+.answer-option.selected .answer-dot {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #ffb8d8, #b9caef 40%, #b8f0d9 100%);
+  border-color: rgba(122, 127, 230, 0.2);
+  box-shadow: 0 0 0 4px rgba(122, 127, 230, 0.12), 0 0 14px rgba(255, 184, 216, 0.9), 0 0 22px rgba(167, 200, 255, 0.75);
+  animation: answerGlow 0.45s ease-out;
+}
+
+.answer-option.selected .answer-dot::before {
+  opacity: 1;
+  animation: answerRing 0.45s ease-out;
+}
+
+.answer-option.selected .answer-dot::after {
+  opacity: 1;
+  animation: answerSpark 0.5s ease-out;
+}
+
+.answer-option.selected .answer-value,
+.answer-option.selected .answer-label {
+  color: var(--navy);
+}
+
+@keyframes answerGlow {
+  0% {
+    transform: scale(0.75);
+    box-shadow: 0 0 0 rgba(255, 184, 216, 0), 0 0 0 rgba(167, 200, 255, 0);
+  }
+  45% {
+    transform: scale(1.12);
+    box-shadow: 0 0 0 6px rgba(255, 184, 216, 0.24), 0 0 18px rgba(255, 184, 216, 0.9), 0 0 28px rgba(167, 200, 255, 0.7);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 4px rgba(122, 127, 230, 0.12), 0 0 14px rgba(255, 184, 216, 0.9), 0 0 22px rgba(167, 200, 255, 0.75);
+  }
+}
+
+@keyframes answerRing {
+  0% {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes answerSpark {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+.nav-row {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 22px;
+}
+
+.result-header {
+  margin: 0 0 18px;
+}
+
+.result-header h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: -0.04em;
+}
+
+.result-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  max-width: 1100px;
+  margin: 0 auto;
+  min-width: 0;
+}
+
+.result-card-wrap {
+  width: min(100%, 420px);
+  justify-self: center;
+  padding: 18px 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(249,244,255,0.95));
+  overflow: hidden;
+  min-width: 0;
+}
+
+.result-card-wrap svg {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 32px;
+  box-shadow: 0 18px 28px rgba(122, 127, 230, 0.12);
+  animation: resultCardReveal 0.4s ease-out;
+  transform-origin: center center;
+}
+
+@keyframes resultCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result-card-wrap svg {
+    animation: none;
+  }
+}
+
+.result-summary-panel {
+  padding: 18px 18px 16px;
+  min-width: 0;
+}
+
+.result-summary-panel h2 {
+  margin: 0 0 16px;
+  font-size: clamp(1.4rem, 2vw, 2rem);
+  letter-spacing: -0.04em;
+}
+
+.result-report {
+  margin-top: 28px;
+  display: grid;
+  gap: 18px;
+}
+
+.result-article {
+  display: grid;
+  gap: 18px;
+}
+
+.report-hero,
+.report-section {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,244,255,0.96));
+  border: 2px solid rgba(194, 179, 232, 0.8);
+  border-radius: 28px;
+  box-shadow: 0 18px 30px rgba(90, 91, 201, 0.08);
+}
+
+.report-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  padding: 20px 18px;
+}
+
+.report-hero-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  padding: 8px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(237,244,255,0.8), rgba(245,240,255,0.8));
+}
+
+.report-hero-art svg {
+  width: min(100%, 260px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 18px 22px rgba(105, 102, 195, 0.12));
+}
+
+.report-copy {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.report-copy h3,
+.report-copy p,
+.report-section > p,
+.trait-item span,
+.strength-item span,
+.weak-item span,
+.axis-summary-top,
+.axis-note,
+.result-line,
+.result-intro,
+.axis-row p,
+.axis-head,
+.share-btn,
+.meta-row span,
+.question-badge,
+.meta-tag,
+.result-badge,
+.keyword-pill,
+.type-card .label,
+.type-card .sub,
+.axis-tag,
+.axis-code,
+.axis-card p,
+.axis-card h3 {
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+.result-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(223, 227, 255, 0.72);
+  color: var(--lavender-strong);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.report-copy h3 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+
+.result-line {
+  margin: 0;
+  color: var(--lavender-strong);
+  font-weight: 800;
+  font-size: 0.98rem;
+}
+
+.result-intro {
+  margin: 0;
+  color: var(--subtle);
+  font-size: 0.98rem;
+}
+
+.keyword-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.keyword-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(247, 191, 215, 0.5), rgba(223, 227, 255, 0.64));
+  border: 1px solid rgba(122, 127, 230, 0.18);
+  color: var(--navy);
+  font-size: 0.73rem;
+  font-weight: 800;
+}
+
+.report-section {
+  padding: 18px 18px 20px;
+  min-width: 0;
+}
+
+.report-section h4 {
+  margin: 0 0 14px;
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+}
+
+.report-section > p {
+  margin: 0;
+  color: var(--subtle);
+  font-size: 0.96rem;
+}
+
+.trait-grid,
+.strength-grid,
+.weak-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.trait-item,
+.strength-item,
+.weak-item {
+  display: grid;
+  gap: 6px;
+  padding: 14px 14px 12px;
+  border-radius: 18px;
+  background: rgba(249,247,255,0.9);
+  border: 1px solid rgba(194, 179, 232, 0.7);
+}
+
+.trait-item strong,
+.strength-item strong,
+.weak-item strong {
+  font-size: 0.96rem;
+}
+
+.trait-item span,
+.strength-item span,
+.weak-item span {
+  color: var(--subtle);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.axis-summary {
+  display: grid;
+  gap: 14px;
+}
+
+.axis-summary-row {
+  display: grid;
+  gap: 8px;
+}
+
+.axis-summary-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.axis-summary-bar {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(228, 217, 239, 0.9);
+}
+
+.axis-summary-bar .segment-a,
+.axis-summary-bar .segment-b {
+  height: 100%;
+  display: block;
+}
+
+.axis-summary-bar .segment-a {
+  background: linear-gradient(90deg, var(--lavender-strong), #8a87ef);
+}
+
+.axis-summary-bar .segment-b {
+  background: linear-gradient(90deg, var(--pink-strong), #f9b4cb);
+}
+
+.axis-summary-note {
+  margin-top: 8px;
+  color: var(--subtle);
+  font-size: 0.82rem;
+}
+
+@media (min-width: 700px) {
+  .report-hero {
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .trait-grid,
+  .strength-grid,
+  .weak-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.axis-breakdown {
+  display: grid;
+  gap: 18px;
+}
+
+.axis-row {
+  display: grid;
+  gap: 8px;
+}
+
+.axis-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.axis-bar {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(228, 217, 239, 0.9);
+}
+
+.axis-bar .segment-a {
+  display: block;
+  background: linear-gradient(90deg, var(--lavender-strong), #8a87ef);
+  height: 100%;
+}
+
+.axis-bar .segment-b {
+  display: block;
+  background: linear-gradient(90deg, var(--pink-strong), #fabcce);
+  height: 100%;
+}
+
+.axis-row p {
+  margin: 0;
+  color: var(--subtle);
+  font-size: 0.78rem;
+}
+
+.axis-note {
+  margin: 10px 0 0;
+  color: var(--subtle);
+  font-size: 0.72rem;
+}
+
+.share-panel {
+  margin-top: 24px;
+  padding: 20px 18px;
+}
+
+.share-panel h2 {
+  margin: 0 0 12px;
+  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  letter-spacing: -0.03em;
+}
+
+.share-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.share-btn {
+  width: 100%;
+  justify-self: stretch;
+  font-size: 0.9rem;
+  padding: 12px 14px;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%) translateY(12px);
+  background: rgba(31, 35, 80, 0.97);
+  color: var(--white);
+  padding: 10px 18px;
+  border-radius: 999px;
+  box-shadow: 0 14px 30px rgba(31, 35, 80, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  font-size: 0.84rem;
+  z-index: 100;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.friend-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 16px 18px;
+  border: 1px solid rgba(112, 118, 220, 0.2);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(122, 109, 255, 0.1), rgba(255, 176, 208, 0.12));
+}
+
+.friend-banner strong {
+  font-size: 1rem;
+  color: var(--navy);
+}
+
+.friend-banner span {
+  font-size: 0.8rem;
+  color: var(--subtle);
+}
+
+.friend-cta {
+  width: fit-content;
+  margin-top: 4px;
+}
+
+.image-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 0;
+}
+
+.image-overlay.show {
+  display: flex;
+}
+
+.image-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 20, 48, 0.6);
+}
+
+.image-overlay-dialog {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 56px 16px 16px;
+  background: #17172a;
+}
+
+.image-overlay-close {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(90, 91, 201, 0.12);
+  color: var(--navy);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.image-overlay-copy {
+  margin: 0 0 18px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.image-overlay-preview {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100dvh - 112px);
+  object-fit: contain;
+  image-rendering: auto;
+}
+
+@media (min-width: 640px) {
+  .axis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .steps-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .type-preview {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 820px) {
+  .hero-layout {
+    grid-template-columns: 1.15fr 1fr;
+  }
+
+  .result-layout {
+    grid-template-columns: minmax(280px, 400px) minmax(0, 1fr);
+  }
+
+  .result-card-wrap {
+    width: min(100%, 400px);
+    justify-self: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .question-panel {
+    padding-inline: 14px;
+  }
+
+  .answer-options {
+    gap: 6px;
+    width: 100%;
+  }
+
+  .answer-option {
+    min-height: 82px;
+    padding-inline: 2px;
+  }
+
+  .answer-option .answer-label {
+    font-size: 0.56rem;
+    min-height: 26px;
+  }
+
+  .answer-option .answer-value {
+    font-size: 0.62rem;
+  }
+
+  .result-card-wrap {
+    padding: 12px 10px;
+  }
+
+  .report-hero {
+    padding: 16px 14px;
+  }
+
+  .report-section {
+    padding: 16px 14px 18px;
+  }
+
+  .share-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 540px) {
+  .page-shell {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .question-text {
+    min-height: 64px;
+    font-size: 1.12rem;
+  }
+
+  .answer-option {
+    min-height: 74px;
+    gap: 5px;
+    min-width: 0;
+  }
+
+  .answer-option .answer-label {
+    font-size: 0.5rem;
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .result-header h2 {
+    font-size: 1.7rem;
+  }
+
+  .report-copy h3 {
+    font-size: 1.7rem;
+  }
+
+  .result-summary-panel,
+  .share-panel,
+  .report-section {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .share-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .axis-head,
+  .axis-summary-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .answer-option .answer-dot,
+  .answer-option.selected .answer-dot {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+    </style>
+    <style>
+      :root {
+        --indigo: #5a5bc9;
+        --indigo-deep: #1f2350;
+        --lavender: #f2efff;
+        --white: #ffffff;
+        --navy: #1f2350;
+        --text: #20263f;
+        --border: rgba(90, 91, 201, 0.16);
+        --error: #d64f68;
+        --success: #2e9d7d;
+      }
+      .survey-screen,
+      .thank-you-screen {
+        max-width: 640px;
+        margin: 0 auto;
+        width: min(92vw, 640px);
+      }
+      .survey-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+      .text-link {
+        background: none;
+        border: none;
+        color: var(--indigo);
+        font-weight: 700;
+        cursor: pointer;
+        padding: 0;
+      }
+      .survey-panel,
+      .thank-you-panel {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        box-shadow: 0 18px 48px rgba(90, 91, 201, 0.08);
+        padding: 24px 18px;
+      }
+      .survey-title {
+        margin: 0;
+        color: var(--navy);
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+      }
+      .survey-subtitle {
+        margin: 6px 0 20px;
+        color: rgba(31, 35, 80, 0.7);
+        line-height: 1.6;
+      }
+      .survey-field {
+        margin-bottom: 20px;
+      }
+      .survey-field > label,
+      .survey-field legend {
+        display: block;
+        font-weight: 800;
+        color: var(--navy);
+        margin-bottom: 10px;
+      }
+      .required-mark {
+        color: var(--error);
+        margin-left: 6px;
+      }
+      .rating-row {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .rating-btn {
+        appearance: none;
+        border: 2px solid rgba(90, 91, 201, 0.2);
+        background: var(--white);
+        color: var(--navy);
+        border-radius: 16px;
+        padding: 12px 8px 10px;
+        min-height: 72px;
+        font: inherit;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.15s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        text-align: center;
+      }
+      .rating-btn .score {
+        font-size: 1.05rem;
+      }
+      .rating-btn .score-label {
+        font-size: 0.72rem;
+        line-height: 1.35;
+        font-weight: 700;
+      }
+      .rating-btn.selected {
+        background: rgba(90, 91, 201, 0.08);
+        border-color: var(--indigo);
+        box-shadow: inset 0 0 0 1px var(--indigo);
+      }
+      .rating-btn:focus-visible,
+      .survey-radio:focus-visible,
+      .survey-textarea:focus-visible,
+      .survey-form button:focus-visible,
+      .survey-link:focus-visible {
+        outline: 3px solid rgba(90, 91, 201, 0.28);
+        outline-offset: 2px;
+      }
+      .survey-readout {
+        margin-top: 8px;
+        color: var(--indigo);
+        font-weight: 700;
+        min-height: 1.5em;
+      }
+      .survey-radio-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .survey-radio-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: #faf9ff;
+        cursor: pointer;
+      }
+      .survey-radio-item input {
+        accent-color: var(--indigo);
+        width: 18px;
+        height: 18px;
+      }
+      .survey-textarea {
+        width: 100%;
+        min-height: 128px;
+        border: 1px solid rgba(90, 91, 201, 0.24);
+        border-radius: 16px;
+        padding: 12px 14px;
+        font: inherit;
+        resize: vertical;
+        background: #fff;
+      }
+      .counter {
+        text-align: right;
+        color: rgba(31, 35, 80, 0.68);
+        font-size: 0.82rem;
+        margin-top: 8px;
+      }
+      .form-error {
+        margin-top: 8px;
+        color: var(--error);
+        font-size: 0.82rem;
+        font-weight: 700;
+        display: none;
+      }
+      .survey-field.has-error .form-error {
+        display: block;
+      }
+      .survey-field.has-error .rating-btn,
+      .survey-field.has-error .survey-radio-item,
+      .survey-field.has-error .survey-textarea {
+        border-color: rgba(214, 79, 104, 0.8);
+      }
+      .survey-form-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 22px;
+      }
+      .survey-submit,
+      .survey-copy,
+      .thank-you-btn {
+        border: none;
+        color: var(--white);
+        background: linear-gradient(135deg, #6d79e6, #5a5bc9);
+        min-height: 52px;
+        border-radius: 999px;
+        font-weight: 800;
+        cursor: pointer;
+        font: inherit;
+      }
+      .survey-copy,
+      .thank-you-btn.secondary {
+        background: #efeefe;
+        color: var(--navy);
+      }
+      .survey-form-note {
+        color: rgba(31, 35, 80, 0.72);
+        font-size: 0.84rem;
+        line-height: 1.5;
+        margin-top: 10px;
+      }
+      .survey-status {
+        min-height: 24px;
+        margin-top: 10px;
+        color: var(--indigo);
+        font-weight: 700;
+      }
+      .thank-you-panel {
+        text-align: center;
+      }
+      .thank-you-message {
+        margin: 12px 0 18px;
+        font-size: clamp(2rem, 7vw, 2.8rem);
+        color: var(--navy);
+      }
+      .thank-you-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 22px;
+      }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+      }
+      @media (max-width: 560px) {
+        .rating-row {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+    <style>
+      :root {
+        --bg-1: #100b15;
+        --bg-2: #1b101e;
+        --bg-3: #24132a;
+        --panel: rgba(31, 19, 34, 0.94);
+        --pink: #61213f;
+        --pink-strong: #f05a9d;
+        --peach: #8d345f;
+        --blue: #312444;
+        --blue-strong: #bc87ee;
+        --lavender: #2b1d38;
+        --lavender-strong: #d29af2;
+        --yellow: #f4c783;
+        --mint: #274137;
+        --navy: #fff3fa;
+        --subtle: #c9b3c9;
+        --line: rgba(247, 176, 217, 0.2);
+        --shadow: rgba(0, 0, 0, 0.38);
+        --indigo: #f05a9d;
+        --indigo-deep: #1c1022;
+        --white: #fff7fc;
+        --text: #fff3fa;
+        --border: rgba(247, 176, 217, 0.2);
+        --error: #ff8296;
+        --success: #8bd8b5;
+      }
+
+      body {
+        background:
+          radial-gradient(ellipse at 10% 12%, rgba(201, 60, 130, 0.17), transparent 34%),
+          radial-gradient(ellipse at 88% 18%, rgba(122, 76, 182, 0.19), transparent 33%),
+          radial-gradient(ellipse at 52% 92%, rgba(71, 37, 87, 0.24), transparent 45%),
+          linear-gradient(155deg, #100b15, #1a101e 54%, #120d19);
+        color: var(--navy);
+      }
+
+      .panel,
+      .survey-panel,
+      .thank-you-panel {
+        color: var(--navy);
+        background: linear-gradient(145deg, rgba(42, 26, 47, 0.97), rgba(25, 16, 31, 0.97)) !important;
+        border: 1px solid var(--line) !important;
+        box-shadow: 0 18px 48px var(--shadow) !important;
+      }
+
+      .hero-layout,
+      .hero-panel {
+        background:
+          radial-gradient(ellipse at 78% 45%, rgba(239, 79, 156, 0.14), transparent 38%),
+          linear-gradient(135deg, rgba(42, 24, 47, 0.98), rgba(24, 16, 31, 0.98)) !important;
+      }
+
+      .hero-copy h1,
+      .section-head h2,
+      .result-header h2,
+      .question-text,
+      .result-summary-panel h2,
+      .share-panel h2,
+      .survey-title,
+      .thank-you-message {
+        color: #fff3fa;
+      }
+
+      .eyebrow,
+      .kicker,
+      .question-badge,
+      .axis-tag,
+      .step-number {
+        color: #ff9fcb;
+      }
+
+      .lead,
+      .section-head p,
+      .axis-card p,
+      .step-card span,
+      .consent-copy,
+      .consent-detail,
+      .survey-subtitle,
+      .survey-form-note {
+        color: var(--subtle);
+      }
+
+      .axis-card,
+      .step-card,
+      .type-card {
+        background: linear-gradient(145deg, rgba(46, 28, 51, 0.98), rgba(27, 19, 34, 0.98)) !important;
+      }
+
+      .axis-code,
+      .meta-tag,
+      .axis-note,
+      .axis-summary-note {
+        color: #d2bfd2;
+      }
+
+      .btn.primary,
+      .survey-submit {
+        color: #fff;
+        background: linear-gradient(115deg, #ee4f98, #9d64d5) !important;
+        border-color: transparent !important;
+        box-shadow: 0 8px 26px rgba(205, 59, 134, 0.24);
+      }
+
+      .btn.secondary,
+      .share-btn,
+      .text-link,
+      .thank-you-btn.secondary {
+        color: #f3d9ec !important;
+        background: rgba(255, 255, 255, 0.045) !important;
+        border-color: rgba(245, 169, 210, 0.24) !important;
+      }
+
+      .btn:focus-visible,
+      .answer-option:focus-visible,
+      .survey-submit:focus-visible {
+        outline-color: #ff8fc2;
+      }
+
+      .question-panel,
+      .consent-panel {
+        background:
+          radial-gradient(ellipse at 50% 0, rgba(227, 70, 145, 0.13), transparent 50%),
+          linear-gradient(145deg, rgba(39, 25, 45, 0.98), rgba(23, 16, 29, 0.99)) !important;
+      }
+
+      .progress-track {
+        background: #3a2a3d;
+      }
+
+      .progress-fill {
+        background: linear-gradient(90deg, #e84c98, #bb75e8);
+        box-shadow: 0 0 16px rgba(236, 78, 159, 0.42);
+      }
+
+      .answer-option {
+        color: #f6e8f3;
+        background: transparent !important;
+        border: 0 !important;
+      }
+
+      .answer-option .answer-dot {
+        border-color: #cda6cb;
+        background: #241a2a;
+      }
+
+      .answer-option.selected .answer-dot {
+        border-color: #ff78b6;
+        background: #ed509a;
+        box-shadow: 0 0 0 6px rgba(237, 80, 154, 0.16), 0 0 20px rgba(237, 80, 154, 0.65);
+      }
+
+      .answer-option.selected .answer-value,
+      .answer-option.selected .answer-label {
+        color: #ffadd2;
+      }
+
+      .consent-screen {
+        width: min(100%, 680px);
+        margin: 0 auto;
+      }
+
+      .consent-panel {
+        padding: clamp(24px, 5vw, 44px);
+        border-radius: 28px;
+        text-align: center;
+      }
+
+      .consent-panel h2 {
+        margin: 0 0 14px;
+        color: #fff3fa;
+        font-size: clamp(1.7rem, 5vw, 2.4rem);
+      }
+
+      .consent-copy {
+        max-width: 48ch;
+        margin: 0 auto;
+        font-size: clamp(1rem, 2.5vw, 1.15rem);
+        line-height: 1.8;
+        word-break: keep-all;
+      }
+
+      .consent-detail {
+        margin: 16px auto 0;
+        font-size: 0.88rem;
+        line-height: 1.7;
+      }
+
+      .consent-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .consent-actions .btn {
+        min-height: 48px;
+      }
+
+      .survey-submit-status {
+        width: min(100%, 780px);
+        margin: 0 auto 18px;
+        padding: 14px 18px;
+        border: 1px solid rgba(255, 130, 150, 0.42);
+        border-radius: 14px;
+        background: rgba(255, 130, 150, 0.1);
+        color: #ffc0cf;
+        text-align: center;
+      }
+
+      .survey-submit-status.success {
+        border-color: rgba(139, 216, 181, 0.42);
+        background: rgba(139, 216, 181, 0.09);
+        color: #b7f0d1;
+      }
+
+      .result-card-wrap,
+      .result-summary-panel,
+      .share-panel,
+      .report-hero,
+      .report-section {
+        color: #fff3fa;
+        background: linear-gradient(145deg, rgba(39, 25, 45, 0.98), rgba(23, 16, 29, 0.99)) !important;
+        border-color: var(--line) !important;
+      }
+
+      .result-card-wrap svg {
+        filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.4));
+      }
+
+      .result-report,
+      .result-article,
+      .trait-item,
+      .strength-item,
+      .weak-item,
+      .axis-summary-row {
+        color: #f6e8f3;
+      }
+
+      .report-section h4,
+      .trait-item strong,
+      .strength-item strong,
+      .weak-item strong,
+      .report-copy h3 {
+        color: #ffb0d3;
+      }
+
+      .report-section p,
+      .trait-item span,
+      .strength-item span,
+      .weak-item span,
+      .result-intro,
+      .result-line {
+        color: #e4d3e2;
+      }
+
+      .axis-bar,
+      .axis-summary-bar {
+        background: #3a2a3d;
+      }
+
+      .survey-field label,
+      .survey-readout,
+      .form-error,
+      .counter {
+        color: #ead9e8;
+      }
+
+      .survey-textarea,
+      .survey-field input:not([type="radio"]):not([type="checkbox"]) {
+        color: #fff3fa;
+        background: #1a1220;
+        border-color: rgba(245, 169, 210, 0.28);
+      }
+
+      .toast {
+        color: #fff5fb;
+        background: #2d1830;
+        border: 1px solid rgba(247, 176, 217, 0.28);
+      }
+
+      .hero-character {
+        filter: drop-shadow(0 12px 24px rgba(237, 80, 154, 0.24));
+      }
+
+      .type-preview button {
+        color: #f9eaf4;
+      }
+
+      @media (max-width: 560px) {
+        .consent-actions {
+          flex-direction: column;
+        }
+
+        .consent-actions .btn {
+          width: 100%;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="page-shell">
@@ -127,6 +2160,14 @@
               </div>
             </div>
 
+            <div class="info-section">
+              <div class="section-head">
+                <span class="kicker">4가지 성향</span>
+                <h2>각 성향의 양면을 살펴봐요</h2>
+              </div>
+              <div id="axis-guide" class="axis-guide" aria-label="성향 가이드"></div>
+            </div>
+
             <div class="preview-block">
               <div class="section-head">
                 <span class="kicker">16 Types</span>
@@ -148,12 +2189,24 @@
               <div id="progress-fill" class="progress-fill"></div>
             </div>
 
-            <h2 id="question-text" class="question-text"></h2>
-            <div id="answer-options" class="answer-options" aria-label="질문 응답 선택"></div>
+            <h2 id="question-text" class="question-text" aria-live="polite"></h2>
+            <div id="answer-options" class="answer-options" aria-label="질문 응답 선택" role="radiogroup"></div>
 
             <div class="nav-row">
               <button id="prev-btn" class="btn secondary" type="button">이전</button>
-              <button id="next-btn" class="btn primary" type="button" disabled>다음 →</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="consent" class="screen hidden consent-screen" aria-live="polite">
+          <div class="panel consent-panel">
+            <p class="eyebrow">마지막 선택</p>
+            <h2>익명 응답 공유</h2>
+            <p class="consent-copy">테스트 응답을 프로젝트 개선을 위한 설문 자료로 전송할까요? 전송하지 않아도 결과를 확인할 수 있습니다.</p>
+            <p class="consent-detail">전송되는 정보는 24개 답변과 네 가지 성향 점수, 결과 코드이며 이름이나 이메일은 요청하지 않습니다.</p>
+            <div class="consent-actions">
+              <button id="survey-send-btn" class="btn primary" type="button">응답 전송</button>
+              <button id="survey-decline-btn" class="btn secondary" type="button">전송하지 않고 결과 보기</button>
             </div>
           </div>
         </section>
@@ -163,6 +2216,7 @@
             <p class="eyebrow">당신의 덕질 유형은</p>
             <h2>나의 애니 덕질 캐릭터</h2>
           </div>
+          <p id="survey-submit-status" class="survey-submit-status" role="status" aria-live="polite" hidden></p>
 
           <div class="result-layout">
             <div id="result-card-wrap" class="panel result-card-wrap"></div>
@@ -189,13 +2243,140 @@
               <button type="button" class="btn share-btn secondary" data-share="retry">다시 하기</button>
             </div>
           </div>
+
+          <div class="result-feedback-row">
+            <button id="survey-trigger-btn" type="button" class="btn primary full-width">결과 평가 설문 남기기</button>
+          </div>
+        </section>
+
+        <section id="survey" class="screen hidden survey-screen" aria-live="polite">
+          <div class="survey-header">
+            <button type="button" id="survey-back-btn" class="text-link">결과로 돌아가기</button>
+          </div>
+          <div class="survey-panel">
+            <h2 class="survey-title">테스트 결과 평가 설문</h2>
+            <p class="survey-subtitle">테스트를 완료하고 자신의 유형 결과를 확인한 뒤 응답해 주세요.</p>
+
+            <form id="feedback-form" class="survey-form" novalidate>
+              <div class="survey-field" data-field="q1_resultMatch">
+                <label for="q1_resultMatch_label">문항 1. 결과 일치도 <span class="required-mark">필수</span></label>
+                <div class="rating-row" id="q1_resultMatch_group" role="radiogroup" aria-label="문항 1. 결과 일치도">
+                  <button type="button" class="rating-btn" data-rating-group="q1_resultMatch" data-value="1" role="radio" aria-checked="false">
+                    <span class="score">1점</span>
+                    <span class="score-label">전혀 그렇지 않다</span>
+                  </button>
+                  <button type="button" class="rating-btn" data-rating-group="q1_resultMatch" data-value="2" role="radio" aria-checked="false">
+                    <span class="score">2점</span>
+                    <span class="score-label">그렇지 않다</span>
+                  </button>
+                  <button type="button" class="rating-btn" data-rating-group="q1_resultMatch" data-value="3" role="radio" aria-checked="false">
+                    <span class="score">3점</span>
+                    <span class="score-label">보통이다</span>
+                  </button>
+                  <button type="button" class="rating-btn" data-rating-group="q1_resultMatch" data-value="4" role="radio" aria-checked="false">
+                    <span class="score">4점</span>
+                    <span class="score-label">그렇다</span>
+                  </button>
+                  <button type="button" class="rating-btn" data-rating-group="q1_resultMatch" data-value="5" role="radio" aria-checked="false">
+                    <span class="score">5점</span>
+                    <span class="score-label">매우 그렇다</span>
+                  </button>
+                </div>
+                <div class="survey-readout" id="q1_resultMatch_readout" aria-live="polite">선택: 없음</div>
+                <div class="form-error" id="q1_resultMatch_error" aria-live="polite">이 문항에 답해 주세요.</div>
+              </div>
+
+              <div class="survey-field" data-field="q2_explanationClarity">
+                <label for="q2_explanationClarity_label">문항 2. 설명 이해도 <span class="required-mark">필수</span></label>
+                <div class="rating-row" id="q2_explanationClarity_group" role="radiogroup" aria-label="문항 2. 설명 이해도">
+                  <button type="button" class="rating-btn" data-rating-group="q2_explanationClarity" data-value="1" role="radio" aria-checked="false">
+                    <span class="score">1점</span>
+                    <span class="score-label">전혀 그렇지 않다</span>
+                  </button>
+                  <button type="button" class="rating-btn" data-rating-group="q2_explanationClarity" data-value="2" role="radio" aria-checked="false">
+                    <span class="score">2점</span>
+                    <span class="score-label">그렇지 않다</span>
+                  </button>
+                  <button type="button" class="rating-btn" data-rating-group="q2_explanationClarity" data-value="3" role="radio" aria-checked="false">
+                    <span class="score">3점</span>
+                    <span class="score-label">보통이다</span>
+                  </button>
+                  <button type="button" class="rating-btn" data-rating-group="q2_explanationClarity" data-value="4" role="radio" aria-checked="false">
+                    <span class="score">4점</span>
+                    <span class="score-label">그렇다</span>
+                  </button>
+                  <button type="button" class="rating-btn" data-rating-group="q2_explanationClarity" data-value="5" role="radio" aria-checked="false">
+                    <span class="score">5점</span>
+                    <span class="score-label">매우 그렇다</span>
+                  </button>
+                </div>
+                <div class="survey-readout" id="q2_explanationClarity_readout" aria-live="polite">선택: 없음</div>
+                <div class="form-error" id="q2_explanationClarity_error" aria-live="polite">이 문항에 답해 주세요.</div>
+              </div>
+
+              <fieldset class="survey-field" data-field="q3_bestMatchingAxis">
+                <legend>문항 3. 축별 납득도 <span class="required-mark">필수</span></legend>
+                <div class="survey-radio-list" role="radiogroup" aria-label="문항 3. 축별 납득도">
+                  <label class="survey-radio-item"><input type="radio" name="q3_bestMatchingAxis" value="감상 습관" /> 감상 습관</label>
+                  <label class="survey-radio-item"><input type="radio" name="q3_bestMatchingAxis" value="작품 선택 기준" /> 작품 선택 기준</label>
+                  <label class="survey-radio-item"><input type="radio" name="q3_bestMatchingAxis" value="취향 탐색 방식" /> 취향 탐색 방식</label>
+                  <label class="survey-radio-item"><input type="radio" name="q3_bestMatchingAxis" value="덕질 표현 방식" /> 덕질 표현 방식</label>
+                  <label class="survey-radio-item"><input type="radio" name="q3_bestMatchingAxis" value="모든 축이 비슷하게 잘 맞는다" /> 모든 축이 비슷하게 잘 맞는다</label>
+                  <label class="survey-radio-item"><input type="radio" name="q3_bestMatchingAxis" value="특별히 잘 맞는 축이 없다" /> 특별히 잘 맞는 축이 없다</label>
+                </div>
+                <div class="form-error" id="q3_bestMatchingAxis_error" aria-live="polite">이 문항에 답해 주세요.</div>
+              </fieldset>
+
+              <div class="survey-field" data-field="q4_mismatchReason">
+                <label for="q4_mismatchReason">문항 4. 결과 불일치 이유 <span style="font-weight: 600; color: rgba(31,35,80,0.7);">(선택)</span></label>
+                <textarea id="q4_mismatchReason" class="survey-textarea" name="q4_mismatchReason" maxlength="500" placeholder="결과 중 자신과 맞지 않는 부분이 있다면, 어떤 점이 맞지 않았나요?"></textarea>
+                <div class="counter"><span id="q4_mismatchReason_count">0</span> / 500</div>
+              </div>
+
+              <div class="survey-field" data-field="q5_comments">
+                <label for="q5_comments">문항 5. 추가 의견 및 개선점 <span style="font-weight: 600; color: rgba(31,35,80,0.7);">(선택)</span></label>
+                <textarea id="q5_comments" class="survey-textarea" name="q5_comments" maxlength="500" placeholder="테스트 문항이나 결과 설명에서 이해하기 어렵거나 개선이 필요하다고 느낀 부분이 있나요?"></textarea>
+                <div class="counter"><span id="q5_comments_count">0</span> / 500</div>
+              </div>
+
+              <div class="survey-field" data-field="feedback-consent">
+                <label class="survey-radio-item" for="feedback-consent">
+                  <input id="feedback-consent" name="feedback-consent" type="checkbox" />
+                  <span>설문 응답이 테스트 운영자에게 전송되는 것에 동의합니다.</span>
+                </label>
+                <div class="form-error" aria-live="polite">응답을 제출하려면 전송에 동의해 주세요.</div>
+              </div>
+
+              <input type="text" name="website" class="visually-hidden" tabindex="-1" autocomplete="off" />
+
+              <div class="survey-form-actions">
+                <button type="submit" class="survey-submit" id="feedback-submit-btn">응답 제출</button>
+                <button type="button" class="survey-copy" id="feedback-copy-btn" style="display:none;">응답 내용 복사</button>
+              </div>
+
+              <p class="survey-form-note">이메일 주소는 받지 않습니다. 결과 평가는 선택 사항이며, 전송 서비스 연결 후 제출할 수 있어요.</p>
+              <div class="survey-status" id="feedback-status" aria-live="polite"></div>
+            </form>
+          </div>
+        </section>
+
+        <section id="thanks" class="screen hidden thank-you-screen" aria-live="polite">
+          <div class="thank-you-panel">
+            <p class="eyebrow">설문 참여 완료</p>
+            <h2 class="thank-you-message">소중한 의견 감사합니다.</h2>
+            <div class="thank-you-actions">
+              <button type="button" class="thank-you-btn" id="thanks-result-btn">내 결과 다시 보기</button>
+              <button type="button" class="thank-you-btn secondary" id="thanks-home-btn">처음으로</button>
+            </div>
+          </div>
         </section>
       </main>
     </div>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="./js/data.js"></script>
-    <script src="./js/app.js"></script>
+    <script src="./survey-config.js?v=0.4.4"></script>
+    <script src="./data.js?v=0.4.4"></script>
+    <script src="./app.js?v=0.4.4"></script>
   </body>
 </html>
