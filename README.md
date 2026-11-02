@@ -1,6 +1,6 @@
-# ANIME ID v0.4
+# ANIME ID v0.5
 
-ANIME ID is a mobile-first Korean anime personality test. The public website is the static `index.html` site, published from the repository root on GitHub Pages. It has a 24-question, seven-point questionnaire, four-axis scoring, 16 personality results, shareable cards, and PNG export.
+ANIME ID is a mobile-first Korean anime personality test. The public website is the static `index.html` site, published from the repository root on GitHub Pages. It has a 25-question, seven-point questionnaire, four-axis scoring, 16 personality results, shareable cards, and PNG export.
 
 ## Project structure
 
@@ -24,7 +24,7 @@ This static site is ready to deploy from the repository root on GitHub Pages.
 4. The intended project Pages URL is `https://yuyeona332.github.io/cc/`; keep it in sync with `SITE_URL` and metadata.
 5. To enable test-response delivery, set `window.ANIME_ID_SURVEY_ENDPOINT` in `survey-config.js` to the public URL of the deployed Next.js endpoint (`https://<backend-host>/api/anime-id-survey`). The default is intentionally empty.
 
-The end-of-test response flow is consent-based. Visitors see the consent request and can either submit all 24 answers or go directly to their result. A declined request makes no network call. The send action is one-shot and uses an idempotency key.
+The end-of-test response flow is consent-based. Visitors see the consent request and can either submit all 25 answers or go directly to their result. A declined request makes no network call. The send action is one-shot and uses an idempotency key.
 
 GitHub Pages is static and cannot run the email API. Deploy the existing Next.js app/API route to a serverless Next.js host such as Vercel, then configure these **server-only** environment variables there:
 
@@ -100,7 +100,7 @@ Intended project URL: https://yuyeona332.github.io/cc/
 4. Set `window.ANIME_ID_SURVEY_ENDPOINT` in `survey-config.js` to the deployed route URL.
 5. Push to `main` and verify the GitHub Pages workflow and an explicit, consented end-to-end submission.
 
-No email address is collected from visitors. The test-response payload contains the 24 answers, result code, axis percentages, and timestamp. The browser does not send anything unless the visitor selects **응답 전송**.
+No email address is collected from visitors. The test-response payload contains the 25 answers, result code, axis percentages, and timestamp. The browser does not send anything unless the visitor selects **응답 전송**.
 
 ### Kakao share setup
 

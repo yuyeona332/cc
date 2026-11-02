@@ -1,43 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" role="img" aria-label="SWED personality character">
-      <defs>
-        <linearGradient id="bg-SWED" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stop-color="#fffafc"/>
-          <stop offset="1" stop-color="#eef2ff"/>
-        </linearGradient>
-      </defs>
-      <circle cx="110" cy="110" r="96" fill="url(#bg-SWED)" opacity="0.45"/>
-      <g fill="white" opacity="0.8">
-        <circle cx="42" cy="36" r="4"/>
-        <circle cx="184" cy="34" r="4"/>
-        <circle cx="110" cy="24" r="5"/>
-      </g>
-      <path d="M46 80 C62 42 88 28 116 30 C140 32 162 48 170 76 L162 92 L122 100 L110 72 L98 100 L58 92 Z" fill="#e187a8"/>
-        <path d="M65 78 C72 58 89 52 110 52 C133 52 148 60 156 82 L144 98 L110 104 L78 98 Z" fill="#f5bfd1" opacity="0.95"/>
-        
-      <path d="M48 86 C60 40 84 24 110 24 C146 24 166 56 168 88 L154 102 L124 102 L110 72 L96 102 L66 98 Z" fill="#a1a8f5"/>
-        <path d="M72 78 C82 54 96 44 110 44 C124 44 138 52 146 70 L136 90 L110 96 L84 90 Z" fill="#d0d6ff" opacity="0.95"/>
-        
-      <ellipse cx="110" cy="104" rx="52" ry="59" fill="#f9f8ff"/>
-      <circle cx="72" cy="109" r="7" fill="#f7c4d8" opacity="0.8"/><circle cx="148" cy="109" r="7" fill="#f7c4d8" opacity="0.8"/>
-      
-        <path d="M78 96 C84 90 90 90 96 96" fill="none" stroke="#2d2b59" stroke-width="3" stroke-linecap="round"/>
-        <path d="M124 96 C130 90 136 90 142 96" fill="none" stroke="#2d2b59" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="83" cy="92" r="2.2" fill="#fff"/>
-        <circle cx="137" cy="92" r="2.2" fill="#fff"/>
-    
-      <path d="M99 116 Q110 122 121 116" fill="none" stroke="#c8657e" stroke-width="4" stroke-linecap="round"/>
-      <path d="M84 128 Q110 138 136 128" fill="none" stroke="#f3d9eb" stroke-width="5" stroke-linecap="round"/>
-      <path d="M78 144 L60 182 L76 194 L94 178 L110 182 L126 178 L144 194 L160 182 L142 144 Z" fill="#e286ae" opacity="0.96"/>
-      <path d="M92 144 Q110 160 128 144 L138 176 Q110 192 82 176 Z" fill="#ea7aa9" opacity="0.8"/>
-      <path d="M76 146 L62 168 L78 180 L90 160 Z" fill="#e286ae" opacity="0.92"/>
-      <path d="M144 146 L158 168 L142 180 L130 160 Z" fill="#ea7aa9" opacity="0.9"/>
-      
-        <g fill="#9ca6ff" opacity="0.92">
-            <circle cx="46" cy="46" r="5"/>
-            <circle cx="58" cy="30" r="4.5"/>
-            <circle cx="174" cy="46" r="5"/>
-            <circle cx="162" cy="30" r="4.5"/>
-        </g>
-    
-      <path d="M78 188 Q110 204 142 188" fill="none" stroke="#dfe4ff" stroke-width="8" stroke-linecap="round"/>
-    </svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Anime curator with a scrapbook">
+  <circle cx="120" cy="120" r="112" fill="#fff2e5"/>
+  <path d="M79 148q-23 17-18 53l31 13 23-42m50-24q25 17 20 49l-30 16-23-44" fill="#b44d70" stroke="#382c3b" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M84 149q36-18 72 0l18 57H66z" fill="#e77679" stroke="#382c3b" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M91 155h58l-8 49H98z" fill="#fff0d6" stroke="#382c3b" stroke-width="3"/>
+  <path d="M83 151l-27 24 13 20 31-27m52-17 25 23-14 18-29-25" fill="#ffddc6" stroke="#382c3b" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M155 165l42-4 5 34-41 7z" fill="#ffdc70" stroke="#382c3b" stroke-width="3"/>
+  <path d="M164 174l10-6 8 6 10-4m-28 15 23-3" fill="none" stroke="#d6537b" stroke-width="2"/>
+  <circle cx="176" cy="167" r="4" fill="#6c94bf"/>
+  <path d="M82 92q-19-41-39 0l16 59 27-18m78-41q20-42 39 0l-17 60-28-19" fill="#624a56" stroke="#382c3b" stroke-width="5"/>
+  <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc6" stroke="#382c3b" stroke-width="4"/>
+  <path d="M78 91q-1-53 43-59 42 3 40 58l-17-17-11 10-14-23-16 22-13-9-12 18z" fill="#795565" stroke="#382c3b" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="88" cy="58" r="15" fill="#7b5765" stroke="#382c3b" stroke-width="3"/><circle cx="152" cy="58" r="15" fill="#7b5765" stroke="#382c3b" stroke-width="3"/>
+  <path d="M92 95q11-10 21 0l-2 14q-11 7-19-14m33 0q11-10 21 0l-2 14q-11 7-19-14" fill="#9b6491"/>
+  <path d="M91 86q10-6 21 0m32 0q10-6 21 0" fill="none" stroke="#382c3b" stroke-width="2.5" stroke-linecap="round"/>
+  <ellipse cx="104" cy="101" rx="7.5" ry="9" fill="#fff" stroke="#382c3b" stroke-width="1.5"/><ellipse cx="136" cy="101" rx="7.5" ry="9" fill="#fff" stroke="#382c3b" stroke-width="1.5"/>
+  <ellipse cx="104" cy="102" rx="4.5" ry="6" fill="#a66bb4"/><ellipse cx="136" cy="102" rx="4.5" ry="6" fill="#a66bb4"/>
+  <ellipse cx="104" cy="103" rx="2.2" ry="3.5" fill="#382c3b"/><ellipse cx="136" cy="103" rx="2.2" ry="3.5" fill="#382c3b"/>
+  <circle cx="102" cy="98" r="2" fill="#fff"/><circle cx="134" cy="98" r="2" fill="#fff"/>
+  <circle cx="84" cy="117" r="5" fill="#ee8d9f" opacity=".4"/><circle cx="156" cy="117" r="5" fill="#ee8d9f" opacity=".4"/>
+  <circle cx="105" cy="99" r="3" fill="#fff"/><circle cx="137" cy="99" r="3" fill="#fff"/>
+  <path d="M110 127q10 8 20-1" fill="none" stroke="#ae626b" stroke-width="3"/>
+  <path d="M98 143v12m44-12v12" stroke="#382c3b" stroke-width="4"/>
+  <path d="M76 206l-7 16h39l-3-16m62 0 8 16h-39l2-16" fill="#6e4058" stroke="#382c3b" stroke-width="4"/>
+  <path d="M50 72l4-11 4 11 11 4-11 4-4 11-4-11-11-4z" fill="#f4c655"/>
+</svg>

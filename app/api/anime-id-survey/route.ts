@@ -1,25 +1,34 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { scoreAnswers, type ScoringAxis } from "../../../scoring.mjs";
 
 export const runtime = "nodejs";
 
 const axisIds = ["R", "C", "F", "P"] as const;
+const axes = [
+  { id: "R", sideA: "R", sideB: "S", tieBreakSide: "A" },
+  { id: "C", sideA: "C", sideB: "W", tieBreakSide: "B" },
+  { id: "F", sideA: "F", sideB: "E", tieBreakSide: "A" },
+  { id: "P", sideA: "P", sideB: "D", tieBreakSide: "B" },
+] satisfies ScoringAxis[];
+const questionCounts = { R: 7, C: 6, F: 6, P: 6 } as const;
 const expectedQuestionIds = axisIds.flatMap((axis) =>
-  Array.from({ length: 6 }, (_, index) => `${axis}${index + 1}`),
+  Array.from({ length: questionCounts[axis] }, (_, index) => `${axis}${index + 1}`),
 );
 
 const submissionSchema = z.object({
   submissionId: z.string().uuid(),
   submittedAt: z.string().datetime(),
-  typeCode: z.string().regex(/^[RSX][CWX][FEX][PDX]$/),
+  typeCode: z.string().regex(/^[RS][CW][FE][PD]$/),
   answers: z.array(
     z.object({
-      questionId: z.string().regex(/^[RCFP][1-6]$/),
+      questionId: z.string().regex(/^[RCFP][1-7]$/),
       question: z.string().min(1).max(500),
       axis: z.enum(axisIds),
+      side: z.enum(["A", "B"]),
       answer: z.number().int().min(1).max(7),
     }),
-  ).length(24),
+  ).length(25),
   axisPercentages: z.object({
     R: z.number().int().min(0).max(100),
     C: z.number().int().min(0).max(100),
@@ -56,43 +65,35 @@ function jsonResponse(body: object, status: number, origin: string) {
 }
 
 function scoreSubmission(answers: z.infer<typeof submissionSchema>["answers"]) {
-  const scores = Object.fromEntries(
-    axisIds.map((axis) => [axis, { sideA: 0, sideB: 0 }]),
-  ) as Record<(typeof axisIds)[number], { sideA: number; sideB: number }>;
-
-  for (const answer of answers) {
-    const match = /^([RCFP])([1-6])$/.exec(answer.questionId);
-    if (!match || match[1] !== answer.axis) {
+  const questions = answers.map(({ questionId, axis, side }) => {
+    const match = /^([RCFP])([1-7])$/.exec(questionId);
+    if (!match || match[1] !== axis) {
       return null;
     }
 
-    const [, axis, questionNumber] = match;
-    if (Number(questionNumber) % 2 === 1) {
-      scores[axis as (typeof axisIds)[number]].sideA += answer.answer;
-    } else {
-      scores[axis as (typeof axisIds)[number]].sideB += answer.answer;
+    const expectedSide = axis === "R" && match[2] === "7"
+      ? "B"
+      : Number(match[2]) % 2 === 1 ? "A" : "B";
+    if (side !== expectedSide) {
+      return null;
     }
+
+    return { id: questionId, axis, side };
+  });
+  if (questions.some((question) => question === null)) {
+    return null;
   }
 
+  const scored = scoreAnswers(
+    questions.filter((question) => question !== null),
+    axes,
+    Object.fromEntries(answers.map(({ questionId, answer }) => [questionId, answer])),
+  );
   const percentages = Object.fromEntries(
-    axisIds.map((axis) => {
-      const { sideA, sideB } = scores[axis];
-      return [axis, Math.round((sideA / (sideA + sideB)) * 100)];
-    }),
+    scored.axes.map(({ axis, percentA }) => [axis.id, percentA]),
   ) as Record<(typeof axisIds)[number], number>;
 
-  const code = axisIds.map((axis) => {
-    const { sideA, sideB } = scores[axis];
-    if (sideA === sideB) return "X";
-    return ({
-      R: sideA > sideB ? "R" : "S",
-      C: sideA > sideB ? "C" : "W",
-      F: sideA > sideB ? "F" : "E",
-      P: sideA > sideB ? "P" : "D",
-    })[axis];
-  }).join("");
-
-  return { scores, percentages, code };
+  return { percentages, code: scored.code };
 }
 
 export async function OPTIONS(request: Request) {

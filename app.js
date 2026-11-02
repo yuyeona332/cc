@@ -1,3 +1,5 @@
+import { scoreAnswers } from "./scoring.mjs";
+
 const SITE_URL = "https://yuyeona332.github.io/cc/";
 const KAKAO_KEY = "";
 const FEEDBACK_ENDPOINT = window.ANIME_ID_FEEDBACK_ENDPOINT || "";
@@ -335,11 +337,12 @@ function renderTypePreview() {
   const buttons = TYPE_CODES.map((code) => {
     const name = getTypeName(code);
     const label = Array.isArray(name) ? name.join(" ") : name;
+    const sub = DATA.typeProfiles?.[code]?.line || DATA.typeMeta[code]?.tagline || "나만의 애니 덕질 유형";
     return `
       <button type="button" class="type-card" data-character-code="${code}" aria-label="${label} 상세 정보 보기">
         <div class="type-card-art" aria-hidden="true">${buildCharacterSvg(code, 84)}</div>
         <span class="label">${label}</span>
-        <span class="sub">${code}</span>
+        <span class="sub">${sub}</span>
       </button>
     `;
   }).join("");
@@ -359,6 +362,12 @@ function getTypeAsset(code, fallback) {
 
 function typeCodeFromAxisLetters(axisLetters) {
   return axisLetters.join("");
+}
+
+function getTypeArtworkUrl(code) {
+  const url = new URL(`./assets/types/${getIllustrationCode(code)}.svg`, document.baseURI);
+  url.searchParams.set("v", "0.5.2");
+  return url.href;
 }
 
 function getTypeName(code) {
@@ -382,28 +391,16 @@ function getTypeName(code) {
 }
 
 function calculateAxisScore(axisId) {
-  const sideAScore = DATA.questions
-    .filter((question) => question.axis === axisId && question.side === "A")
-    .reduce((total, question) => total + (state.answers[question.id] || 0), 0);
-
-  const sideBScore = DATA.questions
-    .filter((question) => question.axis === axisId && question.side === "B")
-    .reduce((total, question) => total + (state.answers[question.id] || 0), 0);
-
-  return {
-    sideA: sideAScore,
-    sideB: sideBScore,
-    percentA: sideAScore + sideBScore === 0 ? 50 : Math.round((sideAScore / (sideAScore + sideBScore)) * 100),
-    percentB: sideAScore + sideBScore === 0 ? 50 : 100 - Math.round((sideAScore / (sideAScore + sideBScore)) * 100)
-  };
+  const score = scoreAnswers(DATA.questions, DATA.axes, state.answers).axes.find((item) => item.axis.id === axisId);
+  if (!score) {
+    throw new Error(`Unknown personality axis: ${axisId}`);
+  }
+  return score;
 }
 
 function getAxisWinner(axis) {
   const score = calculateAxisScore(axis.id);
-  if (score.sideA === score.sideB) {
-    return "X";
-  }
-  return score.sideA > score.sideB ? axis.sideA : axis.sideB;
+  return score.winner === "A" ? axis.sideA : axis.sideB;
 }
 
 function buildResult() {
@@ -421,13 +418,9 @@ function buildResult() {
     return false;
   }
 
-  const axisLetters = DATA.axes.map((axis) => getAxisWinner(axis));
-  const code = typeCodeFromAxisLetters(axisLetters);
-  const validTypeCode = Object.prototype.hasOwnProperty.call(DATA.typeMeta, code)
-    ? code
-    : code.includes("X")
-      ? code
-      : null;
+  const scored = scoreAnswers(DATA.questions, DATA.axes, state.answers);
+  const code = scored.code;
+  const validTypeCode = Object.prototype.hasOwnProperty.call(DATA.typeMeta, code) ? code : null;
 
   if (!validTypeCode) {
     showToast("결과를 계산할 수 없었습니다. 응답을 다시 확인해 주세요.");
@@ -435,12 +428,18 @@ function buildResult() {
   }
 
   const axisStats = DATA.axes.map((axis) => {
-    const score = calculateAxisScore(axis.id);
-    const winnerCode = getAxisWinner(axis);
-    const winner = winnerCode === "X" ? "X" : (winnerCode === axis.sideA ? "A" : "B");
-    const percentA = score.percentA;
-    const percentB = score.percentB;
-    return { ...axis, score, winner, percentA, percentB };
+    const score = scored.axes.find((item) => item.axis.id === axis.id);
+    if (!score) {
+      throw new Error(`Missing score for personality axis ${axis.id}`);
+    }
+    return {
+      ...axis,
+      score,
+      winner: score.winner,
+      tieBreak: score.tieBreak,
+      percentA: score.percentA,
+      percentB: score.percentB,
+    };
   });
 
   const fallbackMeta = DATA.fallbackType;
@@ -545,6 +544,7 @@ async function submitTestResponse() {
         questionId: question.id,
         question: question.text,
         axis: question.axis,
+        side: question.side,
         answer: state.answers[question.id]
       })),
       axisPercentages: Object.fromEntries(
@@ -793,9 +793,9 @@ function renderAxisBreakdown() {
 function buildCharacterSvg(code, size = 220) {
   const fallbackCode = String(code || "RCFP").toUpperCase();
   const resolvedCode = getIllustrationCode(fallbackCode);
-  const assetUrl = new URL(`./assets/types/${resolvedCode}.svg`, document.baseURI).href;
+  const assetUrl = getTypeArtworkUrl(resolvedCode);
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="${size}" height="${size}" role="img" aria-label="${fallbackCode} 캐릭터 일러스트">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="${size}" height="${size}" role="img" aria-label="애니 캐릭터 일러스트">
       <image href="${assetUrl}" x="0" y="0" width="220" height="220" preserveAspectRatio="xMidYMid meet"/>
     </svg>
   `;
@@ -833,6 +833,52 @@ function fitTextToWidth(text, options = {}) {
   return minSize;
 }
 
+function wrapTextForSvg(text, maxCharacters, maxLines) {
+  const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = "";
+
+  words.forEach((word) => {
+    const characters = [...word];
+    if (characters.length > maxCharacters) {
+      if (line) {
+        lines.push(line);
+        line = "";
+      }
+      while (characters.length > maxCharacters) {
+        lines.push(characters.splice(0, maxCharacters).join(""));
+      }
+      line = characters.join("");
+      return;
+    }
+
+    const next = line ? `${line} ${word}` : word;
+    if ([...next].length > maxCharacters && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = next;
+    }
+  });
+
+  if (line) {
+    lines.push(line);
+  }
+
+  if (lines.length > maxLines) {
+    lines.length = maxLines;
+    lines[maxLines - 1] = `${[...lines[maxLines - 1]].slice(0, maxCharacters - 1).join("")}…`;
+  }
+
+  return lines;
+}
+
+function svgTextLines(lines, x, lineHeight) {
+  return lines.map((line, index) => `
+    <tspan x="${x}" dy="${index === 0 ? 0 : lineHeight}">${line}</tspan>
+  `).join("");
+}
+
 function buildResultCardSvg(result, artworkHref = null) {
   const fallbackCode = "RCFP";
   const code = String((result && result.code) || fallbackCode).toUpperCase();
@@ -841,13 +887,12 @@ function buildResultCardSvg(result, artworkHref = null) {
     : getTypeName(code);
   const displayName = String(baseName.join(" ") || `${DATA.fallbackType.adjective} ${DATA.fallbackType.noun}`);
 
-  const nameSize = fitTextToWidth(displayName, { minSize: 12, maxSize: 24, targetWidth: 280, fontWeight: 900 });
+  const nameSize = fitTextToWidth(displayName, { minSize: 16, maxSize: 30, targetWidth: 304, fontWeight: 900 });
   const profile = result.profile || {};
-  const keywords = (profile.keywords || []).slice(0, 4).join("  ·  ");
-  const portraitHref = artworkHref || new URL(
-    `./assets/types/${getIllustrationCode(code)}.svg`,
-    document.baseURI
-  ).href;
+  const taglineLines = wrapTextForSvg(profile.line || result.tagline || "", 26, 2);
+  const keywordLine = (profile.keywords || []).slice(0, 4).join("  ·  ");
+  const keywordLines = wrapTextForSvg(keywordLine, 30, 2);
+  const portraitHref = artworkHref || getTypeArtworkUrl(code);
 
   const axisRows = (result && result.axisStats ? result.axisStats : []).map((axis) => {
     const left = Number(axis.percentA || 0);
@@ -861,27 +906,23 @@ function buildResultCardSvg(result, artworkHref = null) {
       .replace("덕질 표현 방식", "표현");
 
     return `
-      <g transform="translate(28 ${338 + result.axisStats.indexOf(axis) * 30})">
-        <text x="0" y="0" font-size="9" font-weight="700" fill="#f5bdd5">${shortLabel}</text>
-        <text x="304" y="0" text-anchor="end" font-size="9" font-weight="700" fill="#f7eef5">${valueText}</text>
-        <rect x="0" y="8" width="304" height="7" rx="4" fill="#423043"/>
-        <rect x="0" y="8" width="${304 * (left / 100)}" height="7" rx="4" fill="#f05a9d"/>
-        <rect x="${304 * (left / 100)}" y="8" width="${304 * (right / 100)}" height="7" rx="4" fill="#a880e8"/>
+      <g transform="translate(28 ${365 + result.axisStats.indexOf(axis) * 25})">
+        <text x="0" y="0" font-size="9" font-weight="800" fill="#343039">${shortLabel}</text>
+        <text x="304" y="0" text-anchor="end" font-size="9" font-weight="800" fill="#343039">${valueText}</text>
+        <rect x="0" y="8" width="304" height="7" rx="4" fill="#eee9f1"/>
+        <rect x="0" y="8" width="${304 * (left / 100)}" height="7" rx="4" fill="#d82c79"/>
+        <rect x="${304 * (left / 100)}" y="8" width="${304 * (right / 100)}" height="7" rx="4" fill="#6550c8"/>
       </g>
     `;
   }).join("");
 
-  const footerUrl = SITE_URL.replace(/^https?:\/\//, "").replace(/\/$/, "");
-
-  const axisSummaryText = (result && result.axisStats ? result.axisStats : []).map((axis) => `${axis.label}: ${axis.percentA}% / ${axis.percentB}%`).join(", ");
-
   const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520" role="img" aria-label="${code} 유형 결과 카드: ${displayName}. ${axisSummaryText}">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 520" role="img" aria-label="ANIME ID 결과 카드: ${displayName}">
       <defs>
         <linearGradient id="cardGradient-${code}" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#180e20"/>
-          <stop offset="0.55" stop-color="#2a1027"/>
-          <stop offset="1" stop-color="#120c1c"/>
+          <stop offset="0" stop-color="#ffffff"/>
+          <stop offset="0.58" stop-color="#ffffff"/>
+          <stop offset="1" stop-color="#f7f3ff"/>
         </linearGradient>
         <linearGradient id="portraitGlow-${code}" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stop-color="#ff78b7"/>
@@ -896,38 +937,35 @@ function buildResultCardSvg(result, artworkHref = null) {
           </filter>
       </defs>
       <rect width="360" height="520" rx="30" fill="url(#cardGradient-${code})"/>
-      <rect x="9" y="9" width="342" height="502" rx="24" fill="none" stroke="#ed77b4" stroke-opacity="0.7" stroke-width="1.5"/>
-      <rect x="16" y="16" width="328" height="488" rx="20" fill="none" stroke="#fff1fa" stroke-opacity="0.12"/>
-      <g opacity="0.9" fill="#ffc9e4">
+      <rect x="9" y="9" width="342" height="502" rx="24" fill="none" stroke="#d52f78" stroke-opacity="0.8" stroke-width="1.5"/>
+      <rect x="16" y="16" width="328" height="488" rx="20" fill="none" stroke="#39233a" stroke-opacity="0.18"/>
+      <g opacity="0.9" fill="#d52f78">
         <path d="M34 76l3 8 8 3-8 3-3 8-3-8-8-3 8-3z"/>
         <path d="M322 113l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z"/>
         <circle cx="40" cy="153" r="2.2"/>
         <circle cx="318" cy="56" r="2.2"/>
         <circle cx="298" cy="169" r="1.8"/>
       </g>
-      <text x="180" y="38" text-anchor="middle" font-size="9.5" font-weight="800" fill="#ffc3e0" letter-spacing="2">ANIME ID · PERSONALITY</text>
+      <text x="180" y="38" text-anchor="middle" font-size="9.5" font-weight="800" fill="#25212a" letter-spacing="2">ANIME ID · MY ANIME LIFE</text>
 
       <g filter="url(#cardGlow-${code})">
         <circle cx="180" cy="130" r="88" fill="none" stroke="url(#portraitGlow-${code})" stroke-width="2"/>
-        <circle cx="180" cy="130" r="82" fill="#271526" stroke="#fff0f8" stroke-opacity="0.6"/>
+        <circle cx="180" cy="130" r="82" fill="#ffffff" stroke="#25212a" stroke-opacity="0.22"/>
       </g>
       <image href="${portraitHref}" x="100" y="50" width="160" height="160" preserveAspectRatio="xMidYMid meet" clip-path="url(#portraitClip-${code})"/>
 
-      <text x="180" y="244" text-anchor="middle" font-size="${nameSize}" font-weight="900" fill="#fff3fb">${displayName}</text>
-      <text x="180" y="265" text-anchor="middle" font-size="10" font-weight="700" fill="#f0bfd8" textLength="304" lengthAdjust="spacingAndGlyphs">${profile.line || result.tagline || ""}</text>
-      <text x="180" y="284" text-anchor="middle" font-size="8.5" font-weight="700" fill="#e1cce1" textLength="304" lengthAdjust="spacingAndGlyphs">${keywords}</text>
-
-      <g>
-        <rect x="105" y="300" width="150" height="26" rx="13" fill="#d9488c"/>
-        <text x="180" y="318" text-anchor="middle" font-size="12" font-weight="900" fill="#ffffff" letter-spacing="4">${code}</text>
-      </g>
+      <text x="180" y="238" text-anchor="middle" font-size="${nameSize}" font-weight="900" fill="#17151a">${displayName}</text>
+      <rect x="112" y="250" width="136" height="32" rx="16" fill="#222222"/>
+      <text x="180" y="273" text-anchor="middle" font-size="20" font-weight="900" fill="#ffffff" letter-spacing="2">${code}</text>
+      <text x="180" y="299" text-anchor="middle" font-size="10" font-weight="700" fill="#3c3540">${svgTextLines(taglineLines, 180, 12)}</text>
+      <text x="180" y="${321 + Math.max(0, keywordLines.length - 1) * 10}" text-anchor="middle" font-size="8.5" font-weight="700" fill="#48404b">${svgTextLines(keywordLines, 180, 10)}</text>
 
       <g>
         ${axisRows}
       </g>
 
-      <text x="180" y="492" text-anchor="middle" font-size="8.5" font-weight="700" fill="#ddb9d0">${footerUrl}</text>
-      <text x="180" y="504" text-anchor="middle" font-size="8" font-weight="800" fill="#f5bdd5">ANIME ID · FANDOM TEST</text>
+      <text x="180" y="492" text-anchor="middle" font-size="8.5" font-weight="800" fill="#554a57">나의 애니 취향 프로필</text>
+      <text x="180" y="504" text-anchor="middle" font-size="8" font-weight="800" fill="#322735">ANIME ID · PERSONALITY CARD</text>
     </svg>
   `;
 
@@ -1440,21 +1478,28 @@ function renderDetailedReport() {
 
   const axisSummary = state.currentResult.axisStats.map((axis) => {
     const leftLabel = `${axis.sideAName} ${axis.percentA}%`;
-    const rightLabel = `${axis.percentB}% ${axis.sideBName}`;
-    const note = axis.winner === "X"
-      ? "두 성향이 비슷하게 드러나요."
-      : `${axis.winner === "A" ? axis.sideAName : axis.sideBName} 쪽이 조금 더 강하게 나타나요.`;
+    const rightLabel = `${axis.sideBName} ${axis.percentB}%`;
+    const leadingSide = axis.winner === "X"
+      ? "두 성향이 비슷하게 나타나요."
+      : `${axis.winner === "A" ? axis.sideAName : axis.sideBName} 성향이 더 강해요.`;
 
     return `
       <div class="axis-summary-row">
-        <div class="axis-summary-top">
-          <span>${axis.label}</span>
-          <span>${leftLabel} / ${rightLabel}</span>
+        <div class="axis-summary-heading">
+          <div class="axis-summary-title">
+            <strong>${axis.label}</strong>
+            <span>${axis.sideAName} ↔ ${axis.sideBName}</span>
+          </div>
+          <div class="axis-summary-scores">
+            <span class="score-a"><strong>${axis.percentA}%</strong> ${axis.sideAName}</span>
+            <span class="score-b"><strong>${axis.percentB}%</strong> ${axis.sideBName}</span>
+          </div>
         </div>
         <div class="axis-summary-bar" aria-label="${axis.label}: ${leftLabel} / ${rightLabel}">
           <span class="segment-a" style="width:${axis.percentA}%"></span>
           <span class="segment-b" style="width:${axis.percentB}%"></span>
         </div>
+        <p class="axis-summary-winner">${leadingSide}</p>
       </div>
     `;
   }).join("");
@@ -1466,8 +1511,8 @@ function renderDetailedReport() {
       <section class="report-hero">
         <div class="report-hero-art">${buildCharacterSvg(state.currentResult.code, 260)}</div>
         <div class="report-copy">
-          <span class="result-badge">${state.currentResult.code}</span>
           <h3>${profile.koreanName || state.currentResult.name.join(" ")}</h3>
+          <span class="result-badge">${state.currentResult.code}</span>
           <p class="result-line">${profile.line}</p>
           <p class="result-intro">${profile.intro}</p>
           <div class="keyword-row">${keywords}</div>
@@ -1522,10 +1567,7 @@ function generateResultImageBlob() {
 
     let artworkDataUrl;
     try {
-      const response = await fetch(new URL(
-        `./assets/types/${getIllustrationCode(state.currentResult.code)}.svg`,
-        document.baseURI
-      ));
+      const response = await fetch(getTypeArtworkUrl(state.currentResult.code));
       if (!response.ok) {
         throw new Error(`Character asset request failed with status ${response.status}`);
       }
@@ -1875,9 +1917,9 @@ function openCharacterModal(code) {
 
   const typeName = isIntro ? ["애니 덕질", "테스트 안내"] : getTypeName(initialCode);
   const meta = isIntro ? {
-    tagline: "24문항으로 나를 알아보는 덕질 테스트",
+    tagline: "25문항으로 나를 알아보는 덕질 테스트",
     description: "평소의 애니 감상 습관과 덕질 방식을 살펴보고, 나만의 유형을 한 번에 확인할 수 있어요.",
-    traits: ["24문항", "약 3~5분", "앱 설치 없이 바로 공유"]
+    traits: ["25문항", "약 3~5분", "앱 설치 없이 바로 공유"]
   } : DATA.typeMeta[initialCode] || DATA.fallbackType;
 
   const content = isIntro ? `
@@ -1892,7 +1934,7 @@ function openCharacterModal(code) {
         <p class="character-modal-tagline">${meta.tagline}</p>
         <p class="character-modal-description">${meta.description}</p>
         <ul class="character-modal-list">
-          <li>24개의 질문으로 나의 덕질 습관을 체크해요.</li>
+          <li>25개의 질문으로 나의 덕질 습관을 체크해요.</li>
           <li>대략 3~5분 안에 결과를 확인할 수 있어요.</li>
           <li>앱 설치 없이 링크나 이미지로 쉽게 공유할 수 있어요.</li>
         </ul>

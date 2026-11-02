@@ -3,25 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#130d18" />
+    <meta name="theme-color" content="#ffffff" />
     <meta
       name="description"
-      content="ANIME ID v0.4 — 24개 질문으로 알아보는 나의 애니 덕질 유형!"
+      content="ANIME ID v0.5 — 25개 질문으로 알아보는 나의 애니 덕질 유형!"
     />
-    <title>ANIME ID v0.4</title>
+    <title>ANIME ID v0.5</title>
     <link rel="canonical" href="https://yuyeona332.github.io/cc/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="애니 덕질 성향 테스트" />
-    <meta property="og:description" content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 중 나는 어떤 타입일까요?" />
+    <meta property="og:description" content="25개 질문으로 알아보는 나의 덕질 유형! 16가지 중 나는 어떤 타입일까요?" />
     <meta property="og:url" content="https://yuyeona332.github.io/cc/" />
     <meta property="og:locale" content="ko_KR" />
     <meta property="og:image" content="https://yuyeona332.github.io/cc/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="애니 덕질 성향 테스트, 24개 질문으로 알아보는 나의 덕질 유형" />
+    <meta property="og:image:alt" content="애니 덕질 성향 테스트, 25개 질문으로 알아보는 나의 덕질 유형" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="애니 덕질 성향 테스트" />
-    <meta name="twitter:description" content="24개 질문으로 알아보는 나의 덕질 유형! 16가지 중 나는 어떤 타입일까요?" />
+    <meta name="twitter:description" content="25개 질문으로 알아보는 나의 덕질 유형! 16가지 중 나는 어떤 타입일까요?" />
     <meta name="twitter:image" content="https://yuyeona332.github.io/cc/og.png" />
     <link rel="icon" type="image/png" href="./favicon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -2061,6 +2061,572 @@ body.modal-open {
         }
       }
     </style>
+    <style>
+      :root {
+        --bg-1: #ffffff;
+        --bg-2: #ffffff;
+        --bg-3: #ffffff;
+        --panel: #ffffff;
+        --pink: #f9d6e5;
+        --pink-strong: #e83f8e;
+        --peach: #ffe0c9;
+        --blue: #d7edff;
+        --blue-strong: #397ad4;
+        --lavender: #e8ddff;
+        --lavender-strong: #7844c8;
+        --yellow: #ffe568;
+        --mint: #d8f6df;
+        --navy: #222222;
+        --subtle: #4a4650;
+        --line: #ded8e1;
+        --shadow: rgba(31, 25, 38, 0.1);
+        --danger: #bd234e;
+        --white: #ffffff;
+        --indigo: #783bd0;
+        --indigo-deep: #222222;
+        --text: #222222;
+        --border: #ded8e1;
+        --error: #bd234e;
+        --success: #176f43;
+      }
+
+      html,
+      body {
+        background: #ffffff !important;
+        color: #222222 !important;
+      }
+
+      body::before {
+        background-image: radial-gradient(circle, rgba(220, 57, 128, 0.22) 0 1.4px, transparent 1.7px);
+        background-size: 32px 32px;
+        opacity: 0.22;
+      }
+
+      .page-shell,
+      .page,
+      main,
+      .screen {
+        color: #222222;
+      }
+
+      .panel,
+      .survey-panel,
+      .thank-you-panel,
+      .hero-layout,
+      .hero-panel,
+      .axis-card,
+      .step-card,
+      .type-card,
+      .question-panel,
+      .consent-panel,
+      .result-card-wrap,
+      .result-summary-panel,
+      .share-panel,
+      .report-hero,
+      .report-section {
+        color: #222222 !important;
+        background: #ffffff !important;
+        border-color: #ded8e1 !important;
+        box-shadow: 0 12px 34px rgba(34, 24, 43, 0.08) !important;
+      }
+
+      .hero-layout,
+      .hero-panel {
+        background:
+          radial-gradient(ellipse at 82% 40%, rgba(255, 216, 92, 0.28), transparent 28%),
+          radial-gradient(ellipse at 75% 78%, rgba(225, 59, 130, 0.1), transparent 34%),
+          #ffffff !important;
+        border: 1px solid #222222 !important;
+      }
+
+      .hero-copy h1,
+      .section-head h2,
+      .result-header h2,
+      .question-text,
+      .result-summary-panel h2,
+      .share-panel h2,
+      .survey-title,
+      .thank-you-message,
+      .consent-panel h2 {
+        color: #222222 !important;
+        font-weight: 900;
+      }
+
+      .hero-copy h1 {
+        letter-spacing: -0.055em;
+        font-size: clamp(2.7rem, 8vw, 5.3rem);
+        line-height: 1.08;
+      }
+
+      .eyebrow,
+      .kicker,
+      .question-badge,
+      .axis-tag,
+      .step-number {
+        color: #752bb0 !important;
+        font-weight: 900;
+      }
+
+      .lead,
+      .section-head p,
+      .axis-card p,
+      .step-card span,
+      .consent-copy,
+      .consent-detail,
+      .survey-subtitle,
+      .survey-form-note,
+      .axis-note,
+      .axis-summary-note {
+        color: #4a4650 !important;
+      }
+
+      .btn.primary,
+      .survey-submit {
+        color: #ffffff !important;
+        background: #d82c79 !important;
+        border: 2px solid #222222 !important;
+        box-shadow: 4px 4px 0 #222222 !important;
+        font-weight: 900;
+      }
+
+      .btn.primary:hover,
+      .survey-submit:hover {
+        background: #b82066 !important;
+        transform: translate(-1px, -1px);
+        box-shadow: 5px 5px 0 #222222 !important;
+      }
+
+      .btn.secondary,
+      .share-btn,
+      .text-link,
+      .thank-you-btn.secondary {
+        color: #222222 !important;
+        background: #ffffff !important;
+        border: 1.5px solid #222222 !important;
+      }
+
+      .btn:focus-visible,
+      .answer-option:focus-visible,
+      .survey-submit:focus-visible {
+        outline: 3px solid #7d3fd1 !important;
+        outline-offset: 3px;
+      }
+
+      .progress-track {
+        background: #eee9f1 !important;
+        border: 1px solid #222222;
+      }
+
+      .progress-fill {
+        background: linear-gradient(90deg, #ed388d, #8744db, #357cd5) !important;
+        box-shadow: none !important;
+      }
+
+      .answer-option {
+        color: #222222 !important;
+        background: transparent !important;
+        border: 0 !important;
+      }
+
+      .answer-option .answer-dot {
+        background: #ffffff !important;
+        border: 2px solid #3d3541 !important;
+      }
+
+      .answer-option.selected .answer-dot {
+        background: #e63c88 !important;
+        border-color: #222222 !important;
+        box-shadow: 0 0 0 5px rgba(230, 60, 136, 0.16) !important;
+      }
+
+      .answer-option.selected .answer-value,
+      .answer-option.selected .answer-label {
+        color: #782452 !important;
+      }
+
+      .answer-option .answer-label,
+      .answer-option .answer-value {
+        font-weight: 700;
+      }
+
+      .consent-panel {
+        border: 2px solid #222222 !important;
+        box-shadow: 6px 6px 0 #222222 !important;
+      }
+
+      .consent-copy {
+        font-weight: 700;
+        word-break: keep-all;
+      }
+
+      .consent-detail {
+        line-height: 1.75;
+      }
+
+      .consent-actions {
+        gap: 14px;
+      }
+
+      .result-card-wrap svg {
+        filter: drop-shadow(0 10px 18px rgba(34, 24, 43, 0.12));
+      }
+
+      .report-section h4,
+      .trait-item strong,
+      .strength-item strong,
+      .weak-item strong,
+      .report-copy h3 {
+        color: #60218b !important;
+      }
+
+      .report-section p,
+      .trait-item span,
+      .strength-item span,
+      .weak-item span,
+      .result-intro,
+      .result-line {
+        color: #3c3740 !important;
+      }
+
+      .axis-bar,
+      .axis-summary-bar {
+        background: #eee9f1 !important;
+      }
+
+      .question-text,
+      .hero-copy h1,
+      .section-head h2,
+      .result-header h2,
+      .result-summary-panel h2,
+      .share-panel h2,
+      .survey-title,
+      .thank-you-message,
+      .report-copy h3,
+      .report-section h4,
+      .report-section p,
+      .result-line,
+      .result-intro,
+      .answer-option .answer-label,
+      .axis-card h3,
+      .btn,
+      .share-btn,
+      .type-card .label,
+      .type-card .sub,
+      .axis-summary-row,
+      .axis-summary-row * {
+        font-stretch: normal;
+        letter-spacing: normal !important;
+      }
+
+      .question-text,
+      .section-head h2,
+      .result-header h2,
+      .result-summary-panel h2,
+      .share-panel h2,
+      .survey-title,
+      .thank-you-message,
+      .report-copy h3,
+      .report-section h4,
+      .report-section p,
+      .result-line,
+      .result-intro,
+      .answer-option .answer-label {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        word-break: keep-all;
+        line-height: 1.65;
+      }
+
+      .question-meta .meta-tag {
+        color: #45414a !important;
+      }
+
+      .answer-option .answer-value {
+        color: #222222 !important;
+        font-size: 0.9rem;
+      }
+
+      .answer-option .answer-label {
+        min-height: 2.8em;
+        color: #3e3943 !important;
+        font-size: 0.82rem;
+        line-height: 1.4;
+      }
+
+      .axis-summary-row {
+        gap: 12px;
+        padding: 16px;
+        color: #222222 !important;
+        background: #ffffff !important;
+        border: 1.5px solid #d8d2dc !important;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(34, 24, 43, 0.06);
+      }
+
+      .axis-summary-heading {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+        align-items: center;
+        gap: 12px;
+      }
+
+      .axis-summary-title {
+        display: grid;
+        gap: 3px;
+        min-width: 0;
+      }
+
+      .axis-summary-title strong {
+        color: #222222;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+
+      .axis-summary-title span {
+        color: #55505a;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .axis-summary-scores {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .axis-summary-scores span {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        min-width: 0;
+        padding: 7px 9px;
+        border-radius: 10px;
+        color: #302b34;
+        font-size: 0.76rem;
+        font-weight: 700;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+      }
+
+      .axis-summary-scores .score-a {
+        background: #fff0f7;
+      }
+
+      .axis-summary-scores .score-b {
+        background: #f0efff;
+      }
+
+      .axis-summary-scores strong {
+        flex: 0 0 auto;
+        color: #222222;
+        font-size: 1rem;
+        font-weight: 900;
+      }
+
+      .axis-summary-bar {
+        height: 14px;
+        border: 1px solid #d8d2dc;
+      }
+
+      .axis-summary-bar .segment-a {
+        background: #d82c79;
+      }
+
+      .axis-summary-bar .segment-b {
+        background: #6550c8;
+      }
+
+      .axis-summary-winner {
+        margin: 0;
+        color: #38323d;
+        font-size: 0.88rem;
+        font-weight: 800;
+        line-height: 1.5;
+      }
+
+      .axis-summary-note {
+        margin-top: 16px !important;
+        color: #4a4650 !important;
+        font-size: 0.9rem !important;
+      }
+
+      .result-card-wrap,
+      .report-hero,
+      .report-section {
+        background: #ffffff !important;
+      }
+
+      .result-badge {
+        padding: 9px 16px;
+        background: #222222 !important;
+        color: #ffffff !important;
+        font-size: 1.15rem;
+        letter-spacing: 0.12em;
+        line-height: 1.2;
+      }
+
+      .report-copy h3 {
+        color: #17151a !important;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        line-height: 1.2;
+        letter-spacing: -0.035em;
+      }
+
+      .axis-summary-row {
+        color: #222222 !important;
+        background: #ffffff !important;
+      }
+
+      @media (max-width: 520px) {
+        .axis-summary-heading {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .axis-summary-scores span {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 2px;
+          font-size: 0.74rem;
+        }
+        line-height: 1.7 !important;
+      }
+
+      .type-card .sub {
+        display: block;
+        margin-top: 4px;
+        color: #4a4650 !important;
+        font-size: 0.72rem;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+        word-break: keep-all;
+      }
+
+      .survey-field label,
+      .survey-readout,
+      .form-error,
+      .counter {
+        color: #222222 !important;
+      }
+
+      .survey-textarea,
+      .survey-field input:not([type="radio"]):not([type="checkbox"]) {
+        color: #222222 !important;
+        background: #ffffff !important;
+        border-color: #77717a !important;
+      }
+
+      .toast {
+        color: #ffffff !important;
+        background: #222222 !important;
+      }
+
+      .type-preview button {
+        color: #222222 !important;
+      }
+
+      .type-card {
+        border: 1px solid #ded8e1 !important;
+      }
+
+      .type-card:hover {
+        border-color: #d82c79 !important;
+        box-shadow: 0 8px 20px rgba(216, 44, 121, 0.15) !important;
+      }
+
+      .survey-submit-status {
+        color: #8c1f37;
+        background: #fff0f3;
+        border-color: #db7386;
+      }
+
+      .survey-submit-status.success {
+        color: #145a37;
+        background: #edfff4;
+        border-color: #63ad84;
+      }
+
+      @media (max-width: 560px) {
+        .hero-copy h1 {
+          font-size: clamp(2.45rem, 12vw, 4rem);
+        }
+
+        .answer-options {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 10px;
+        }
+
+        .answer-option {
+          min-height: 96px;
+          padding: 9px 5px 8px;
+          justify-content: center;
+          border: 1px solid #c9c3cf !important;
+          border-radius: 14px;
+          background: #ffffff !important;
+        }
+
+        .answer-option .answer-dot {
+          width: 20px;
+          height: 20px;
+          background: #ffffff !important;
+          border: 2px solid #5b5562 !important;
+          box-shadow: none !important;
+        }
+
+        .answer-option.selected .answer-dot {
+          background: #d82c79 !important;
+          border-color: #222222 !important;
+          box-shadow: 0 0 0 4px rgba(216, 44, 121, 0.15) !important;
+        }
+
+        .answer-option .answer-value {
+          color: #222222 !important;
+          font-size: 0.85rem !important;
+        }
+
+        .answer-option .answer-label {
+          min-height: 2.6em;
+          color: #3e3943 !important;
+          font-size: 0.76rem !important;
+          line-height: 1.35 !important;
+          overflow-wrap: anywhere;
+          white-space: normal;
+        }
+
+        .answer-option.selected .answer-value,
+        .answer-option.selected .answer-label {
+          color: #61213f !important;
+        }
+
+        .axis-summary-heading {
+          grid-template-columns: 1fr;
+          gap: 9px;
+        }
+
+        .axis-summary-row {
+          padding: 13px;
+        }
+
+        .axis-summary-scores {
+          gap: 6px;
+        }
+
+        .axis-summary-scores span {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 2px;
+          font-size: 0.74rem;
+        }
+
+        .consent-actions {
+          flex-direction: column;
+        }
+
+        .consent-actions .btn {
+          width: 100%;
+          min-height: 50px;
+        }
+      }
+    </style>
   </head>
   <body>
     <div class="page-shell">
@@ -2073,13 +2639,13 @@ body.modal-open {
                 <h1>애니 덕질<br />성향 테스트</h1>
                 <p class="lead">
                   나의 애니 감상 습관부터 최애를 향한 애정, 새로운 취향을 발견하는 방식까지.
-                  24개의 질문으로 나만의 덕질 유형을 알아보세요!
+                  25개의 질문으로 나만의 덕질 유형을 알아보세요!
                 </p>
                 <button id="start-btn" class="btn primary" type="button">
                   내 덕질 유형 알아보기 →
                 </button>
                 <div class="meta-row" aria-label="테스트 정보">
-                  <span>총 24문항</span>
+                  <span>총 25문항</span>
                   <span>약 3~5분</span>
                   <span>답을 선택해 주세요</span>
                 </div>
@@ -2145,7 +2711,7 @@ body.modal-open {
                 <div class="panel step-card">
                   <div class="step-number">01</div>
                   <b>질문에 답하기</b>
-                  <span>24개의 질문에 평소 애니를 즐기는 모습대로 답해요.</span>
+                  <span>25개의 질문에 평소 애니를 즐기는 모습대로 답해요.</span>
                 </div>
                 <div class="panel step-card">
                   <div class="step-number">02</div>
@@ -2181,7 +2747,7 @@ body.modal-open {
         <section id="test" class="screen hidden" aria-live="polite">
           <div class="panel question-panel">
             <div class="question-meta">
-              <span id="question-counter" class="question-badge">QUESTION 01 / 24</span>
+              <span id="question-counter" class="question-badge">QUESTION 01 / 25</span>
               <span class="meta-tag">답을 선택해 주세요</span>
             </div>
 
@@ -2203,7 +2769,7 @@ body.modal-open {
             <p class="eyebrow">마지막 선택</p>
             <h2>익명 응답 공유</h2>
             <p class="consent-copy">테스트 응답을 프로젝트 개선을 위한 설문 자료로 전송할까요? 전송하지 않아도 결과를 확인할 수 있습니다.</p>
-            <p class="consent-detail">전송되는 정보는 24개 답변과 네 가지 성향 점수, 결과 코드이며 이름이나 이메일은 요청하지 않습니다.</p>
+            <p class="consent-detail">전송되는 정보는 25개 답변과 네 가지 성향 점수, 결과 코드이며 이름이나 이메일은 요청하지 않습니다.</p>
             <div class="consent-actions">
               <button id="survey-send-btn" class="btn primary" type="button">응답 전송</button>
               <button id="survey-decline-btn" class="btn secondary" type="button">전송하지 않고 결과 보기</button>
@@ -2225,7 +2791,7 @@ body.modal-open {
               <h2>나의 성향 분석</h2>
               <div id="axis-breakdown" class="axis-breakdown"></div>
               <p class="axis-note">
-                ※ 수치는 응답을 바탕으로 한 상대적 성향 점수예요. 두 성향이 같으면 X로 표시해요.
+                점수는 응답을 바탕으로 계산해요. 정확한 동점은 응답 방향과 강도로 결정하고, 모두 중립이면 균형 기본값을 적용해요.
               </p>
             </div>
           </div>
@@ -2375,8 +2941,8 @@ body.modal-open {
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="./survey-config.js?v=0.4.4"></script>
-    <script src="./data.js?v=0.4.4"></script>
-    <script src="./app.js?v=0.4.4"></script>
+    <script src="./survey-config.js?v=0.6.0"></script>
+        <script src="./data.js?v=0.6.0"></script>
+        <script type="module" src="./app.js?v=0.6.0"></script>
   </body>
 </html>
