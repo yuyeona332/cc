@@ -1,21 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Cozy anime fan cuddling a plush toy">
-  <circle cx="120" cy="120" r="112" fill="#fff0e8"/>
-  <path d="M81 146q-20 21-18 55l31 10 23-40m47-25q20 20 17 52l-28 12-22-43" fill="#9a5d6e" stroke="#443039" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M84 148q36-17 72 0l17 58H67z" fill="#d98f91" stroke="#443039" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M91 156q29 21 58 0l11 47H80z" fill="#ffe6cb" stroke="#443039" stroke-width="3"/>
-  <path d="M78 156l-19 27 15 15 30-28m56-14 18 28-17 16-24-29" fill="#ffdcc5" stroke="#443039" stroke-width="4" stroke-linejoin="round"/>
-  <ellipse cx="157" cy="178" rx="25" ry="27" fill="#f4bb80" stroke="#443039" stroke-width="3"/>
-  <circle cx="147" cy="169" r="9" fill="#f4bb80" stroke="#443039" stroke-width="3"/><circle cx="168" cy="169" r="9" fill="#f4bb80" stroke="#443039" stroke-width="3"/>
-  <circle cx="150" cy="179" r="2.5" fill="#46303a"/><circle cx="164" cy="179" r="2.5" fill="#46303a"/><path d="M154 187q4 4 8 0" fill="none" stroke="#46303a" stroke-width="2"/>
-  <path d="M78 92q-20-39-40 1l17 60 27-19m78-42q23-42 40-1l-17 60-26-17" fill="#68455b" stroke="#443039" stroke-width="5"/>
-  <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc5" stroke="#443039" stroke-width="4"/>
-  <path d="M78 90q-3-53 42-59 45 3 42 58l-17-18-12 9-14-24-15 23-13-10-13 21z" fill="#79546b" stroke="#443039" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M92 86q10-7 20-1m28 1q10-6 20 1" fill="none" stroke="#443039" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
-
-  <circle cx="84" cy="117" r="5" fill="#ef91a0" opacity=".4"/><circle cx="156" cy="117" r="5" fill="#ef91a0" opacity=".4"/>
-  <path d="M116 128q4-4 8 0" fill="none" stroke="#ad6368" stroke-width="3"/><path d="M84 117l5 2m67-2-5 2" fill="none" stroke="#d98c99" stroke-width="1.8" stroke-linecap="round"/>
-  <path d="M99 142v12m42-12v12" stroke="#443039" stroke-width="4"/>
-  <path d="M76 206l-7 16h39l-3-16m61 0 7 16h-39l3-16" fill="#5b414d" stroke="#443039" stroke-width="4"/>
-  <path d="M54 57q12-16 25 0-12 18-25 0m120 14q10-14 21 0-10 15-21 0" fill="#f2bc77"/>
+<svg xmlns="http://www.w3.org/2000/svg" class="character-svg" data-motion="sip" viewBox="0 0 240 240" role="img" aria-label="Original SCFP chibi character">
+  <defs>
+    <linearGradient id="hair-SCFP" x1="0" x2="0.8" y1="0" y2="1"><stop stop-color="#a9d8c4"/><stop offset=".46" stop-color="#498f87"/><stop offset="1" stop-color="#498f87"/></linearGradient>
+    <linearGradient id="cloth-SCFP" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#6da597"/><stop offset="1" stop-color="#f3e4c2"/></linearGradient>
+    <filter id="soft-shadow-SCFP" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <ellipse cx="120" cy="218" rx="48" ry="7" fill="#758094" opacity=".13" filter="url(#soft-shadow-SCFP)"/>
+  <g class="character-figure" transform="">
+    <g fill="url(#hair-SCFP)" stroke="#394454" stroke-width="4" stroke-linejoin="round"><path d="M72 81q-29 17-17 68l25 15 12-52m60-31q28 24 16 70l-23 13-9-53"/></g>
+    <g fill="#30394c" stroke="#394454" stroke-width="3.5" stroke-linejoin="round"><path d="M91 187h26l-4 15-18 9-23-1q-7-7 2-13zM124 187h25l12 15-5 11-27-4-8-10z"/><path d="M76 207q10-4 22 0m37-1q11-4 22 1" fill="none" stroke="#77849c" stroke-width="2"/></g>
+    <path d="M87 139q-19 7-22 23l12 14 15-13m56-24q19 7 22 23l-12 14-15-13" fill="#ffe1d5" stroke="#394454" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M91 137q29-17 58 0l14 52H77z" fill="url(#cloth-SCFP)" stroke="#394454" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M91 153q29 13 58 0M94 167q26 12 52 0M99 180q21 9 42 0" fill="none" stroke="#f3e4c2" stroke-width="3"/>
+    <path d="M91 146q-17 9-15 22l18 7 15-18m40-11q17 9 15 22l-18 7-14-18" fill="#ffe1d5" stroke="#394454" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M145 158h24v24q-12 8-24 0z" fill="#fff4dd" stroke="#394454" stroke-width="2.5"/><path d="M169 163q12-1 6 11h-6" fill="none" stroke="#394454" stroke-width="2.5"/><path d="M151 151q-5-8 1-12m8 12q-5-8 1-12" fill="none" stroke="#b6a69a" stroke-width="2"/>
+    <path d="M69 86q-12-1-12 13 0 11 13 13m100-26q12-1 12 13 0 11-13 13" fill="#ffe1d5" stroke="#394454" stroke-width="3"/>
+    <ellipse cx="120" cy="88" rx="54" ry="62" fill="#ffe1d5" stroke="#394454" stroke-width="4"/>
+    <ellipse cx="69" cy="101" rx="6" ry="10" fill="#ffe1d5" stroke="#394454" stroke-width="2.5"/>
+    <ellipse cx="171" cy="101" rx="6" ry="10" fill="#ffe1d5" stroke="#394454" stroke-width="2.5"/>
+    <path d="M65 99Q56 31 107 24l14 13 10-17 13 18q41-6 36 62l-17-12-16 18-16-20-17 20-15-15-20 17z" fill="url(#hair-SCFP)" stroke="#394454" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M88 87q9 5 18 0m28 0q9 5 18 0" fill="none" stroke="#394454" stroke-width="3" stroke-linecap="round"/><g><path d="M92 101q9 6 17 0" fill="none" stroke="#394454" stroke-width="3" stroke-linecap="round"/><path d="M131 101q9 6 17 0" fill="none" stroke="#394454" stroke-width="3" stroke-linecap="round"/></g><path d="M114 124q6 2 12 0" fill="none" stroke="#8f4e54" stroke-width="2.5" stroke-linecap="round"/><path d="M80 111q8-5 15 0m50 0q8-5 15 0" fill="none" stroke="#e98d99" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+    <path d="M81 57q17-17 36-16m15-2q15 1 24 10" fill="none" stroke="#a9d8c4" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+    <circle cx="147" cy="49" r="3.5" fill="#a9d8c4" opacity=".8"/>
+    <g transform="translate(165 57)" fill="#efa6a7" stroke="#394454" stroke-width="1.8"><circle cy="-7" r="5.5"/><circle cx="7" r="5.5"/><circle cy="7" r="5.5"/><circle cx="-7" r="5.5"/><circle r="3" fill="#f5d56f"/></g>
+  </g>
 </svg>

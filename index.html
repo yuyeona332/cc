@@ -2763,6 +2763,165 @@ body.modal-open {
           animation: none;
         }
       }
+
+      .character-svg image {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+
+      .character-svg[data-motion="read"]:hover image,
+      .character-svg.character-acting[data-motion="read"] image {
+        animation: characterRead 800ms ease-in-out;
+      }
+      .character-svg[data-motion="phone"]:hover image,
+      .character-svg.character-acting[data-motion="phone"] image {
+        animation: characterPhone 800ms ease-in-out;
+      }
+      .character-svg[data-motion="hop"]:hover image,
+      .character-svg.character-acting[data-motion="hop"] image {
+        animation: characterHop 800ms ease-in-out;
+      }
+      .character-svg[data-motion="cheer"]:hover image,
+      .character-svg.character-acting[data-motion="cheer"] image {
+        animation: characterCheer 800ms ease-in-out;
+      }
+      .character-svg[data-motion="jump"]:hover image,
+      .character-svg.character-acting[data-motion="jump"] image {
+        animation: characterJump 800ms ease-in-out;
+      }
+      .character-svg[data-motion="snap"]:hover image,
+      .character-svg.character-acting[data-motion="snap"] image {
+        animation: characterSnap 800ms ease-in-out;
+      }
+      .character-svg[data-motion="glasses"]:hover image,
+      .character-svg.character-acting[data-motion="glasses"] image {
+        animation: characterGlasses 800ms ease-in-out;
+      }
+      .character-svg[data-motion="type"]:hover image,
+      .character-svg.character-acting[data-motion="type"] image {
+        animation: characterType 800ms ease-in-out;
+      }
+      .character-svg[data-motion="sip"]:hover image,
+      .character-svg.character-acting[data-motion="sip"] image {
+        animation: characterSip 800ms ease-in-out;
+      }
+      .character-svg[data-motion="wave"]:hover image,
+      .character-svg.character-acting[data-motion="wave"] image {
+        animation: characterWave 800ms ease-in-out;
+      }
+      .character-svg[data-motion="float"]:hover image,
+      .character-svg.character-acting[data-motion="float"] image {
+        animation: characterFloatAction 800ms ease-in-out;
+      }
+      .character-svg[data-motion="spin"]:hover image,
+      .character-svg.character-acting[data-motion="spin"] image {
+        animation: characterSpin 800ms ease-in-out;
+      }
+      .character-svg[data-motion="stretch"]:hover image,
+      .character-svg.character-acting[data-motion="stretch"] image {
+        animation: characterStretch 800ms ease-in-out;
+      }
+      .character-svg[data-motion="pose"]:hover image,
+      .character-svg.character-acting[data-motion="pose"] image {
+        animation: characterPose 800ms ease-in-out;
+      }
+      .character-svg[data-motion="play"]:hover image,
+      .character-svg.character-acting[data-motion="play"] image {
+        animation: characterPlay 800ms ease-in-out;
+      }
+      .character-svg[data-motion="nod"]:hover image,
+      .character-svg.character-acting[data-motion="nod"] image {
+        animation: characterNod 800ms ease-in-out;
+      }
+      .result-card-wrap image[data-motion="read"]:hover { animation: characterRead 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="phone"]:hover { animation: characterPhone 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="hop"]:hover { animation: characterHop 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="cheer"]:hover { animation: characterCheer 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="jump"]:hover { animation: characterJump 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="snap"]:hover { animation: characterSnap 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="glasses"]:hover { animation: characterGlasses 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="type"]:hover { animation: characterType 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="sip"]:hover { animation: characterSip 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="wave"]:hover { animation: characterWave 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="float"]:hover { animation: characterFloatAction 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="spin"]:hover { animation: characterSpin 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="stretch"]:hover { animation: characterStretch 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="pose"]:hover { animation: characterPose 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="play"]:hover { animation: characterPlay 800ms ease-in-out; }
+      .result-card-wrap image[data-motion="nod"]:hover { animation: characterNod 800ms ease-in-out; }
+
+      @keyframes characterRead {
+        35% { transform: translateY(-5px) rotate(-5deg); }
+        70% { transform: translateY(2px) rotate(3deg); }
+      }
+      @keyframes characterPhone {
+        30%, 70% { transform: translateY(-4px) rotate(6deg); }
+        50% { transform: translateY(-2px) rotate(-5deg); }
+      }
+      @keyframes characterHop {
+        35% { transform: translateY(-10px) rotate(-4deg); }
+        65% { transform: translateY(1px) rotate(3deg); }
+      }
+      @keyframes characterCheer {
+        25%, 75% { transform: translateY(-6px) rotate(-2deg) scale(1.04); }
+        50% { transform: translateY(2px) rotate(2deg) scale(0.98); }
+      }
+      @keyframes characterJump {
+        30% { transform: translate(-4px, -8px) rotate(5deg); }
+        60% { transform: translate(4px, 1px) rotate(-4deg); }
+      }
+      @keyframes characterSnap {
+        35%, 65% { transform: scale(1.05) rotate(3deg); }
+        50% { transform: scale(1.03) rotate(-3deg); }
+      }
+      @keyframes characterGlasses {
+        35% { transform: rotate(-4deg) translateY(-3px); }
+        70% { transform: rotate(3deg); }
+      }
+      @keyframes characterType {
+        20%, 60% { transform: translateY(-3px) rotate(-2deg); }
+        40%, 80% { transform: translateY(1px) rotate(2deg); }
+      }
+      @keyframes characterSip {
+        35% { transform: rotate(-6deg) translateY(-2px); }
+        70% { transform: rotate(4deg); }
+      }
+      @keyframes characterWave {
+        30% { transform: rotate(-5deg) translateY(-2px); }
+        60% { transform: rotate(5deg); }
+      }
+      @keyframes characterFloatAction {
+        35% { transform: translateY(-11px) rotate(4deg); }
+        70% { transform: translateY(2px) rotate(-3deg); }
+      }
+      @keyframes characterSpin {
+        35% { transform: rotate(-8deg) translateY(-4px); }
+        65% { transform: rotate(8deg) translateY(-2px); }
+      }
+      @keyframes characterStretch {
+        35% { transform: scale(1.04, 0.96) translateY(-3px); }
+        70% { transform: scale(0.98, 1.03); }
+      }
+      @keyframes characterPose {
+        30%, 70% { transform: rotate(4deg) scale(1.03); }
+        50% { transform: rotate(-3deg) scale(1.01); }
+      }
+      @keyframes characterPlay {
+        30% { transform: rotate(-6deg) translateY(-3px); }
+        60% { transform: rotate(6deg) translateY(1px); }
+      }
+      @keyframes characterNod {
+        30%, 70% { transform: translateY(3px) scale(1, 0.98); }
+        50% { transform: translateY(-3px); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .character-svg[data-motion] image,
+        .result-card-wrap image[data-motion] {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -3083,8 +3242,8 @@ body.modal-open {
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="./survey-config.js?v=0.6.8"></script>
-        <script src="./data.js?v=0.6.8"></script>
-        <script type="module" src="./app.js?v=0.6.8"></script>
+    <script src="./survey-config.js?v=0.6.11"></script>
+        <script src="./data.js?v=0.6.11"></script>
+        <script type="module" src="./app.js?v=0.6.11"></script>
   </body>
 </html>

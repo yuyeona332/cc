@@ -1,21 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Anime reviewer with headphones and microphone">
-  <circle cx="120" cy="120" r="112" fill="#fff0ef"/>
-  <path d="M80 148q-22 20-18 57l33 4 19-39m52-22q27 21 22 54l-30 9-19-40" fill="#433268" stroke="#30243a" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M85 148q35-15 70 0l18 58H67z" fill="#7655b8" stroke="#30243a" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M91 158l29 24 29-24 9 44H82z" fill="#fff0ca" stroke="#30243a" stroke-width="3"/>
-  <path d="M103 165h34m-29 9h24" stroke="#e35a7b" stroke-width="3"/>
-  <path d="M75 101q-15-51 8-61m82 61q15-51-8-61" fill="none" stroke="#28243a" stroke-width="9"/>
-  <path d="M72 79q-12 6-12 21v19q0 11 12 12zm96 0q12 6 12 21v19q0 11-12 12z" fill="#df477a" stroke="#30243a" stroke-width="3"/>
-  <path d="M88 147l-24 27 13 15 28-26m47-16 22 27-13 15-27-25" fill="#ffd9c4" stroke="#30243a" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M177 130q20 18 9 45" fill="none" stroke="#30243a" stroke-width="4"/><circle cx="185" cy="182" r="8" fill="#ffcc57" stroke="#30243a" stroke-width="3"/>
-  <path d="M85 91q-38-33-25 39l18 26 19-29m64-36q32-32 28 34l-19 31-18-27" fill="#9e3f7b" stroke="#30243a" stroke-width="5"/>
-  <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc6" stroke="#30243a" stroke-width="4"/>
-  <path d="M78 90q-1-52 42-59 43 4 42 62l-16-20-13 9-14-23-15 21-14-9-12 20z" fill="#b44882" stroke="#30243a" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M91 87q10-7 20-1m29-3q10 8 21 1" fill="none" stroke="#30243a" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
-
-  <circle cx="84" cy="117" r="5" fill="#ed829b" opacity=".42"/><circle cx="156" cy="117" r="5" fill="#ed829b" opacity=".42"/>
-  <path d="M109 128q12-1 22-8" fill="none" stroke="#b24a69" stroke-width="3" stroke-linecap="round"/><path d="M126 120l4 1-3 4" fill="none" stroke="#30243a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M97 206l-6 16h37l-4-16m29 0 7 16h-37l4-16" fill="#343047" stroke="#30243a" stroke-width="4"/>
-  <path d="M55 50l4-11 4 11 11 4-11 4-4 11-4-11-11-4z" fill="#ffd14f"/>
+<svg xmlns="http://www.w3.org/2000/svg" class="character-svg" data-motion="cheer" viewBox="0 0 240 240" role="img" aria-label="Original RWFD chibi character">
+  <defs>
+    <linearGradient id="hair-RWFD" x1="0" x2="0.8" y1="0" y2="1"><stop stop-color="#fff0a7"/><stop offset=".46" stop-color="#e0bf54"/><stop offset="1" stop-color="#e0bf54"/></linearGradient>
+    <linearGradient id="cloth-RWFD" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#4c8fc4"/><stop offset="1" stop-color="#f8e28e"/></linearGradient>
+    <filter id="soft-shadow-RWFD" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <ellipse cx="120" cy="218" rx="48" ry="7" fill="#758094" opacity=".13" filter="url(#soft-shadow-RWFD)"/>
+  <g class="character-figure" transform="rotate(-5 120 120)">
+    <g fill="url(#hair-RWFD)" stroke="#394454" stroke-width="4" stroke-linejoin="round"><path d="M73 80Q47 100 59 148l24 12 8-50m58-30q26 20 17 68l-22 12-10-50"/></g>
+    <g fill="#30394c" stroke="#394454" stroke-width="3.5" stroke-linejoin="round"><path d="M91 180h24l-3 17-22 7-13-8q0-7 14-16zM126 180h24l15 13-5 11-24-7-14-8z"/><path d="M76 207q10-4 22 0m37-1q11-4 22 1" fill="none" stroke="#77849c" stroke-width="2"/></g>
+    <path d="M87 139q-19 7-22 23l12 14 15-13m56-24q19 7 22 23l-12 14-15-13" fill="#ffe1d5" stroke="#394454" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M91 137q29-17 58 0l14 52H77z" fill="url(#cloth-RWFD)" stroke="#394454" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M91 153h58m-55 12h52" stroke="#f8e28e" stroke-width="5"/><path d="M113 176h14" stroke="#fff9ed" stroke-width="4"/>
+    <path d="M91 145q-16-8-21-26l12-7 18 31m44 2q17-7 22-23l-12-8-18 30" fill="#ffe1d5" stroke="#394454" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M144 153l29-10v29l-29-10z" fill="#fff0bd" stroke="#394454" stroke-width="2.5"/><path d="M151 161l5 17h9l-7-18" fill="#e9b18f" stroke="#394454" stroke-width="2"/>
+    <path d="M69 86q-12-1-12 13 0 11 13 13m100-26q12-1 12 13 0 11-13 13" fill="#ffe1d5" stroke="#394454" stroke-width="3"/>
+    <ellipse cx="120" cy="88" rx="54" ry="62" fill="#ffe1d5" stroke="#394454" stroke-width="4"/>
+    <ellipse cx="69" cy="101" rx="6" ry="10" fill="#ffe1d5" stroke="#394454" stroke-width="2.5"/>
+    <ellipse cx="171" cy="101" rx="6" ry="10" fill="#ffe1d5" stroke="#394454" stroke-width="2.5"/>
+    <path d="M65 100Q56 32 107 25l12 12 12-17 13 17q42-7 36 62l-18-13-16 17-15-20-16 19-17-15-18 17z" fill="url(#hair-RWFD)" stroke="#394454" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M88 84q9-8 18 0m28 0q9-7 18 0" fill="none" stroke="#394454" stroke-width="3" stroke-linecap="round"/><g><path d="M92 101q9-6 17 0" fill="none" stroke="#394454" stroke-width="3" stroke-linecap="round"/><circle cx="139" cy="101" r="3.1" fill="#85633b"/></g><path d="M108 120q12 15 24-1" fill="none" stroke="#8f4e54" stroke-width="2.5" stroke-linecap="round"/><path d="M80 111q8-5 15 0m50 0q8-5 15 0" fill="none" stroke="#e98d99" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+    <path d="M81 57q17-17 36-16m15-2q15 1 24 10" fill="none" stroke="#fff0a7" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+    <circle cx="147" cy="49" r="3.5" fill="#fff0a7" opacity=".8"/>
+    <path d="M74 59q30-26 65-10l20 12q-41 10-84 3z" fill="#f0d56f" stroke="#394454" stroke-width="3"/><path d="M96 48q15-9 27-6" fill="none" stroke="#fff7d3" stroke-width="3"/>
+  </g>
 </svg>

@@ -138,6 +138,13 @@ const TYPE_CODES = [
   "SWFP", "SWFD", "SWEP", "SWED"
 ];
 
+const CHARACTER_MOTIONS = {
+  RCFP: "read", RCFD: "phone", RCEP: "hop", RCED: "snap",
+  RWFP: "glasses", RWFD: "cheer", RWEP: "type", RWED: "pose",
+  SCFP: "sip", SCFD: "wave", SCEP: "play", SCED: "float",
+  SWFP: "nod", SWFD: "jump", SWEP: "spin", SWED: "stretch"
+};
+
 const $ = (selector) => document.querySelector(selector);
 
 function normalizeAnswerValue(rawValue) {
@@ -363,8 +370,23 @@ function typeCodeFromAxisLetters(axisLetters) {
 
 function getTypeArtworkUrl(code) {
   const url = new URL(`./assets/types/${getIllustrationCode(code)}.svg`, document.baseURI);
-  url.searchParams.set("v", "0.6.8");
+  url.searchParams.set("v", "0.6.11");
   return url.href;
+}
+
+function playCharacterAction(artwork) {
+  if (!artwork) {
+    return;
+  }
+
+  window.clearTimeout(Number(artwork.dataset.actionTimer));
+  artwork.classList.remove("character-acting");
+  void artwork.getBoundingClientRect();
+  artwork.classList.add("character-acting");
+  artwork.dataset.actionTimer = String(window.setTimeout(() => {
+    artwork.classList.remove("character-acting");
+    delete artwork.dataset.actionTimer;
+  }, 900));
 }
 
 function getTypeName(code) {
@@ -803,8 +825,9 @@ function buildCharacterSvg(code, size = 220) {
   const fallbackCode = String(code || "RCFP").toUpperCase();
   const resolvedCode = getIllustrationCode(fallbackCode);
   const assetUrl = getTypeArtworkUrl(resolvedCode);
+  const motion = CHARACTER_MOTIONS[resolvedCode];
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220" width="${size}" height="${size}" role="img" aria-label="애니 캐릭터 일러스트">
+    <svg xmlns="http://www.w3.org/2000/svg" class="character-svg" data-motion="${motion}" viewBox="0 0 220 220" width="${size}" height="${size}" role="img" aria-label="애니 캐릭터 일러스트">
       <image href="${assetUrl}" x="0" y="0" width="220" height="220" preserveAspectRatio="xMidYMid meet"/>
     </svg>
   `;
@@ -960,7 +983,7 @@ function buildResultCardSvg(result, artworkHref = null) {
         <circle cx="180" cy="130" r="88" fill="none" stroke="url(#portraitGlow-${code})" stroke-width="2"/>
         <circle cx="180" cy="130" r="82" fill="#ffffff" stroke="#25212a" stroke-opacity="0.22"/>
       </g>
-      <image href="${portraitHref}" x="100" y="50" width="160" height="160" preserveAspectRatio="xMidYMid meet" clip-path="url(#portraitClip-${code})"/>
+      <image href="${portraitHref}" x="100" y="50" width="160" height="160" preserveAspectRatio="xMidYMid meet" clip-path="url(#portraitClip-${code})" data-motion="${CHARACTER_MOTIONS[getIllustrationCode(code)]}"/>
 
       <text x="180" y="238" text-anchor="middle" font-size="${nameSize}" font-weight="900" fill="#17151a">${displayName}</text>
       <rect x="112" y="250" width="136" height="32" rx="16" fill="#222222"/>
@@ -1980,6 +2003,7 @@ function openCharacterModal(code) {
   modal.innerHTML = content;
   document.body.appendChild(modal);
   document.body.classList.add("modal-open");
+  playCharacterAction(modal.querySelector(".character-modal-hero .character-svg"));
 
   const close = () => {
     document.removeEventListener("keydown", trapHandler);
@@ -2070,6 +2094,7 @@ function openCharacterModal(code) {
         </div>
       `;
 
+      playCharacterAction(modalBody.querySelector(".character-modal-hero .character-svg"));
       modalBody.querySelector(".character-modal-close").addEventListener("click", close);
       modalBody.querySelector(".character-modal-start").addEventListener("click", () => {
         close();

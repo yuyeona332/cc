@@ -1,20 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Anime scout with a compass">
-  <circle cx="120" cy="120" r="112" fill="#edfaef"/>
-  <path d="M74 144l-20 30 16 39 33-11 10-41zm91 0 20 30-16 39-33-11-10-41" fill="#b1d6a0" stroke="#354235" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M86 147q34-17 68 0l18 58H68z" fill="#789951" stroke="#354235" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M88 154h64l-12 46h-40z" fill="#e8d4a9" stroke="#354235" stroke-width="3"/>
-  <path d="M95 163h50m-47 8h44" stroke="#8c704a" stroke-width="3"/>
-  <path d="M83 150l-27 26 12 20 31-26m58-20 26 25-12 20-31-25" fill="#ffddc5" stroke="#354235" stroke-width="4" stroke-linejoin="round"/>
-  <circle cx="179" cy="170" r="16" fill="#f4d75c" stroke="#354235" stroke-width="3"/><path d="M179 158l4 12-4 12-4-12z" fill="#d84e55"/>
-  <path d="M79 91q-25-35-43 5l19 57 27-16m81-46q23-34 41 6l-19 57-28-16" fill="#79543d" stroke="#354235" stroke-width="5"/>
-  <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc5" stroke="#354235" stroke-width="4"/>
-  <path d="M78 90q-2-53 43-59 43 3 41 59l-17-16-12 11-14-23-16 21-12-10-13 17z" fill="#946547" stroke="#354235" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M92 86q10-8 20-1m28-3q10-6 19-1" fill="none" stroke="#354235" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
-
-  <circle cx="84" cy="117" r="5" fill="#e98e8e" opacity=".38"/><circle cx="156" cy="117" r="5" fill="#e98e8e" opacity=".38"/>
-  <path d="M116 123q4-5 8 0t0 9q-4 4-8 0t0-9" fill="none" stroke="#ad6464" stroke-width="3"/><path d="M160 91q8 2 6 9-7-1-6-9z" fill="#8cc9d0" stroke="#354235" stroke-width="1.5"/>
-  <path d="M98 140v14m44-14v14" stroke="#354235" stroke-width="4"/>
-  <path d="M75 206l-7 16h39l-3-16m64 0 7 16h-39l3-16" fill="#4a5140" stroke="#354235" stroke-width="4"/>
-  <path d="M92 51l20-13 22 5 17 12-16 9-34-4z" fill="#d3a054" stroke="#354235" stroke-width="3"/>
+<svg xmlns="http://www.w3.org/2000/svg" class="character-svg" data-motion="play" viewBox="0 0 240 240" role="img" aria-label="Original SCEP chibi character">
+  <defs>
+    <linearGradient id="hair-SCEP" x1="0" x2="0.8" y1="0" y2="1"><stop stop-color="#f7d994"/><stop offset=".46" stop-color="#b58b54"/><stop offset="1" stop-color="#b58b54"/></linearGradient>
+    <linearGradient id="cloth-SCEP" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#c5895d"/><stop offset="1" stop-color="#f2d89d"/></linearGradient>
+    <filter id="soft-shadow-SCEP" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <ellipse cx="120" cy="218" rx="48" ry="7" fill="#758094" opacity=".13" filter="url(#soft-shadow-SCEP)"/>
+  <g class="character-figure" transform="">
+    <g fill="url(#hair-SCEP)" stroke="#394454" stroke-width="4" stroke-linejoin="round"><path d="M74 81q-28 15-15 68l25 13 10-52m60-29q28 19 16 69l-24 12-9-53"/><circle cx="66" cy="78" r="13"/><circle cx="174" cy="82" r="13"/></g>
+    <g fill="#30394c" stroke="#394454" stroke-width="3.5" stroke-linejoin="round"><path d="M91 182h25l-2 19-17 11-22-4q-5-7 5-12zM125 182h24l-5 18-19 8-8-10z"/><path d="M76 207q10-4 22 0m37-1q11-4 22 1" fill="none" stroke="#77849c" stroke-width="2"/></g>
+    <path d="M87 139q-19 7-22 23l12 14 15-13m56-24q19 7 22 23l-12 14-15-13" fill="#ffe1d5" stroke="#394454" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M91 137q29-17 58 0l14 52H77z" fill="url(#cloth-SCEP)" stroke="#394454" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M98 140q22 24 44 0m-31 20 9 10 9-10" fill="none" stroke="#f2d89d" stroke-width="3"/><path d="M105 179h30" stroke="#f2d89d" stroke-width="3"/>
+    <path d="M91 147q-20 7-24 23l17 11 20-17m48-17q17 8 17 24l-17 7-15-18" fill="#ffe1d5" stroke="#394454" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(101 161) rotate(-7)"><path d="M0 0h38v25H0q-4-12 0-25z" fill="#fff5df" stroke="#394454" stroke-width="2.5"/><path d="M5 7h27M5 12h23M5 17h17" stroke="#8b8796" stroke-width="1.5"/><path d="M19 0v25" stroke="#394454" stroke-width="1.5"/></g>
+    <path d="M69 86q-12-1-12 13 0 11 13 13m100-26q12-1 12 13 0 11-13 13" fill="#ffe1d5" stroke="#394454" stroke-width="3"/>
+    <ellipse cx="120" cy="88" rx="54" ry="62" fill="#ffe1d5" stroke="#394454" stroke-width="4"/>
+    <ellipse cx="69" cy="101" rx="6" ry="10" fill="#ffe1d5" stroke="#394454" stroke-width="2.5"/>
+    <ellipse cx="171" cy="101" rx="6" ry="10" fill="#ffe1d5" stroke="#394454" stroke-width="2.5"/>
+    <path d="M65 100Q54 34 107 24l13 12 11-16 12 19q42-7 36 61l-18-13-15 17-16-20-16 20-18-16-18 16z" fill="url(#hair-SCEP)" stroke="#394454" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M89 87q9-4 17 2m28-1q8-5 17 0" fill="none" stroke="#394454" stroke-width="3" stroke-linecap="round"/><g><circle cx="101" cy="101" r="3.1" fill="#8b654b"/><circle cx="139" cy="101" r="3.1" fill="#8b654b"/></g><path d="M114 124q6 4 12 0" fill="none" stroke="#8f4e54" stroke-width="2.5" stroke-linecap="round"/><path d="M80 111q8-5 15 0m50 0q8-5 15 0" fill="none" stroke="#e98d99" stroke-width="4" stroke-linecap="round" opacity=".8"/>
+    <path d="M81 57q17-17 36-16m15-2q15 1 24 10" fill="none" stroke="#f7d994" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+    <circle cx="147" cy="49" r="3.5" fill="#f7d994" opacity=".8"/>
+    <path d="M157 57l16 5m-14-12 15 3m-14 8 12 8" stroke="#f1d176" stroke-width="4" stroke-linecap="round"/>
+  </g>
 </svg>

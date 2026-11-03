@@ -1,22 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-label="Anime curator with a scrapbook">
-  <circle cx="120" cy="120" r="112" fill="#fff2e5"/>
-  <path d="M79 148q-23 17-18 53l31 13 23-42m50-24q25 17 20 49l-30 16-23-44" fill="#b44d70" stroke="#382c3b" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M84 149q36-18 72 0l18 57H66z" fill="#e77679" stroke="#382c3b" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M91 155h58l-8 49H98z" fill="#fff0d6" stroke="#382c3b" stroke-width="3"/>
-  <path d="M83 151l-27 24 13 20 31-27m52-17 25 23-14 18-29-25" fill="#ffddc6" stroke="#382c3b" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M155 165l42-4 5 34-41 7z" fill="#ffdc70" stroke="#382c3b" stroke-width="3"/>
-  <path d="M164 174l10-6 8 6 10-4m-28 15 23-3" fill="none" stroke="#d6537b" stroke-width="2"/>
-  <circle cx="176" cy="167" r="4" fill="#6c94bf"/>
-  <path d="M82 92q-19-41-39 0l16 59 27-18m78-41q20-42 39 0l-17 60-28-19" fill="#624a56" stroke="#382c3b" stroke-width="5"/>
-  <ellipse cx="120" cy="92" rx="42" ry="50" fill="#ffddc6" stroke="#382c3b" stroke-width="4"/>
-  <path d="M78 91q-1-53 43-59 42 3 40 58l-17-17-11 10-14-23-16 22-13-9-12 18z" fill="#795565" stroke="#382c3b" stroke-width="4" stroke-linejoin="round"/>
-  <circle cx="88" cy="58" r="15" fill="#7b5765" stroke="#382c3b" stroke-width="3"/><circle cx="152" cy="58" r="15" fill="#7b5765" stroke="#382c3b" stroke-width="3"/>
-  <path d="M91 86q10-8 21-1m31-2q10 7 21 0" fill="none" stroke="#382c3b" stroke-width="2.5" stroke-linecap="round"/>
-  <circle cx="104" cy="103" r="2.5" fill="#28232e"/><circle cx="136" cy="103" r="2.5" fill="#28232e"/>
-
-  <circle cx="84" cy="117" r="5" fill="#ee8d9f" opacity=".4"/><circle cx="156" cy="117" r="5" fill="#ee8d9f" opacity=".4"/>
-  <path d="M109 127q12 4 22-5" fill="none" stroke="#ae626b" stroke-width="3"/><path d="M128 121l4 1-3 4" fill="none" stroke="#382c3b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M98 143v12m44-12v12" stroke="#382c3b" stroke-width="4"/>
-  <path d="M76 206l-7 16h39l-3-16m62 0 8 16h-39l2-16" fill="#6e4058" stroke="#382c3b" stroke-width="4"/>
-  <path d="M50 72l4-11 4 11 11 4-11 4-4 11-4-11-11-4z" fill="#f4c655"/>
+<svg xmlns="http://www.w3.org/2000/svg" class="character-svg" data-motion="stretch" viewBox="0 0 240 240" role="img" aria-label="Original SWED chibi character">
+  <defs>
+    <linearGradient id="hair-SWED" x1="0" x2="0.8" y1="0" y2="1"><stop stop-color="#fff0a4"/><stop offset=".46" stop-color="#dfad46"/><stop offset="1" stop-color="#dfad46"/></linearGradient>
+    <linearGradient id="cloth-SWED" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#628bad"/><stop offset="1" stop-color="#f5e2a8"/></linearGradient>
+    <filter id="soft-shadow-SWED" x="-30%" y="-30%" width="160%" height="170%"><feGaussianBlur stdDeviation="3"/></filter>
+  </defs>
+  <ellipse cx="120" cy="218" rx="48" ry="7" fill="#758094" opacity=".13" filter="url(#soft-shadow-SWED)"/>
+  <g class="character-figure" transform="">
+    <g fill="url(#hair-SWED)" stroke="#394454" stroke-width="4" stroke-linejoin="round"><path d="M73 80Q49 103 58 147l23 13 9-44m60-36q28 25 17 70l-22 10-10-44"/><path d="M57 132q-15 10-3 19 12 10 0 18 15 11 25-2 11-13-5-21"/></g>
+    <g fill="#30394c" stroke="#394454" stroke-width="3.5" stroke-linejoin="round"><path d="M91 182h25l-2 19-17 11-22-4q-5-7 5-12zM125 182h24l-5 18-19 8-8-10z"/><path d="M76 207q10-4 22 0m37-1q11-4 22 1" fill="none" stroke="#77849c" stroke-width="2"/></g>
+    <path d="M87 139q-19 7-22 23l12 14 15-13m56-24q19 7 22 23l-12 14-15-13" fill="#ffe1d5" stroke="#394454" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M91 137q29-17 58 0l14 52H77z" fill="url(#cloth-SWED)" stroke="#394454" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M102 143h36l18 49H84z" fill="#f5e2a8" stroke="#394454" stroke-width="3"/><path d="M101 157q19 10 38 0m-43 21q24 8 48 0" fill="none" stroke="#628bad" stroke-width="3"/>
+    <path d="M92 145q-17 9-14 24l18 8 15-18m38-14q17 9 14 24l-18 8-14-18" fill="#ffe1d5" stroke="#394454" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <g transform="translate(101 161)"><rect width="39" height="25" rx="3" fill="#51596f" stroke="#394454" stroke-width="2.5"/><rect x="4" y="4" width="31" height="17" fill="#c8e8ec"/><path d="M-5 27h49l-5 5h-39z" fill="#9ea8b8" stroke="#394454" stroke-width="2"/></g>
+    <path d="M69 86q-12-1-12 13 0 11 13 13m100-26q12-1 12 13 0 11-13 13" fill="#ffe1d5" stroke="#394454" stroke-width="3"/>
+    <ellipse cx="120" cy="88" rx="54" ry="62" fill="#ffe1d5" stroke="#394454" stroke-width="4"/>
+    <ellipse cx="69" cy="101" rx="6" ry="10" fill="#ffe1d5" stroke="#394454" stroke-width="2.5"/>
+    <ellipse cx="171" cy="101" rx="6" ry="10" fill="#ffe1d5" stroke="#394454" stroke-width="2.5"/>
+    <path d="M65 98Q55 34 106 23l13 13 10-16 13 16q44-6 37 61l-19-15-13 18-15-22-16 21-16-16-17 17z" fill="url(#hair-SWED)" stroke="#394454" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M87 80l19 5m28-5-18 5" fill="none" stroke="#394454" stroke-width="3" stroke-linecap="round"/><g><circle cx="101" cy="101" r="3.1" fill="#8c6841"/><circle cx="139" cy="101" r="3.1" fill="#8c6841"/></g><path d="M110 127q10-8 20 0" fill="none" stroke="#8f4e54" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M81 57q17-17 36-16m15-2q15 1 24 10" fill="none" stroke="#fff0a4" stroke-width="7" stroke-linecap="round" opacity=".8"/>
+    <circle cx="147" cy="49" r="3.5" fill="#fff0a4" opacity=".8"/>
+    <path d="M164 48l5 10 11 1-8 8 2 11-10-5-10 5 2-11-8-8 11-1z" fill="#f4d36c" stroke="#394454" stroke-width="2"/>
+  </g>
 </svg>
